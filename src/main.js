@@ -5,7 +5,7 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import Page from './routes';
-import './index.css';
+import './main.css';
 import './api/http';
 
 const store = createStore(reducers, compose(
