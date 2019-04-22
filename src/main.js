@@ -5,8 +5,7 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
 import Page from './routes';
-import './main.css';
-import './api/http';
+import './main.scss';
 
 const store = createStore(reducers, compose(
   applyMiddleware(thunk), window.devToolsExtension ?
