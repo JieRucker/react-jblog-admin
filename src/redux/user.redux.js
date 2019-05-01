@@ -109,7 +109,6 @@ async function onPublicKey(dispatch, params) {
   }
 
   fetchCaptcha()();
-  // this.form.vericode = '';
   // this.getCode();
   message.error(msg)
 }
