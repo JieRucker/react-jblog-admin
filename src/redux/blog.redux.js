@@ -1,7 +1,16 @@
+/**
+ * @Author: jrucker
+ * @Description
+ * @Date: 2019/5/19 上午12:03
+ * @Last Modified by: jrucker
+ * @Last Modified time: 2019/5/19 上午12:03
+ */
+
 import axios from 'axios'
 import {
   message
 } from 'antd'
+
 /**
  * action
  */
@@ -21,11 +30,11 @@ const initState = {
 
 /**
  * reducer
- * @param {*} state 
- * @param {*} action 
+ * @param {*} state
+ * @param {*} action
  */
 export function blog(state = initState, action) {
-  switch(action.type) {
+  switch (action.type) {
     case PUBLISH_SUCCESS:
       return {
         ...state,
@@ -89,14 +98,14 @@ function errorMsg(data) {
  * dispatch
  */
 
- export function publish({
-   title,
-   summary,
-   content,
-   tags,
-   catalog_id,
-   user_id
- }) {
+export function publish({
+                          title,
+                          summary,
+                          content,
+                          tags,
+                          catalog_id,
+                          user_id
+                        }) {
   return dispatch => {
     axios.post('/api/blog', {
       title,
@@ -106,18 +115,18 @@ function errorMsg(data) {
       catalog_id,
       user_id
     })
-    .then(res => {
-      if (res.status === 200 && res.data.code === 0) {
-        dispatch(publishSuccess(res.data.msg))
-      } else {
-        dispatch(errorMsg(res.data.msg))
-      }
-    })
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          dispatch(publishSuccess(res.data.msg))
+        } else {
+          dispatch(errorMsg(res.data.msg))
+        }
+      })
   }
 }
 
 export function getBlogList(params) {
-   return dispatch => {
+  return dispatch => {
     axios.get('/api/blog', {
       params: params
     })
@@ -131,20 +140,20 @@ export function getBlogList(params) {
       .catch(err => {
         console.log(err)
       })
-    }
+  }
 }
 
 export function deleteBlog(id) {
   return dispatch => {
     axios.delete(`/api/users/1/blog/${id}`)
-    .then(res => {
-      if (res.status === 200 && res.data.code === 0) {
-        dispatch(deteleSuccess(id))
-        message.success(res.data.msg, 1)
-      } else {
-        dispatch(errorMsg(res.data.msg))
-        message.error(res.data.msg, 1)
-      }
-    })
+      .then(res => {
+        if (res.status === 200 && res.data.code === 0) {
+          dispatch(deteleSuccess(id))
+          message.success(res.data.msg, 1)
+        } else {
+          dispatch(errorMsg(res.data.msg))
+          message.error(res.data.msg, 1)
+        }
+      })
   }
 }

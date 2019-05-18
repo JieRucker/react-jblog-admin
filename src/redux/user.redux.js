@@ -1,8 +1,12 @@
-// import axios from 'axios'
-// import qs from 'qs'
-import {
-  message
-} from 'antd'
+/**
+ * @Author: jrucker
+ * @Description
+ * @Date: 2019/5/19 上午12:03
+ * @Last Modified by: jrucker
+ * @Last Modified time: 2019/5/19 上午12:03
+ */
+
+import {message} from 'antd'
 
 import JSEncrypt from 'jsencrypt';
 import api from '@/api/server';
@@ -11,24 +15,22 @@ import api from '@/api/server';
  * action
  */
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-const LOGIN_FAILURE = 'LOGIN_FAILURE';
+const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const LOGOUT = 'LOGOUT';
 
 const FETCH_CAPTCHA = 'FETCH_CAPTCHA';
+
 /**
  * state
  */
 const initState = {
-  user: '',
-  msg: '',
-  redirectTo: '',
-
-  checkToken: '',
-  captchaImg: '',
+  redirectTo: '', // 重定向
+  checkToken: '', // token值
+  captchaImg: '', // 验证码
   admin_id: '',
-  admin_name: '',
+  admin_name: '', // 用户名
   token: ''
-}
+};
 
 /**
  * reducer
@@ -40,34 +42,35 @@ export function user(state = initState, action) {
     case FETCH_CAPTCHA:
       return {
         checkToken: action.payload.token,
-        captchaImg: action.payload.img
+        captchaImg: action.payload.img,
       };
     case LOGIN_SUCCESS:
-      /*return {
-        ...state,
-        redirectTo: '/app/index',
-        user: action.payload.data,
-        msg: action.payload.msg
-      };*/
+      let {admin_id, admin_name, token} = action.payload;
+      window.sessionStorage.setItem('admin_id', admin_id);
+      window.sessionStorage.setItem('admin_name', admin_name);
+      window.sessionStorage.setItem('token', token);
+
       return {
         ...state,
         redirectTo: '/app/index',
-        admin_id: action.payload.admin_id,
-        admin_name: action.payload.admin_name,
-        token: action.payload.token
+        admin_id: admin_id,
+        admin_name: admin_name,
+        token: token
+      };
+    case REGISTER_SUCCESS:
+      return {
+        redirectTo: '/login',
       };
     case LOGOUT:
+      window.sessionStorage.removeItem('admin_id');
+      window.sessionStorage.removeItem('admin_name');
+      window.sessionStorage.removeItem('token');
+
       return {
-        user: '',
-        msg: '',
-        redirectTo: ''
-      };
-    case LOGIN_FAILURE:
-      return {
-        ...state,
-        user: '',
+        admin_id: '',
+        admin_name: '',
         token: '',
-        msg: action.msg
+        redirectTo: '/login'
       };
     default:
       return state
@@ -75,50 +78,11 @@ export function user(state = initState, action) {
 }
 
 /**
- * action type
- */
-/*function loginSuccess(data) {
-  return {
-    type: LOGIN_SUCCESS,
-    payload: data
-  }
-}*/
-
-/*function loginFailure(msg) {
-  return {
-    msg,
-    type: LOGIN_FAILURE
-  }
-}*/
-
-async function onPublicKey(dispatch, params) {
-  console.log(params);
-
-  let res = await api.loginInterface.login(params);
-
-  let {code, data, msg} = res.data;
-  if (code === 200) {
-    message.success('登录成功！');
-
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: data
-    });
-
-    return false;
-  }
-
-  fetchCaptcha()();
-  // this.getCode();
-  message.error(msg)
-}
-
-/**
  * dispatch
  */
 
 export function fetchCaptcha() {
-  return async dispatch =>{
+  return async dispatch => {
     let res = await api.loginInterface.getCheckcode();
     let {code, data} = res.data;
     if (code === 200) {
@@ -128,6 +92,16 @@ export function fetchCaptcha() {
       });
     }
   }
+}
+
+function getCheckcode() {
+  return new Promise(async (resolve, reject) => {
+    let res = await api.loginInterface.getCheckcode();
+    let {code, data} = res.data;
+    if (code === 200) {
+      resolve(data)
+    }
+  });
 }
 
 export function login({username, password, captcha, checkToken}) {
@@ -147,30 +121,53 @@ export function login({username, password, captcha, checkToken}) {
         token: checkToken
       };
 
-      onPublicKey(dispatch, params);
+      let res_login = await api.loginInterface.login(params);
 
+      let {code, msg} = res_login.data;
+      if (code === 200) {
+        message.success('登录成功！');
+
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: res_login.data.data
+        });
+
+        return false;
+      }
+
+      message.error(msg);
+
+      let getCode = await getCheckcode();
+
+      dispatch({
+        type: FETCH_CAPTCHA,
+        payload: Object.assign({}, getCode)
+      });
     }
-
-
-    /*axios.post('/api/users/login', qs.stringify({
-      username,
-      password
-    }), {
-      withCredentials: true
-    }).then(res => {
-        if (res.status === 200 && res.data.code === 0) {
-          dispatch(loginSuccess(res.data))
-          message.success(res.data.msg)
-        } else {
-          dispatch(loginFailure(res.data.msg))
-          message.error(res.data.msg)
-        }
-      })*/
   }
 }
 
-export function logoutSubmit() {
-  return {
-    type: LOGOUT
+export function register({username, password}) {
+  return async dispatch => {
+    let params = {
+      admin_name: username,
+      admin_id: username,
+      admin_pwd: password,
+    };
+
+    let res = await api.loginInterface.register(params);
+
+    let {code, msg} = res.data;
+    if (code === 200) {
+      message.success('注册成功！');
+
+      dispatch({
+        type: REGISTER_SUCCESS,
+      });
+
+      return false;
+    }
+
+    message.error(msg);
   }
 }

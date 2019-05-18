@@ -10,6 +10,7 @@ import {
   Input,
   Button
 } from 'antd'
+
 import {login, fetchCaptcha} from '../../redux/user.redux'
 
 const FormItem = Form.Item;
@@ -34,10 +35,7 @@ class LoginForm extends Component {
   }
 
   componentDidMount() {
-    console.log(this);
-
     this.props.fetchCaptcha()
-
   }
 
   get backgroundImage() {
@@ -57,12 +55,18 @@ class LoginForm extends Component {
           checkToken: this.props.checkToken
         });
 
-        this.props.login(body)
+        this.props.login(body);
+
+        this.props.form.setFieldsValue({
+          captcha: '',
+        });
       }
     })
   }
 
   render() {
+    console.log(this);
+
     const {getFieldDecorator} = this.props.form;
     return (
       <div className="login" style={{backgroundImage: this.backgroundImage}}>
@@ -109,54 +113,13 @@ class LoginForm extends Component {
               </Button>
               <a href="" className="login-register" onClick={this.onRegister}>注册</a>
             </FormItem>
-
           </Form>
         </div>
-
-
       </div>
     )
   }
-
-  /*render() {
-    const {getFieldDecorator} = this.props.form
-    return (
-      <div className="login">
-        {this.props.redirectTo && this.props.redirectTo !== '/login' ? <Redirect to={this.props.redirectTo}/> : null}
-        <Col span="6" className="login-form">
-          <h3 className="login-title">Login</h3>
-          <Form onSubmit={this.handleSubmit}>
-            <FormItem>
-              {getFieldDecorator('username', {
-                rules: [{required: true, message: 'Please input your username!'}],
-              })(
-                <Input prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>} placeholder="Username"/>
-              )}
-            </FormItem>
-            <FormItem>
-              {getFieldDecorator('password', {
-                rules: [{required: true, message: 'Please input your Password!'}],
-              })(
-                <Input prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>} type="password"
-                       placeholder="Password"/>
-              )}
-            </FormItem>
-            <FormItem>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="login-form-button"
-              >
-                Log in
-              </Button>
-            </FormItem>
-          </Form>
-        </Col>
-      </div>
-    )
-  }*/
 }
 
-const Login = Form.create()(LoginForm)
+const Login = Form.create()(LoginForm);
 
 export default Login
