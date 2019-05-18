@@ -2,14 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import './login.scss'
-import {
-  Row,
-  Col,
-  Form,
-  Icon,
-  Input,
-  Button
-} from 'antd'
+import {Row, Col, Form, Icon, Input, Button} from 'antd'
 
 import {login, fetchCaptcha} from '../../redux/user.redux'
 
@@ -23,10 +16,7 @@ class LoginForm extends Component {
   constructor(props) {
     super(props);
 
-    /*this.state = {
-      checkToken: '',
-      captchaImg: ''
-    };*/
+    this.state = {};
 
     this.onRegister = this.onRegister.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -65,8 +55,6 @@ class LoginForm extends Component {
   }
 
   render() {
-    console.log(this);
-
     const {getFieldDecorator} = this.props.form;
     return (
       <div className="login" style={{backgroundImage: this.backgroundImage}}>
