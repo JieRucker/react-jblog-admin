@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { user } from './redux/user.redux'
-import { blog } from './redux/blog.redux'
+import { user } from './user.redux'
+import { blog } from './blog.redux'
 export default combineReducers({
   user,
   blog
