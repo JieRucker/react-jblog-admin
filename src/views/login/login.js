@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import './login.scss'
 import {Row, Col, Form, Icon, Input, Button} from 'antd'
-
 import {login, fetchCaptcha} from '../../redux/user.redux'
 
 const FormItem = Form.Item;
