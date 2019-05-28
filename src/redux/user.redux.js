@@ -10,6 +10,7 @@ import {message} from 'antd'
 
 import JSEncrypt from 'jsencrypt';
 import api from '@/api/server';
+import Cookies from 'js-cookie'
 
 /**
  * action
@@ -46,9 +47,13 @@ export function user(state = initState, action) {
       };
     case LOGIN_SUCCESS:
       let {admin_id, admin_name, token} = action.payload;
-      window.sessionStorage.setItem('admin_id', admin_id);
-      window.sessionStorage.setItem('admin_name', admin_name);
-      window.sessionStorage.setItem('token', token);
+      Cookies.set('admin_id', admin_id);
+        Cookies.set('admin_name', admin_name);
+        Cookies.set('token', token);
+
+      // window.sessionStorage.setItem('admin_id', admin_id);
+      // window.sessionStorage.setItem('admin_name', admin_name);
+      // window.sessionStorage.setItem('token', token);
 
       return {
         ...state,
@@ -62,9 +67,12 @@ export function user(state = initState, action) {
         redirectTo: '/login',
       };
     case LOGOUT:
-      window.sessionStorage.removeItem('admin_id');
-      window.sessionStorage.removeItem('admin_name');
-      window.sessionStorage.removeItem('token');
+        Cookies.remove('admin_id');
+        Cookies.remove('admin_name');
+        Cookies.remove('token');
+      // window.sessionStorage.removeItem('admin_id');
+      // window.sessionStorage.removeItem('admin_name');
+      // window.sessionStorage.removeItem('token');
 
       return {
         admin_id: '',
@@ -170,4 +178,10 @@ export function register({username, password}) {
 
     message.error(msg);
   }
+}
+
+export function loginOut() {
+    return {
+        type: LOGOUT
+    }
 }

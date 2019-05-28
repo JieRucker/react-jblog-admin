@@ -8,7 +8,7 @@ import {
 import Auth from '../components/auth/auth'
 import Login from '../views/login/login'
 import Register from '../views/login/register'
-// import Index from '../containers/layout/index'
+import Index from '../views/layout'
 import NotFound from '../views/404/notFound'
 
 export default () => (
@@ -17,7 +17,7 @@ export default () => (
       <Auth></Auth>
       <Switch>
         <Route exact path="/" render={() => <Redirect to="/app/index" push/>}/>
-        {/*<Route path="/app" component={Index}/>*/}
+        <Route path="/app" component={Index}/>
         <Route path="/login" component={Login}/>
         <Route path="/register" component={Register}/>
         <Route path='/404' component={NotFound}/>
