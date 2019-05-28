@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom'
 import Cookeis from 'js-cookie'
 
 @withRouter
-class Auth extends Component {
+class AuthRoute extends Component {
   componentDidMount() {
     const routePath = ['/login'];
     const currentPath = this.props.location.pathname;
@@ -26,4 +26,4 @@ class Auth extends Component {
   }
 }
 
-export default Auth;
+export default AuthRoute;
