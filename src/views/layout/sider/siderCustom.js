@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom'
 import {Layout} from 'antd'
 import './sider.css'
 import SiderMenu from './siderMenu'
-import {menus} from '../../routes/menus'
+import {appRouter} from "../../../routes/router";
 
 const {Sider} = Layout;
 
@@ -16,11 +16,19 @@ class SiderCustom extends Component {
         selectedKey: ''
     };
 
-    menuClick = () => {
+    menuClick = ({item, key, keyPath, domEvent}) => {
+    };
 
+    onOpenChange = (openKeys) => {
+
+        console.log(openKeys);
+
+        // this.props.siderOpenChange()
     };
 
     render() {
+        // console.log('this', this, this.props.location.pathname)
+
         return (
             <Sider
                 trigger={null}
@@ -28,14 +36,15 @@ class SiderCustom extends Component {
                 collapsed={this.props.collapsed}
                 breakpoint="md"
                 collapsedWidth="0"
-                className="sider-contaniner"
-            >
-                <div className="logo"></div>
+                className="sider-contaniner">
+                <div className="logo"/>
                 <SiderMenu
-                    menus={menus}
+                    menus={appRouter}
+                    onOpenChange={this.onOpenChange}
                     onClick={this.menuClick}
                     theme="dark"
                     mode="inline"
+                    active={this.props.location.pathname || ''}
                 />
             </Sider>
         )

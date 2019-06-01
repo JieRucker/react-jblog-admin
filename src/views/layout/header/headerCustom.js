@@ -13,7 +13,6 @@ const {Header} = Layout;
 
 class HeaderCustom extends Component {
     render() {
-        console.log('this', this.props)
         const menu = (
             <Menu>
                 <Menu.Item>

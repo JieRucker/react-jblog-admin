@@ -5,17 +5,33 @@ import {
 } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import {connect} from 'react-redux'
-import SiderCustom from '../../components/sider/siderCustom'
-import HeaderCustom from '../../components/header/headerCustom'
-import {routes} from '../../routes/menuRoutes'
+import SiderCustom from './sider/siderCustom'
+import HeaderCustom from './header/headerCustom'
+import {routers} from '../../routes/router';
 import {loginOut} from '../../redux/user.redux'
 import './index.css'
 
+import {initOpenMenu, siderOpenChange} from '../../redux/blog1.redux'
+
 const {Content, Footer} = Layout;
 
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+        blog1:state.blog1
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginOut,
+        initOpenMenu, siderOpenChange
+    }
+};
+
 @connect(
-    state => state.user,
-    {loginOut}
+    mapStateToProps,
+    mapDispatchToProps
 )
 class Index extends Component {
     constructor(props) {
@@ -23,6 +39,11 @@ class Index extends Component {
         this.state = {
             collapsed: false
         };
+    }
+
+    componentDidMount() {
+        console.log('12345', this)
+        // this.props.initOpenMenu()
     }
 
     loginOut = () => {
@@ -53,8 +74,8 @@ class Index extends Component {
                         </HeaderCustom>
                         <Content style={{margin: '24px 16px', padding: 24, background: '#fff', overflow: 'initial'}}>
                             {Cookies.get('token') ?
-                                routes.map(({path, key, component, ...props}) => (
-                                    <Route key={key}
+                                routers.map(({path, title, component, ...props}) => (
+                                    <Route key={title}
                                            exact
                                            path={path}
                                            component={component}
