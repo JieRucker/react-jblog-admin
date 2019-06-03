@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom'
 import {Layout} from 'antd'
 import './sider.css'
 import SiderMenu from './siderMenu'
-import {appRouter} from "../../../routes/router";
+import {appRouter} from "../../../router/routers";
 
 const {Sider} = Layout;
 

@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 import {connect} from 'react-redux'
 import SiderCustom from './sider/siderCustom'
 import HeaderCustom from './header/headerCustom'
-import {routers} from '../../routes/router';
+import {routers} from '../../router/routers';
 import {loginOut} from '../../redux/user.redux'
 import './index.css'
 

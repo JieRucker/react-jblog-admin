@@ -4,7 +4,7 @@ import reducers from './redux/reducers';
 import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
-import Page from './routes';
+import Page from './router';
 import './main.scss';
 
 const store = createStore(reducers, compose(
