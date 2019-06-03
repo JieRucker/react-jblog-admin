@@ -11,14 +11,14 @@ import {routers} from '../../routes/router';
 import {loginOut} from '../../redux/user.redux'
 import './index.css'
 
-import {initOpenMenu, siderOpenChange} from '../../redux/blog1.redux'
+import {initOpenMenu, siderOpenChange} from '../../redux/sider.redux'
 
 const {Content, Footer} = Layout;
 
 const mapStateToProps = (state) => {
     return {
         user: state.user,
-        blog1:state.blog1
+        sider: state.sider
     }
 };
 
@@ -31,19 +31,23 @@ const mapDispatchToProps = (dispatch) => {
 
 @connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps()
 )
 class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            collapsed: false
+            collapsed: false,
+            hidden: true
         };
     }
 
-    componentDidMount() {
-        console.log('12345', this)
-        // this.props.initOpenMenu()
+    componentWillMount() {
+        this.props.initOpenMenu();
+
+        setTimeout(() => {
+            this.setState(prevState => ({hidden: !prevState}))
+        }, 100)
     }
 
     loginOut = () => {
@@ -52,17 +56,21 @@ class Index extends Component {
     };
 
     toggle = () => {
-        this.setState({
-            collapsed: !this.state.collapsed
-        })
+        this.setState(prevState => ({collapsed: !prevState.collapsed}))
+    };
+
+    siderOpenChange = (payload) => {
+        this.props.siderOpenChange(payload)
     };
 
     render() {
-        return (
+        return !this.state.hidden && (
             <div className="container">
                 <Layout>
                     <SiderCustom
                         collapsed={this.state.collapsed}
+                        defaultOpenKeys={this.props.sider.openKeys}
+                        siderOpenChange={this.siderOpenChange}
                     >
                     </SiderCustom>
                     <Layout>

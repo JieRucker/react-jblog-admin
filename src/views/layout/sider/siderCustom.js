@@ -20,15 +20,10 @@ class SiderCustom extends Component {
     };
 
     onOpenChange = (openKeys) => {
-
-        console.log(openKeys);
-
-        // this.props.siderOpenChange()
+        this.props.siderOpenChange(openKeys)
     };
 
     render() {
-        // console.log('this', this, this.props.location.pathname)
-
         return (
             <Sider
                 trigger={null}
@@ -45,6 +40,7 @@ class SiderCustom extends Component {
                     theme="dark"
                     mode="inline"
                     active={this.props.location.pathname || ''}
+                    defaultOpenKeys={this.props.defaultOpenKeys}
                 />
             </Sider>
         )

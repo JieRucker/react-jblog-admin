@@ -13,7 +13,7 @@ const initState = {
     openKeys: [] // 展开的菜单
 };
 
-export function blog1(state = initState, action) {
+export function sider(state = initState, action) {
     switch (action.type) {
         case OPEN_CHANGE_SUCCESS:
             window.sessionStorage.setItem('openMenuKeys', JSON.stringify(action.payload));
@@ -25,7 +25,6 @@ export function blog1(state = initState, action) {
             return Object.assign({}, state, {
                 openKeys: action.payload
             });
-
         default:
             return state
     }
@@ -34,8 +33,10 @@ export function blog1(state = initState, action) {
 export function initOpenMenu() {
     return dispatch => {
         let openMenuKeys = window.sessionStorage.getItem('openMenuKeys');
+
         if (openMenuKeys) {
             let json = JSON.parse(openMenuKeys);
+
             dispatch({
                 type: INIT_JSON_SUCCESS,
                 payload: json
@@ -44,7 +45,7 @@ export function initOpenMenu() {
     }
 }
 
-export function siderOpenChange({openKeys}) {
+export function siderOpenChange(openKeys) {
     return dispatch => {
         dispatch({
             type: OPEN_CHANGE_SUCCESS,

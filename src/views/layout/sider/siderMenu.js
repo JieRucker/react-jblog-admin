@@ -28,7 +28,7 @@ const renderSubMenu = ({path, title, icon, sub}) =>
 export default ({menus, ...props}) => <Menu
     {...props}
     defaultSelectedKeys={[props.active]}
-    defaultOpenKeys={['/app/blog']}
+    defaultOpenKeys={props.defaultOpenKeys}
 >
     {menus && menus.map(
         item => item.sub && item.sub.length ?
