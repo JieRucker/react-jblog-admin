@@ -15,19 +15,15 @@ import {initOpenMenu, siderOpenChange} from '../../redux/sider.redux'
 
 const {Content, Footer} = Layout;
 
-const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-        sider: state.sider
-    }
-};
+const mapStateToProps = (state) => ({
+    user: state.user,
+    sider: state.sider
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        loginOut,
-        initOpenMenu, siderOpenChange
-    }
-};
+const mapDispatchToProps = (dispatch) => ({
+    loginOut,
+    initOpenMenu, siderOpenChange
+});
 
 @connect(
     mapStateToProps,

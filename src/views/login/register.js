@@ -21,17 +21,13 @@ import {register} from '../../redux/user.redux'
 
 const FormItem = Form.Item;
 
-const mapStateToProps = (state) => {
-    return {
-        user: state.user,
-    }
-};
+const mapStateToProps = (state) => ({
+    user: state.user,
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        register
-    }
-};
+const mapDispatchToProps = (dispatch) => ({
+    register
+});
 
 @connect(
     mapStateToProps,
