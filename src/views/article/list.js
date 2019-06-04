@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 // import {connect} from 'react-redux';
-import {Form, Input, Button, Table, Divider} from 'antd';
+import {Form, Input, Button, Table} from 'antd';
 
 class ListForm extends Component {
     constructor(props) {
@@ -19,11 +19,43 @@ class ListForm extends Component {
         })
     };
 
+    /**
+     * 搜索
+     * @params e
+     */
     handleSearch = e => {
         e.preventDefault();
     };
 
+    /**
+     * 写文章
+     * @params e
+     */
     handleArticle = e => {
+
+    };
+
+    /**
+     * 查看
+     * @params e
+     */
+    handlePreview = e => {
+
+    };
+
+    /**
+     * 修改
+     * @params e
+     */
+    handleFix = e => {
+
+    };
+
+    /**
+     * 删除
+     * @params e
+     */
+    handleDelete = e => {
 
     };
 
@@ -55,11 +87,26 @@ class ListForm extends Component {
                 key: 'action',
                 render: (text, record) => (
                     <span>
-                        <a href="javascript:;">查看</a>
-                        <Divider type="vertical"/>
-                        <a href="javascript:;">修改</a>
-                        <Divider type="vertical"/>
-                        <a href="javascript:;">删除</a>
+                        <Button
+                            type="primary"
+                            size="small"
+                            style={{marginRight: '5px'}}
+                            onClick={this.handlePreview}
+                        >查看
+                        </Button>
+                        <Button
+                            type="primary"
+                            size="small"
+                            style={{marginRight: '5px'}}
+                            onClick={this.handleFix}
+                        >修改
+                        </Button>
+                        <Button
+                            type="danger"
+                            size="small"
+                            onClick={this.handleDelete}
+                        >删除
+                        </Button>
                     </span>
                 ),
             },
