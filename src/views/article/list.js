@@ -1,19 +1,44 @@
 import React, {Component} from 'react'
 // import {connect} from 'react-redux';
-import {Form, Input, Button, Table} from 'antd';
+import {Form, Select, Input, Button, Table} from 'antd';
+
+const {Option} = Select;
 
 class ListForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            search: {
+                keyword: '',
+                tag: -1,
+                state: -1
+            },
+            stateOptions: [
+                {
+                    name: '所有',
+                    value: -1
+                },
+                {
+                    name: '发布',
+                    value: 1
+                },
+                {
+                    name: '草稿',
+                    value: 0
+                }
+            ],
             keyword: '',
             header: [],
             body: []
         }
     }
 
-    handleChange = event => {
+    handleSelectChange = (value) => {
+        console.log('value', value)
+    };
+
+    handleInputChange = event => {
         this.setState({
             [event.target.name]: event.target.value
         })
@@ -62,28 +87,44 @@ class ListForm extends Component {
     render() {
         const columns = [
             {
-                title: 'Name',
-                dataIndex: 'name',
-                key: 'name',
-                render: text => <a href="javascript:;">{text}</a>,
+                title: '文章标题',
+                dataIndex: 'article_title',
+                key: 'article_title',
             },
             {
-                title: 'Age',
-                dataIndex: 'age',
-                key: 'age',
+                title: '创建日期',
+                dataIndex: 'article_create_time',
+                key: 'article_create_time',
+                render: (params) => (
+                    <span>{params.article_create_time}</span>
+                )
             },
             {
-                title: 'Address',
-                dataIndex: 'address',
-                key: 'address',
+                title: '修改日期',
+                dataIndex: 'article_update_time',
+                key: 'article_update_time',
+                render: (params) => (
+                    <span>{params.article_update_time}</span>
+                )
             },
             {
-                title: 'Tags',
-                key: 'tags',
-                dataIndex: 'tags',
+                title: '标签',
+                key: 'article_tags',
+                dataIndex: 'article_tags',
+                render: () => {
+
+                }
             },
             {
-                title: 'Action',
+                title: '状态',
+                key: 'article_state',
+                dataIndex: 'article_state',
+                render: (params) => (
+                    <span>{this.formatState(params.article_state)}</span>
+                )
+            },
+            {
+                title: '操作',
                 key: 'action',
                 render: (text, record) => (
                     <span>
@@ -114,33 +155,23 @@ class ListForm extends Component {
 
         const data = [
             {
-                key: '1',
                 name: 'John Brown',
-                age: 32,
-                address: 'New York No. 1 Lake Park',
                 tags: ['nice', 'developer'],
             },
             {
-                key: '2',
                 name: 'Jim Green',
-                age: 42,
-                address: 'London No. 1 Lake Park',
                 tags: ['loser'],
-            },
-            {
-                key: '3',
-                name: 'Joe Black',
-                age: 32,
-                address: 'Sidney No. 1 Lake Park',
-                tags: ['cool', 'teacher'],
-            },
+            }
         ];
 
         return (
             <div>
                 <Form layout="inline" onSubmit={this.handleSubmit}>
                     <Form.Item label="标签：">
-
+                        <Select style={{width: 120}} onChange={this.handleSelectChange}>
+                            <Option value="jack">Jack</Option>
+                            <Option value="lucy">Lucy</Option>
+                        </Select>
                     </Form.Item>
                     <Form.Item label="状态：">
 
@@ -150,7 +181,7 @@ class ListForm extends Component {
                             placeholder="请输入关键词"
                             name="keyword"
                             value={this.state.keyword}
-                            onChange={this.handleChange}
+                            onChange={this.handleInputChange}
                         />
                     </Form.Item>
                     <Button
