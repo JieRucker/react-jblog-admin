@@ -16,11 +16,11 @@ import StarNew from '../views/star/starnew'
 import StarList from '../views/star/starlist'
 import StarEdit from '../views/star/staredit'
 
-import ArticleList from '../views/article/article-list';
-// import ArticleNew from '../views/article/article-new';
-// import TagList from '../views/tag/tag-list';
-// import WorkList from '../views/work/work-list';
-// import WorkNew from '../views/work/work-new';
+import ArticleList from '../views/article/list';
+// import ArticleNew from '../views/article/new';
+// import TagList from '../views/tag/list';
+// import WorkList from '../views/work/list';
+// import WorkNew from '../views/work/new';
 // import FileUpload from '../views/upload/file-upload';
 // import SettingMine from '../views/setting/mine';
 // import SettingUpyun from '../views/setting/upyun';
@@ -57,7 +57,7 @@ export const appRouter = [
             icon: '',
             component: ArticleList
         }, {
-            path: '/app/article/create',
+            path: '/app/article/new',
             title: '写文章',
             icon: '',
             // component: ArticleNew
@@ -84,7 +84,7 @@ export const appRouter = [
             icon: '',
             // component: WorkList
         }, {
-            path: '/app/work/create',
+            path: '/app/work/new',
             title: '写作品',
             icon: '',
             // component: WorkNew

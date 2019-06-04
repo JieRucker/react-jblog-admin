@@ -1,4 +1,138 @@
-<template>
+import React, {Component} from 'react'
+// import {connect} from 'react-redux';
+import {Form, Input, Button, Table, Divider} from 'antd';
+
+class ListForm extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            keyword: '',
+            header: [],
+            body: []
+        }
+    }
+
+    handleChange = event => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    };
+
+    handleSearch = e => {
+        e.preventDefault();
+    };
+
+    handleArticle = e => {
+
+    };
+
+    render() {
+        const columns = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
+                render: text => <a href="javascript:;">{text}</a>,
+            },
+            {
+                title: 'Age',
+                dataIndex: 'age',
+                key: 'age',
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                key: 'address',
+            },
+            {
+                title: 'Tags',
+                key: 'tags',
+                dataIndex: 'tags',
+            },
+            {
+                title: 'Action',
+                key: 'action',
+                render: (text, record) => (
+                    <span>
+                        <a href="javascript:;">查看</a>
+                        <Divider type="vertical"/>
+                        <a href="javascript:;">修改</a>
+                        <Divider type="vertical"/>
+                        <a href="javascript:;">删除</a>
+                    </span>
+                ),
+            },
+        ];
+
+        const data = [
+            {
+                key: '1',
+                name: 'John Brown',
+                age: 32,
+                address: 'New York No. 1 Lake Park',
+                tags: ['nice', 'developer'],
+            },
+            {
+                key: '2',
+                name: 'Jim Green',
+                age: 42,
+                address: 'London No. 1 Lake Park',
+                tags: ['loser'],
+            },
+            {
+                key: '3',
+                name: 'Joe Black',
+                age: 32,
+                address: 'Sidney No. 1 Lake Park',
+                tags: ['cool', 'teacher'],
+            },
+        ];
+
+        return (
+            <div>
+                <Form layout="inline" onSubmit={this.handleSubmit}>
+                    <Form.Item label="标签：">
+
+                    </Form.Item>
+                    <Form.Item label="状态：">
+
+                    </Form.Item>
+                    <Form.Item label="搜索：">
+                        <Input
+                            placeholder="请输入关键词"
+                            name="keyword"
+                            value={this.state.keyword}
+                            onChange={this.handleChange}
+                        />
+                    </Form.Item>
+                    <Button
+                        type="primary"
+                        onClick={this.handleSearch}
+                    >
+                        搜索
+                    </Button>
+                    <Button
+                        type="default"
+                        style={{marginLeft: '10px'}}
+                        onClick={this.handleArticle}
+                    >
+                        写文章
+                    </Button>
+                </Form>
+                <Table columns={columns} dataSource={data}/>
+            </div>
+
+        )
+    }
+}
+
+const List = Form.create()(ListForm);
+
+export default List
+
+
+/*<template>
   <div>
     <Form :label-width="60" inline>
       <FormItem label="标签：">
@@ -30,9 +164,9 @@
       </div>
     </div>
   </div>
-</template>
+</template>*/
 
-<script>
+/*<script>
   export default {
     name: "article-list",
     data() {
@@ -237,4 +371,4 @@
       }
     }
   }
-</script>
+</script>*/
