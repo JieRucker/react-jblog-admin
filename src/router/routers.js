@@ -16,7 +16,17 @@ import StarNew from '../views/star/starnew'
 import StarList from '../views/star/starlist'
 import StarEdit from '../views/star/staredit'
 
-// 作为Main组件的子页面展示但是不在左侧菜单显示的路由写在otherRouter里
+import ArticleList from '../views/article/article-list';
+import ArticleNew from '../views/article/article-new';
+import TagList from '../views/tag/tag-list';
+import WorkList from '../views/work/work-list';
+import WorkNew from '../views/work/work-new';
+import FileUpload from '../views/upload/file-upload';
+import SettingMine from '../views/setting/mine';
+import SettingUpyun from '../views/setting/upyun';
+import SettingAbout from '../views/setting/about';
+
+// 不显示在菜单路由里
 export const otherRouter = [
     {
         title: '编辑博客',
@@ -35,8 +45,83 @@ export const otherRouter = [
     }
 ];
 
-// 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
+// 显示在菜单路由里
 export const appRouter = [
+    {
+        path: '/app/article',
+        title: '文章',
+        icon: 'article',
+        sub: [{
+            path: '/app/article/list',
+            title: '文章列表',
+            icon: '',
+            component: ArticleList
+        }, {
+            path: '/app/article/create',
+            title: '写文章',
+            icon: '',
+            component: ArticleNew
+        }],
+    },
+    {
+        path: '/app/tag',
+        title: '标签',
+        icon: 'tag',
+        sub: [{
+            path: '/app/tag/list',
+            title: '标签列表',
+            icon: '',
+            component: TagList
+        }],
+    },
+    {
+        path: '/app/work',
+        title: '作品',
+        icon: 'work',
+        sub: [{
+            path: '/app/work/list',
+            title: '作品列表',
+            icon: '',
+            component: WorkList
+        }, {
+            path: '/app/work/create',
+            title: '写作品',
+            icon: '',
+            component: WorkNew
+        }],
+    },
+    {
+        path: '/app/upload',
+        title: '上传',
+        icon: 'upload',
+        sub: [{
+            path: '/app/upload/list',
+            title: '文件列表',
+            icon: '',
+            component: FileUpload
+        }],
+    },
+    {
+        path: '/app/setting',
+        title: '设置',
+        icon: 'setting',
+        sub: [{
+            path: '/app/setting/mine',
+            title: '个人信息',
+            icon: '',
+            component: SettingMine
+        }, {
+            path: '/app/setting/upyun',
+            title: '又拍云',
+            icon: '',
+            component: SettingUpyun
+        }, {
+            path: '/app/setting/about',
+            title: '关于',
+            icon: '',
+            component: SettingAbout
+        }],
+    },
     {
         path: '/app/index',
         title: '首页',

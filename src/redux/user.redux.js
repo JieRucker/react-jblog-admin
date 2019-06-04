@@ -107,7 +107,6 @@ function getCheckcode() {
 
 export function login({username, password, captcha, checkToken}) {
     return async dispatch => {
-
         let res = await api.loginInterface.getPublicKey();
         let {code, data} = res.data;
         if (code === 200) {
