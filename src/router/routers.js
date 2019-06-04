@@ -17,14 +17,14 @@ import StarList from '../views/star/starlist'
 import StarEdit from '../views/star/staredit'
 
 import ArticleList from '../views/article/article-list';
-import ArticleNew from '../views/article/article-new';
-import TagList from '../views/tag/tag-list';
-import WorkList from '../views/work/work-list';
-import WorkNew from '../views/work/work-new';
-import FileUpload from '../views/upload/file-upload';
-import SettingMine from '../views/setting/mine';
-import SettingUpyun from '../views/setting/upyun';
-import SettingAbout from '../views/setting/about';
+// import ArticleNew from '../views/article/article-new';
+// import TagList from '../views/tag/tag-list';
+// import WorkList from '../views/work/work-list';
+// import WorkNew from '../views/work/work-new';
+// import FileUpload from '../views/upload/file-upload';
+// import SettingMine from '../views/setting/mine';
+// import SettingUpyun from '../views/setting/upyun';
+// import SettingAbout from '../views/setting/about';
 
 // 不显示在菜单路由里
 export const otherRouter = [
@@ -60,7 +60,7 @@ export const appRouter = [
             path: '/app/article/create',
             title: '写文章',
             icon: '',
-            component: ArticleNew
+            // component: ArticleNew
         }],
     },
     {
@@ -71,7 +71,7 @@ export const appRouter = [
             path: '/app/tag/list',
             title: '标签列表',
             icon: '',
-            component: TagList
+            // component: TagList
         }],
     },
     {
@@ -82,12 +82,12 @@ export const appRouter = [
             path: '/app/work/list',
             title: '作品列表',
             icon: '',
-            component: WorkList
+            // component: WorkList
         }, {
             path: '/app/work/create',
             title: '写作品',
             icon: '',
-            component: WorkNew
+            // component: WorkNew
         }],
     },
     {
@@ -98,7 +98,7 @@ export const appRouter = [
             path: '/app/upload/list',
             title: '文件列表',
             icon: '',
-            component: FileUpload
+            // component: FileUpload
         }],
     },
     {
@@ -109,17 +109,17 @@ export const appRouter = [
             path: '/app/setting/mine',
             title: '个人信息',
             icon: '',
-            component: SettingMine
+            // component: SettingMine
         }, {
             path: '/app/setting/upyun',
             title: '又拍云',
             icon: '',
-            component: SettingUpyun
+            // component: SettingUpyun
         }, {
             path: '/app/setting/about',
             title: '关于',
             icon: '',
-            component: SettingAbout
+            // component: SettingAbout
         }],
     },
     {
