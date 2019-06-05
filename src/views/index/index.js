@@ -10,7 +10,7 @@ import {
 import {
     getBlogList,
     deleteBlog
-} from '../../redux/blog.redux'
+} from '../../redux/blog/blog.redux'
 import './index.css'
 
 const confirm = Modal.confirm;

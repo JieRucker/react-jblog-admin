@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { publish } from '../../redux/blog.redux'
+import { publish } from '../../redux/blog/blog.redux'
 import axios from 'axios'
 import {
   Row,
@@ -62,7 +62,7 @@ class Publish extends Component {
           this.setState({
             catalogData: res.data.data.rows,
             catalog_id: res.data.data.rows[0].id
-            
+
           })
         } else {
 
@@ -89,7 +89,7 @@ class Publish extends Component {
             <div className="publish-input">
               <Input
                 addonBefore="标题"
-                size="large" 
+                size="large"
                 placeholder="文章标题"
                 name="title"
                 value={this.state.title}
@@ -97,20 +97,20 @@ class Publish extends Component {
               />
             </div>
             <div className="publish-input">
-              <TextArea 
-                rows={6} 
+              <TextArea
+                rows={6}
                 autosize={{ minRows: 5}}
-                placeholder="文章摘要" 
+                placeholder="文章摘要"
                 name="summary"
                 value={this.state.summary}
                 onChange = {this.handleChange}
               />
             </div>
             <div className="publish-input">
-              <TextArea 
-                rows={6} 
+              <TextArea
+                rows={6}
                 autosize={{ minRows: 15}}
-                placeholder="文章内容 markdown格式" 
+                placeholder="文章内容 markdown格式"
                 name="content"
                 value={this.state.content}
                 onChange = {this.handleChange}
@@ -119,7 +119,7 @@ class Publish extends Component {
             <div className="publish-input">
               <Input
                 addonBefore="标签"
-                size="large" 
+                size="large"
                 placeholder="文章标签"
                 name="tags"
                 value={this.state.tags}
@@ -140,7 +140,7 @@ class Publish extends Component {
                       </Option>
                     ))
                   }
-                </Select> 
+                </Select>
               : null}
             </div>
             <div className="publish-input">

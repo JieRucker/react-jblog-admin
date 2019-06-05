@@ -1,41 +1,75 @@
 import React, {Component} from 'react'
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 import {Form, Select, Input, Button, Table} from 'antd';
+import {getTagsList, getArticleList} from '../../redux/article/list.redux';
 
 const {Option} = Select;
+
+const mapStateProps = state => ({
+    article: state.article_list
+});
+
+const mapDispatchToProps = dispatch => ({
+    getTagsList, getArticleList
+});
+
+@connect(
+    mapStateProps,
+    mapDispatchToProps()
+)
 
 class ListForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            search: {
-                keyword: '',
-                tag: -1,
-                state: -1
-            },
-            stateOptions: [
-                {
-                    name: '所有',
-                    value: -1
-                },
-                {
-                    name: '发布',
-                    value: 1
-                },
-                {
-                    name: '草稿',
-                    value: 0
-                }
-            ],
-            keyword: '',
-            header: [],
-            body: []
+            // keyword: '',
+            // tag: -1,
+            // state: -1,
+            state_list: [{
+                name: '所有',
+                value: ''
+            }, {
+                name: '发布',
+                value: 1
+            }, {
+                name: '草稿',
+                value: 0
+            }],
+            /*pagination: {
+                total_count: 0
+            },*/
+            // loading: false,
+            // data: []
         }
     }
 
-    handleSelectChange = (value) => {
-        console.log('value', value)
+    componentWillMount() {
+        this.props.getTagsList()
+    }
+
+    componentDidMount() {
+        this.getArticleList()
+    }
+
+    getArticleList = () => {
+        this.props.getArticleList({
+            keyword: this.props.keyword,
+            tag: this.state.tag === -1 ? '' : this.state.tag,
+            state: this.state.state === -1 ? '' : this.state.state
+        });
+    };
+
+    handleTagChange = (value) => {
+        console.log('value', value);
+
+        this.setState(prevState => ({tag: value}))
+    };
+
+    handleStateChange = (value) => {
+        console.log('value', value);
+
+        this.setState(prevState => ({state: value}))
     };
 
     handleInputChange = event => {
@@ -50,6 +84,8 @@ class ListForm extends Component {
      */
     handleSearch = e => {
         e.preventDefault();
+
+        this.getArticleList()
     };
 
     /**
@@ -82,6 +118,21 @@ class ListForm extends Component {
      */
     handleDelete = e => {
 
+    };
+
+    handleTableChange = (pagination, filters, sorter) => {
+        const pager = {...this.state.pagination};
+        pager.current = pagination.current;
+        this.setState({
+            pagination: pager,
+        });
+
+        let params = {
+            current_page: 1,
+            page_size: 10,
+        };
+
+        this.props.getArticleList(params);
     };
 
     render() {
@@ -153,28 +204,30 @@ class ListForm extends Component {
             },
         ];
 
-        const data = [
-            {
-                name: 'John Brown',
-                tags: ['nice', 'developer'],
-            },
-            {
-                name: 'Jim Green',
-                tags: ['loser'],
-            }
-        ];
-
         return (
             <div>
                 <Form layout="inline" onSubmit={this.handleSubmit}>
                     <Form.Item label="标签：">
-                        <Select style={{width: 120}} onChange={this.handleSelectChange}>
-                            <Option value="jack">Jack</Option>
-                            <Option value="lucy">Lucy</Option>
+                        <Select defaultValue={this.state.tag} style={{width: 150}} onChange={this.handleTagChange}>
+                            {this.props.article.tag_list.map(item => (
+                                <Option
+                                    value={item._id}
+                                >
+                                    {item.tags_name}
+                                </Option>
+                            ))}
                         </Select>
                     </Form.Item>
                     <Form.Item label="状态：">
-
+                        <Select defaultValue={this.state.state} style={{width: 150}} onChange={this.handleStateChange}>
+                            {this.state.state_list.map(item => (
+                                <Option
+                                    value={item.value}
+                                >
+                                    {item.name}
+                                </Option>
+                            ))}
+                        </Select>
                     </Form.Item>
                     <Form.Item label="搜索：">
                         <Input
@@ -198,7 +251,13 @@ class ListForm extends Component {
                         写文章
                     </Button>
                 </Form>
-                <Table columns={columns} dataSource={data}/>
+                <Table
+                    columns={columns}
+                    dataSource={this.state.data}
+                    pagination={this.state.pagination}
+                    loading={this.state.loading}
+                    onChange={this.handleTableChange}
+                />
             </div>
 
         )

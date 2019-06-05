@@ -8,10 +8,10 @@ import {connect} from 'react-redux'
 import SiderCustom from './sider/siderCustom'
 import HeaderCustom from './header/headerCustom'
 import {routers} from '../../router/routers';
-import {loginOut} from '../../redux/user.redux'
+import {loginOut} from '../../redux/user/user.redux'
 import './index.css'
 
-import {initOpenMenu, siderOpenChange} from '../../redux/sider.redux'
+import {initOpenMenu, siderOpenChange} from '../../redux/sider/sider.redux'
 
 const {Content, Footer} = Layout;
 

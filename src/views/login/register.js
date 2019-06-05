@@ -17,7 +17,7 @@ import {
     Button
 } from 'antd'
 
-import {register} from '../../redux/user.redux'
+import {register} from '../../redux/user/user.redux'
 
 const FormItem = Form.Item;
 
