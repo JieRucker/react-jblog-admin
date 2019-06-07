@@ -19,7 +19,9 @@ const initState = {
         state: '',
     },
     pagination: {
-        total_count: 0
+        total_count: 0,
+        current_page: 1,
+        page_size: 10
     },
     loading: false,
     article_list: []
@@ -69,6 +71,7 @@ export function getTagsList() {
 
 export function getArticleList({keyword, tag, state, current_page, page_size}) {
     return async dispatch => {
+
         let search = {
             keyword: keyword,
             tag: tag,

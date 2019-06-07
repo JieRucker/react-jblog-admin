@@ -49,16 +49,8 @@ class ListForm extends Component {
     }
 
     componentDidMount() {
-        this.getArticleList()
+        this.props.getArticleList({...this.props.article.search, ...this.props.article.pagination})
     }
-
-    getArticleList = () => {
-        this.props.getArticleList({
-            keyword: this.props.keyword,
-            tag: this.state.tag === -1 ? '' : this.state.tag,
-            state: this.state.state === -1 ? '' : this.state.state
-        });
-    };
 
     handleTagChange = (value) => {
         console.log('value', value);
@@ -85,7 +77,7 @@ class ListForm extends Component {
     handleSearch = e => {
         e.preventDefault();
 
-        this.getArticleList()
+        this.props.getArticleList({...this.props.article.search, ...this.props.article.pagination})
     };
 
     /**
@@ -204,13 +196,17 @@ class ListForm extends Component {
             },
         ];
 
+        console.log(this)
+
         return (
             <div>
                 <Form layout="inline" onSubmit={this.handleSubmit}>
                     <Form.Item label="标签：">
-                        <Select defaultValue={this.state.tag} style={{width: 150}} onChange={this.handleTagChange}>
-                            {this.props.article.tag_list.map(item => (
+                        <Select defaultValue={this.props.article.search.tag} style={{width: 150}}
+                                onChange={this.handleTagChange}>
+                            {this.props.article.tag_list.map((item, key) => (
                                 <Option
+                                    key={key}
                                     value={item._id}
                                 >
                                     {item.tags_name}
@@ -219,9 +215,11 @@ class ListForm extends Component {
                         </Select>
                     </Form.Item>
                     <Form.Item label="状态：">
-                        <Select defaultValue={this.state.state} style={{width: 150}} onChange={this.handleStateChange}>
-                            {this.state.state_list.map(item => (
+                        <Select defaultValue={this.props.article.search.state} style={{width: 150}}
+                                onChange={this.handleStateChange}>
+                            {this.state.state_list.map((item, key) => (
                                 <Option
+                                    key={key}
                                     value={item.value}
                                 >
                                     {item.name}
@@ -238,6 +236,7 @@ class ListForm extends Component {
                         />
                     </Form.Item>
                     <Button
+                        style={{margin: '4px'}}
                         type="primary"
                         onClick={this.handleSearch}
                     >
@@ -252,6 +251,7 @@ class ListForm extends Component {
                     </Button>
                 </Form>
                 <Table
+                    style={{marginTop: '20px'}}
                     columns={columns}
                     dataSource={this.state.data}
                     pagination={this.state.pagination}

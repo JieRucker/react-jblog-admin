@@ -16,7 +16,7 @@ import StarNew from '../views/star/starnew'
 import StarList from '../views/star/starlist'
 import StarEdit from '../views/star/staredit'
 
-// import ArticleList from '../views/article/list';
+import ArticleList from '../views/article/list';
 // import ArticleNew from '../views/article/new';
 // import TagList from '../views/tag/list';
 // import WorkList from '../views/work/list';
@@ -50,12 +50,12 @@ export const appRouter = [
     {
         path: '/app/article',
         title: '文章',
-        icon: 'article',
+        icon: 'exception',
         sub: [{
             path: '/app/article/list',
             title: '文章列表',
             icon: '',
-            // component: ArticleList
+            component: ArticleList
         }, {
             path: '/app/article/new',
             title: '写文章',
@@ -66,7 +66,7 @@ export const appRouter = [
     {
         path: '/app/tag',
         title: '标签',
-        icon: 'tag',
+        icon: 'exception',
         sub: [{
             path: '/app/tag/list',
             title: '标签列表',
@@ -77,7 +77,7 @@ export const appRouter = [
     {
         path: '/app/work',
         title: '作品',
-        icon: 'work',
+        icon: 'exception',
         sub: [{
             path: '/app/work/list',
             title: '作品列表',

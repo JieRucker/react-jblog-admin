@@ -47,7 +47,7 @@ class LoginForm extends Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 let body = Object.assign({}, values, {
-                    checkToken: this.props.checkToken
+                    checkToken: this.props.user.checkToken
                 });
 
                 this.props.login(body);
@@ -63,8 +63,8 @@ class LoginForm extends Component {
         const {getFieldDecorator} = this.props.form;
         return (
             <div className="login" style={{backgroundImage: this.backgroundImage}}>
-                {this.props.redirectTo && this.props.redirectTo !== '/login' ?
-                    <Redirect to={this.props.redirectTo}/> : null}
+                {this.props.user.redirectTo && this.props.user.redirectTo !== '/login' ?
+                    <Redirect to={this.props.user.redirectTo}/> : null}
 
                 <div className="login-box">
                     <h3 className="login-title"><Icon type="user" style={{marginRight: '3px'}}/>登录</h3>
@@ -96,7 +96,7 @@ class LoginForm extends Component {
                                 </Col>
                                 <Col span={7}>
                                     <img
-                                        src={this.props.captchaImg}
+                                        src={this.props.user.captchaImg}
                                         onClick={this.props.fetchCaptcha}
                                         alt="验证码" className="captcha"/>
                                 </Col>

@@ -15,7 +15,7 @@ export default () => (
     <Router>
         <div style={{height: '100%'}}>
             <Switch>
-                <Route exact path="/" render={() => <Redirect to="/app/index" push/>}/>
+                <Route exact path="/" render={() => <Redirect to="/app/article/list" push/>}/>
                 <Route path="/login" component={Login}/>
                 <Route path="/register" component={Register}/>
                 <AuthRouter path='/app' component={Index}></AuthRouter>

@@ -53,7 +53,7 @@ export function user(state = initState, action) {
 
             return {
                 ...state,
-                redirectTo: '/app/index',
+                redirectTo: '/app/article/list',
                 admin_id: admin_id,
                 admin_name: admin_name,
                 token: token
