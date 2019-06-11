@@ -10,19 +10,16 @@ import api from '@/api/server';
 
 const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
 const ARTICLE_LIST_SUCCESS = 'ARTICLE_LIST_SUCCESS';
+const SET_STORE_SUCCESS = 'SET_STORE_SUCCESS';
 
 const initState = {
     tag_list: [],
-    search: {
-        keyword: '',
-        tag: '',
-        state: '',
-    },
-    pagination: {
-        total_count: 0,
-        current_page: 1,
-        page_size: 10
-    },
+    keyword: '',
+    tag: '',
+    state: 1,
+    total_count: 0,
+    current_page: 1,
+    page_size: 10,
     loading: false,
     article_list: []
 };
@@ -37,6 +34,13 @@ export function article_list(state = initState, action) {
         case ARTICLE_LIST_SUCCESS:
             return {
                 ...state,
+                article_list: action.payload.list,
+                total_count: action.payload.total
+            };
+        case SET_STORE_SUCCESS:
+            return {
+                ...state,
+                ...action.payload
             };
         default:
             return state
@@ -71,27 +75,28 @@ export function getTagsList() {
 
 export function getArticleList({keyword, tag, state, current_page, page_size}) {
     return async dispatch => {
-
-        let search = {
-            keyword: keyword,
-            tag: tag,
-            state: state
+        let reqBody = {
+            keyword,
+            tag,
+            state,
+            current_page,
+            page_size,
         };
 
-        let page = {
-            current_page: current_page,
-            page_size: page_size,
-        };
-
-        let res = await api.articleInterface.getArticleList({...search, ...page});
+        let res = await api.articleInterface.getArticleList(reqBody);
         let {code, data = {}} = res.data;
         if (code === 200) {
             dispatch({
                 type: ARTICLE_LIST_SUCCESS,
                 payload: data
             })
-            // this.table.body = data.list;
-            // this.table.args.total_count = data.total;
         }
+    }
+}
+
+export function setStore(payload) {
+    return {
+        type: SET_STORE_SUCCESS,
+        payload
     }
 }

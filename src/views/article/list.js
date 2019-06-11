@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
 import {Form, Select, Input, Button, Table} from 'antd';
-import {getTagsList, getArticleList} from '../../redux/article/list.redux';
+import {getTagsList, getArticleList, setStore} from '../../redux/article/list.redux';
 
 const {Option} = Select;
 
@@ -10,7 +10,7 @@ const mapStateProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getTagsList, getArticleList
+    getTagsList, getArticleList, setStore
 });
 
 @connect(
@@ -23,24 +23,13 @@ class ListForm extends Component {
         super(props);
 
         this.state = {
-            // keyword: '',
-            // tag: -1,
-            // state: -1,
             state_list: [{
-                name: '所有',
-                value: ''
-            }, {
                 name: '发布',
                 value: 1
             }, {
                 name: '草稿',
                 value: 0
             }],
-            /*pagination: {
-                total_count: 0
-            },*/
-            // loading: false,
-            // data: []
         }
     }
 
@@ -49,25 +38,32 @@ class ListForm extends Component {
     }
 
     componentDidMount() {
-        this.props.getArticleList({...this.props.article.search, ...this.props.article.pagination})
+        let {keyword, tag, state, current_page, page_size} = this.props.article;
+        this.props.getArticleList({keyword, tag, state, current_page, page_size})
     }
 
-    handleTagChange = (value) => {
-        console.log('value', value);
-
-        this.setState(prevState => ({tag: value}))
+    handleTagChange = value => {
+        this.props.setStore({
+            tag: value,
+        });
     };
 
-    handleStateChange = (value) => {
-        console.log('value', value);
+    handleStateChange = value => {
+        this.props.setStore({
+            state: value,
+        });
 
-        this.setState(prevState => ({state: value}))
+        // this.setState(prevState => ({state: value}))
     };
 
     handleInputChange = event => {
         this.setState({
             [event.target.name]: event.target.value
-        })
+        });
+
+        this.props.setStore({
+            keyword: event.target.value,
+        });
     };
 
     /**
@@ -77,7 +73,8 @@ class ListForm extends Component {
     handleSearch = e => {
         e.preventDefault();
 
-        this.props.getArticleList({...this.props.article.search, ...this.props.article.pagination})
+        let {keyword, tag, state, current_page, page_size} = this.props.article;
+        this.props.getArticleList({keyword, tag, state, current_page, page_size})
     };
 
     /**
@@ -85,14 +82,6 @@ class ListForm extends Component {
      * @params e
      */
     handleArticle = e => {
-
-    };
-
-    /**
-     * 查看
-     * @params e
-     */
-    handlePreview = e => {
 
     };
 
@@ -113,18 +102,18 @@ class ListForm extends Component {
     };
 
     handleTableChange = (pagination, filters, sorter) => {
-        const pager = {...this.state.pagination};
-        pager.current = pagination.current;
-        this.setState({
-            pagination: pager,
+        this.props.setStore({
+            current_page: pagination.current,
         });
 
-        let params = {
-            current_page: 1,
-            page_size: 10,
-        };
+        setTimeout(() => {
+            let {keyword, tag, state, current_page, page_size} = this.props.article;
+            this.props.getArticleList({keyword, tag, state, current_page, page_size})
+        }, 50)
+    };
 
-        this.props.getArticleList(params);
+    formatState = val => {
+        return val === 0 ? "草稿" : "发布";
     };
 
     render() {
@@ -138,44 +127,59 @@ class ListForm extends Component {
                 title: '创建日期',
                 dataIndex: 'article_create_time',
                 key: 'article_create_time',
-                render: (params) => (
-                    <span>{params.article_create_time}</span>
+                render: (value, params) => (
+                    <span>{value}</span>
                 )
             },
             {
                 title: '修改日期',
                 dataIndex: 'article_update_time',
                 key: 'article_update_time',
-                render: (params) => (
-                    <span>{params.article_update_time}</span>
+                render: (value, params) => (
+                    <span>{value}</span>
                 )
             },
             {
                 title: '标签',
-                key: 'article_tags',
                 dataIndex: 'article_tags',
-                render: () => {
+                key: 'article_tags',
+                render: (value, params) => {
+                    if (value.length) {
+                        return <ul>
+                            {value.map((v, k) => (
+                                <li key={k}>
+                                    {
+                                        k === value.length - 1 ? v.tags_name : `${v.tags_name},`
+                                    }
+                                </li>
+                            ))}
+                        </ul>
+                    }
 
+                    return <span>无</span>
                 }
             },
             {
                 title: '状态',
-                key: 'article_state',
                 dataIndex: 'article_state',
-                render: (params) => (
+                key: 'article_state',
+                render: (value, params) => (
                     <span>{this.formatState(params.article_state)}</span>
                 )
             },
             {
                 title: '操作',
                 key: 'action',
-                render: (text, record) => (
+                render: (value, params) => (
                     <span>
                         <Button
                             type="primary"
                             size="small"
                             style={{marginRight: '5px'}}
-                            onClick={this.handlePreview}
+                            onClick={() => {
+                                let prefix = 'https://www.jrucker.cn';
+                                window.open(`${prefix}/detail/${params._id}`, '_blank')
+                            }}
                         >查看
                         </Button>
                         <Button
@@ -196,13 +200,16 @@ class ListForm extends Component {
             },
         ];
 
-        console.log(this)
+        const paginationProps = {
+            pageSize: this.props.article.page_size,
+            total: this.props.article.total_count,
+        };
 
         return (
             <div>
                 <Form layout="inline" onSubmit={this.handleSubmit}>
                     <Form.Item label="标签：">
-                        <Select defaultValue={this.props.article.search.tag} style={{width: 150}}
+                        <Select defaultValue={this.props.article.tag} style={{width: 150}}
                                 onChange={this.handleTagChange}>
                             {this.props.article.tag_list.map((item, key) => (
                                 <Option
@@ -215,7 +222,7 @@ class ListForm extends Component {
                         </Select>
                     </Form.Item>
                     <Form.Item label="状态：">
-                        <Select defaultValue={this.props.article.search.state} style={{width: 150}}
+                        <Select defaultValue={this.props.article.state} style={{width: 150}}
                                 onChange={this.handleStateChange}>
                             {this.state.state_list.map((item, key) => (
                                 <Option
@@ -231,7 +238,7 @@ class ListForm extends Component {
                         <Input
                             placeholder="请输入关键词"
                             name="keyword"
-                            value={this.state.keyword}
+                            value={this.props.article.keyword}
                             onChange={this.handleInputChange}
                         />
                     </Form.Item>
@@ -253,9 +260,10 @@ class ListForm extends Component {
                 <Table
                     style={{marginTop: '20px'}}
                     columns={columns}
-                    dataSource={this.state.data}
-                    pagination={this.state.pagination}
-                    loading={this.state.loading}
+                    dataSource={this.props.article.article_list}
+                    rowKey="_id"
+                    pagination={paginationProps}
+                    loading={this.props.loading}
                     onChange={this.handleTableChange}
                 />
             </div>

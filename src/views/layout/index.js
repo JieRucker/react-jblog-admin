@@ -76,7 +76,12 @@ class Index extends Component {
                             loginOut={this.loginOut}
                         >
                         </HeaderCustom>
-                        <Content style={{margin: '24px 16px', padding: 24, background: '#fff', overflow: 'initial'}}>
+                        <Content style={{
+                            margin: '24px 16px',
+                            padding: 24,
+                            background: '#fff',
+                            overflow: 'initial',
+                            minHeight: 'initial'}}>
                             {Cookies.get('token') ?
                                 routers.map(({path, title, component, ...props}) => (
                                     <Route key={title}
@@ -89,7 +94,7 @@ class Index extends Component {
                                 : null}
                         </Content>
                         <Footer style={{textAlign: 'center'}}>
-                            Copyright © Water 2018
+                            Copyright © J.Rucker 2018
                         </Footer>
                     </Layout>
                 </Layout>
