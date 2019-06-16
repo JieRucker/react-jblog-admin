@@ -7,6 +7,7 @@
  */
 
 import api from '@/api/server';
+import {message} from 'antd';
 
 const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
 const ARTICLE_LIST_SUCCESS = 'ARTICLE_LIST_SUCCESS';
@@ -24,6 +25,12 @@ const initState = {
     article_list: []
 };
 
+/**
+ * action处理
+ * @param state
+ * @param action
+ * @returns {{tag_list: Array, keyword: string, tag: string, state: number, total_count: number, current_page: number, page_size: number, loading: boolean, article_list: Array}}
+ */
 export function article_list(state = initState, action) {
     switch (action.type) {
         case TAG_LIST_SUCCESS:
@@ -47,6 +54,10 @@ export function article_list(state = initState, action) {
     }
 }
 
+/**
+ * 获取标签列表
+ * @returns {Function}
+ */
 export function getTagsList() {
     let tag_list = [];
 
@@ -73,6 +84,15 @@ export function getTagsList() {
     }
 }
 
+/**
+ * 获取文章列表
+ * @param keyword
+ * @param tag
+ * @param state
+ * @param current_page
+ * @param page_size
+ * @returns {Function}
+ */
 export function getArticleList({keyword, tag, state, current_page, page_size}) {
     return async dispatch => {
         let reqBody = {
@@ -94,6 +114,29 @@ export function getArticleList({keyword, tag, state, current_page, page_size}) {
     }
 }
 
+/**
+ * 删除文章
+ * @param _id
+ * @param onSuccess
+ * @returns {function(*): MessageType}
+ */
+export function deleteArticle({_id, onSuccess}) {
+    return async dispatch => {
+        let res = await api.articleInterface.deleteArticleById({_id});
+        let {code, msg} = res.data;
+        if (code === 200) {
+            onSuccess()
+        }
+
+        return message.info(msg)
+    }
+}
+
+/**
+ * 设置属性值
+ * @param payload
+ * @returns {{type: string, payload: *}}
+ */
 export function setStore(payload) {
     return {
         type: SET_STORE_SUCCESS,

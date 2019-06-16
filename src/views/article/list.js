@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Form, Select, Input, Button, Table} from 'antd';
-import {getTagsList, getArticleList, setStore} from '../../redux/article/list.redux';
+import {Form, Select, Input, Button, Table, Modal} from 'antd';
+import {getTagsList, getArticleList, deleteArticle, setStore} from '../../redux/article/list.redux';
 
 const {Option} = Select;
 
@@ -10,7 +10,7 @@ const mapStateProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getTagsList, getArticleList, setStore
+    getTagsList, getArticleList, deleteArticle, setStore
 });
 
 @connect(
@@ -38,9 +38,13 @@ class ListForm extends Component {
     }
 
     componentDidMount() {
+        this.getArticleList()
+    }
+
+    getArticleList = () => {
         let {keyword, tag, state, current_page, page_size} = this.props.article;
         this.props.getArticleList({keyword, tag, state, current_page, page_size})
-    }
+    };
 
     handleTagChange = value => {
         this.props.setStore({
@@ -90,14 +94,6 @@ class ListForm extends Component {
      * @params e
      */
     handleFix = e => {
-
-    };
-
-    /**
-     * 删除
-     * @params e
-     */
-    handleDelete = e => {
 
     };
 
@@ -192,7 +188,22 @@ class ListForm extends Component {
                         <Button
                             type="danger"
                             size="small"
-                            onClick={this.handleDelete}
+                            onClick={() => {
+                                Modal.confirm({
+                                    title: '删除',
+                                    content: '确定删除吗？',
+                                    okText: '确认',
+                                    cancelText: '取消',
+                                    onOk: async () => {
+                                        this.props.deleteArticle({
+                                            _id: params._id,
+                                            onSuccess: () => {
+                                                this.getArticleList()
+                                            }
+                                        })
+                                    },
+                                });
+                            }}
                         >删除
                         </Button>
                     </span>
@@ -207,7 +218,7 @@ class ListForm extends Component {
 
         return (
             <div>
-                <Form layout="inline" onSubmit={this.handleSubmit}>
+                <Form layout="inline">
                     <Form.Item label="标签：">
                         <Select defaultValue={this.props.article.tag} style={{width: 150}}
                                 onChange={this.handleTagChange}>
