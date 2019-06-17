@@ -7,7 +7,7 @@
  */
 
 import api from '@/api/server';
-import {message} from 'antd';
+// import {message} from 'antd';
 
 const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
 const SET_STORE_SUCCESS = 'SET_STORE_SUCCESS';

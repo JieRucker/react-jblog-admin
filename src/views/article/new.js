@@ -9,7 +9,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Form, Select, Input, Button, Tag, message} from 'antd';
-import Editor from 'for-editor';
+// import Editor from 'for-editor';
+import Editor from '../../components/editor';
 import './stylesheet.css';
 // import MdEditor from 'react-markdown-editor-lite';
 // import MarkdownIt from 'markdown-it';
