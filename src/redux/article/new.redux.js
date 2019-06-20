@@ -98,7 +98,7 @@ export function getTagsList() {
         console.log(tag_list)
         dispatch({
             type: TAG_LIST_SUCCESS,
-            payload: {tag_list: tag_list}
+            payload: {tag_list}
         })
     }
 }

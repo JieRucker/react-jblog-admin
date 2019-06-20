@@ -41,8 +41,6 @@ class NewForm extends Component {
 
     editor = null;
 
-    // mdjs = null;
-
     constructor(props) {
         super(props);
 
@@ -57,24 +55,6 @@ class NewForm extends Component {
             formLayout: 'horizontal',
         };
 
-        // let self = this;
-
-        /*this.mdjs = new MarkdownIt({
-            html: true,
-            linkify: true,
-            typographer: true,
-            highlight: function (str, lang) {
-                console.log(11,str,lang)
-              if (lang && hljs.getLanguage(lang)) {
-                try {
-                  return hljs.highlight(lang, str).value
-                } catch (__) {}
-              }
-              return '' // use external default escaping
-            }
-        })*/
-
-
     }
 
 
@@ -86,14 +66,15 @@ class NewForm extends Component {
         // console.log('handleEditorChange', html, md)
     };
 
-    handleGetMdValue = () => {
+    /*handleGetMdValue = () => {
         window.editor = this.editor;
         console.log(this.editor)
         // this.editor && alert(this.editor.getMdValue())
-    };
-    handleGetHtmlValue = () => {
+    };*/
+
+    /*handleGetHtmlValue = () => {
         this.editor && alert(this.editor.getHtmlValue())
-    };
+    };*/
 
     componentWillMount() {
         this.props.getTagsList()
@@ -181,17 +162,46 @@ class NewForm extends Component {
         }
     };
 
+    getNavigation = () => {
+        let navigationContent;
+        let navigation_list = [];
+        let mavonEditor = this.$refs.mavonEditor;
+        navigationContent = mavonEditor.$refs.navigationContent;
+        navigationContent.innerHTML = mavonEditor.d_render;
+
+        let nodes = navigationContent.children;
+        if (nodes.length) {
+            for (let i = 0; i < nodes.length; i++) {
+                judageH(nodes[i], i, nodes)
+            }
+        }
+
+        function judageH(node, i, nodes) {
+            let reg = /^H[1-6]{1}$/;
+            if (reg.exec(node.tagName)) {
+                navigation_list.push({
+                    name: node.innerText,
+                    id: node.childNodes[0].getAttribute('id')
+                })
+            }
+        }
+
+        return navigation_list
+    };
+
     handlePublish = () => {
-        this.props.addArticle({
+        let reqBody = {
             content: this.props.article_new.content,
-            render_content: '111',
+            render_content: this.editor.getHtmlValue(),
             cover: this.props.article_new.cover,
             desc: this.props.article_new.desc,
             state: this.props.article_new.state,
             tags: this.props.article_new.selectedTags,
             title: this.props.article_new.title,
-            navigation: this.props.article_new.navigation
-        })
+            navigation: JSON.stringify(this.getNavigation())
+        };
+
+        this.props.addArticle(reqBody)
     };
 
     render() {
@@ -252,14 +262,11 @@ class NewForm extends Component {
                         />
                     </Form.Item>
                 </Form>
-                <button onClick={this.handleGetMdValue}>getMdValue</button>
-                <button onClick={this.handleGetHtmlValue}>getHtmlValue</button>
-
                 <div className="article-content markdown-body" id="article-content" style={{marginBottom: '20px'}}>
                     <Editor
                         ref={node => this.editor = node}
                         value={this.props.article_new.content}
-                        onChange={this.handleEditorChange} />
+                        onChange={this.handleEditorChange}/>
                     {/*<MdEditor
                         ref={node => this.mdEditor = node}
                         value={this.props.article_new.content}
