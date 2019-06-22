@@ -18,6 +18,7 @@ import Cookies from 'js-cookie'
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 const LOGOUT = 'LOGOUT';
+const INIT_USER_INFO = 'INIT_USER_INFO';
 
 const FETCH_CAPTCHA = 'FETCH_CAPTCHA';
 
@@ -47,9 +48,6 @@ export function user(state = initState, action) {
             };
         case LOGIN_SUCCESS:
             let {admin_id, admin_name, token} = action.payload;
-            Cookies.set('admin_id', admin_id);
-            Cookies.set('admin_name', admin_name);
-            Cookies.set('token', token);
 
             return {
                 ...state,
@@ -63,15 +61,19 @@ export function user(state = initState, action) {
                 redirectTo: '/login',
             };
         case LOGOUT:
-            Cookies.remove('admin_id');
-            Cookies.remove('admin_name');
-            Cookies.remove('token');
-
             return {
                 admin_id: '',
                 admin_name: '',
                 token: '',
                 redirectTo: '/login'
+            };
+        case INIT_USER_INFO:
+            let payload = action.payload;
+
+            return {
+                admin_id: payload.admin_id,
+                admin_name: payload.admin_name,
+                token: payload.token
             };
         default:
             return state
@@ -127,6 +129,12 @@ export function login({username, password, captcha, checkToken}) {
             if (code === 200) {
                 message.success('登录成功！');
 
+                let {admin_id, admin_name, token} = res_login.data.data;
+
+                Cookies.set('admin_id', admin_id);
+                Cookies.set('admin_name', admin_name);
+                Cookies.set('token', token);
+
                 dispatch({
                     type: LOGIN_SUCCESS,
                     payload: res_login.data.data
@@ -173,7 +181,23 @@ export function register({username, password}) {
 }
 
 export function loginOut() {
+    Cookies.remove('admin_id');
+    Cookies.remove('admin_name');
+    Cookies.remove('token');
+
     return {
         type: LOGOUT
+    }
+}
+
+export function initUserInfo() {
+
+    let admin_id = Cookies.get('admin_id') || '';
+    let admin_name = Cookies.get('admin_name') || '';
+    let token = Cookies.get('token') || '';
+
+    return {
+        type: INIT_USER_INFO,
+        payload: {admin_id, admin_name, token}
     }
 }

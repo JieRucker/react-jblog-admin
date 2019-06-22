@@ -10,17 +10,17 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Form, Select, Input, Button, Tag, message} from 'antd';
 import Editor from '../../components/editor';
-import {getTagsList, addArticle, setStore} from "../../redux/article/new.redux";
+import {getTagsList, getArticle, alterArticle, setStore} from "../../redux/article/edit.redux";
 
 const {Option} = Select;
 const {CheckableTag} = Tag;
 
 const mapStateProps = state => ({
-    article_new: state.article_new
+    article_edit: state.article_edit
 });
 
 const mapDispatchToProps = dispatch => ({
-    getTagsList, addArticle, setStore
+    getTagsList, getArticle, alterArticle, setStore
 });
 
 @connect(
@@ -44,10 +44,6 @@ class NewForm extends Component {
                 value: 0
             }],
         };
-
-        /*this.setState(prevState => ({
-            title: ''
-        }));*/
     }
 
 
@@ -63,6 +59,9 @@ class NewForm extends Component {
 
     componentDidMount() {
         console.log(this);
+
+        const _id = this.props.match.params.id;
+        this.props.getArticle({_id})
     }
 
     handleStateChange = value => {
@@ -72,12 +71,12 @@ class NewForm extends Component {
     };
 
     handleTagChange = (tag, checked) => {
-        const {selectedTags} = this.props.article_new;
+        const {selectedTags} = this.props.article_edit;
         const nextSelectedTags = checked ? [...selectedTags, tag._id] : selectedTags.filter(t => t !== tag._id);
         this.props.setStore({selectedTags: nextSelectedTags});
 
         setTimeout(() => {
-            console.log(this.props.article_new.selectedTags)
+            console.log(this.props.article_edit.selectedTags)
         }, 50)
     };
 
@@ -133,20 +132,21 @@ class NewForm extends Component {
 
     handlePublish = () => {
 
-        this.props.addArticle({
-            content: this.props.article_new.content,
+        this.props.alterArticle({
+            _id: this.props.match.params.id,
+            content: this.props.article_edit.content,
             render_content: this.editor.getHtmlValue(),
-            cover: this.props.article_new.cover,
-            desc: this.props.article_new.desc,
-            state: this.props.article_new.state,
-            tags: JSON.stringify(this.props.article_new.selectedTags),
-            title: this.props.article_new.title,
+            cover: this.props.article_edit.cover,
+            desc: this.props.article_edit.desc,
+            state: this.props.article_edit.state,
+            tags: JSON.stringify(this.props.article_edit.selectedTags),
+            title: this.props.article_edit.title,
             navigation: JSON.stringify(this.getNavigation())
         })
     };
 
     render() {
-        const {selectedTags} = this.props.article_new;
+        const {selectedTags} = this.props.article_edit;
 
         return (
             <div>
@@ -155,7 +155,7 @@ class NewForm extends Component {
                         <Input
                             placeholder="请输入名称"
                             name="title"
-                            value={this.props.article_new.title}
+                            value={this.props.article_edit.title}
                             onChange={(event) => {
                                 this.props.setStore({
                                     title: event.target.value,
@@ -165,7 +165,7 @@ class NewForm extends Component {
                     </Form.Item>
                     <Form.Item label="标签：">
                         {
-                            this.props.article_new.tag_list.map((tag, key) => (
+                            this.props.article_edit.tag_list.map((tag, key) => (
                                 <CheckableTag
                                     key={key}
                                     checked={selectedTags.indexOf(tag._id) > -1}
@@ -177,7 +177,7 @@ class NewForm extends Component {
                         }
                     </Form.Item>
                     <Form.Item label="状态：">
-                        <Select defaultValue={this.props.article_new.state} style={{width: 150}}
+                        <Select defaultValue={this.props.article_edit.state} style={{width: 150}}
                                 onChange={this.handleStateChange}>
                             {this.state.state_list.map((item, key) => (
                                 <Option
@@ -193,7 +193,7 @@ class NewForm extends Component {
                         <Input
                             placeholder="请输入图片地址"
                             name="cover"
-                            value={this.props.article_new.cover}
+                            value={this.props.article_edit.cover}
                             onChange={(event) => {
                                 this.props.setStore({
                                     cover: event.target.value,
@@ -205,7 +205,7 @@ class NewForm extends Component {
                         <Input.TextArea
                             placeholder="请输入描述内容"
                             name="desc"
-                            value={this.props.article_new.desc}
+                            value={this.props.article_edit.desc}
                             autosize={{minRows: 2, maxRows: 5}}
                             onChange={(event) => {
                                 this.props.setStore({
@@ -219,7 +219,7 @@ class NewForm extends Component {
                 <div className="article-content markdown-body" id="article-content" style={{marginBottom: '20px'}}>
                     <Editor
                         ref={node => this.editor = node}
-                        value={this.props.article_new.content}
+                        value={this.props.article_edit.content}
                         onChange={this.handleEditorChange}/>
                 </div>
 

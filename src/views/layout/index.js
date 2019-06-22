@@ -8,7 +8,7 @@ import {connect} from 'react-redux'
 import SiderCustom from './sider/siderCustom'
 import HeaderCustom from './header/headerCustom'
 import {routers} from '../../router/routers';
-import {loginOut} from '../../redux/user/user.redux'
+import {loginOut, initUserInfo} from '../../redux/user/user.redux'
 import './index.css'
 
 import {initOpenMenu, siderOpenChange} from '../../redux/sider/sider.redux'
@@ -21,7 +21,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    loginOut,
+    loginOut, initUserInfo,
     initOpenMenu, siderOpenChange
 });
 
@@ -39,6 +39,7 @@ class Index extends Component {
     }
 
     componentWillMount() {
+        this.props.initUserInfo(); // 初始化用户信息
         this.props.initOpenMenu();
 
         setTimeout(() => {
@@ -77,11 +78,12 @@ class Index extends Component {
                         >
                         </HeaderCustom>
                         <Content style={{
-                            margin: '24px 16px',
+                            margin: '10px',
                             padding: 24,
                             background: '#fff',
                             overflow: 'initial',
-                            minHeight: 'initial'}}>
+                            minHeight: 'initial'
+                        }}>
                             {Cookies.get('token') ?
                                 routers.map(({path, title, component, ...props}) => (
                                     <Route key={title}

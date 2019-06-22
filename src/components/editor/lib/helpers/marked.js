@@ -1,5 +1,5 @@
 import * as marked from 'marked'
-import Hljs from './highlight'
+import hljs from './highlight'
 
 marked.setOptions({
     renderer: new marked.Renderer(),
@@ -10,8 +10,9 @@ marked.setOptions({
     sanitize: false,
     smartLists: true,
     smartypants: false,
-    highlight(code) {
-        return Hljs.highlightAuto(code).value
+    langPrefix: 'lang-',
+    highlight(code, lang) {
+        return hljs.highlightAuto(code).value
     }
 })
 

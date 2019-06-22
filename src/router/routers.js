@@ -18,6 +18,8 @@ import StarEdit from '../views/star/staredit'
 
 import ArticleList from '../views/article/list';
 import ArticleNew from '../views/article/new';
+import ArticleEdit from '../views/article/edit';
+
 // import TagList from '../views/tag/list';
 // import WorkList from '../views/work/list';
 // import WorkNew from '../views/work/new';
@@ -28,6 +30,11 @@ import ArticleNew from '../views/article/new';
 
 // 不显示在菜单路由里
 export const otherRouter = [
+    {
+        title: '编辑文章',
+        path: '/app/article/edit/:id',
+        component: ArticleEdit
+    },
     {
         title: '编辑博客',
         path: '/app/blog/edit/:id',

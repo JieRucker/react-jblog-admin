@@ -2,79 +2,84 @@ import axios from 'axios'
 import qs from 'qs'
 import '../../node_modules/nprogress/nprogress.css'
 import NProgress from 'nprogress'
-// import store from '@/modules/app/vuex';
-// import {router} from '@/modules/app/router';
+import Cookies from 'js-cookie'
+import {message} from 'antd';
 
 class BaseModule {
-  constructor() {
-    this.instance = axios.create();
-    this.dataMethodDefaults = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      withCredentials: true,
-      transformRequest: [function (data) {
-        return qs.stringify(data)
-      }]
-    };
+    constructor() {
+        this.instance = axios.create();
+        this.dataMethodDefaults = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            withCredentials: true,
+            transformRequest: [function (data) {
+                return qs.stringify(data)
+            }]
+        };
 
-    axios.interceptors.request.use = this.instance.interceptors.request.use;
+        axios.interceptors.request.use = this.instance.interceptors.request.use;
 
-    // request拦截器
-    this.instance.interceptors.request.use(config => {
-        // 每次发送请求，检查 vuex 中是否有token,如果有放在headers中
-        /*if (store.state.user.adminInfo.token) {
-          config.headers.Authorization = `${store.state.user.adminInfo.token}`;
-        }*/
+        // request拦截器
+        this.instance.interceptors.request.use(config => {
+                // 每次发送请求，检查 vuex 中是否有token,如果有放在headers中
 
-        NProgress.start();
+                let token = Cookies.get('token');
 
-        return config;
-      }, err => {
-        return Promise.reject(err);
-      }
-    );
+                if (token) {
+                    config.headers.Authorization = token;
+                }
 
-    // respone拦截器
-    this.instance.interceptors.response.use(response => {
-        NProgress.done();
+                NProgress.start();
 
-        return response;
-      }, err => {
+                return config;
+            }, err => {
+                return Promise.reject(err);
+            }
+        );
 
-        return Promise.reject(err.response);
-        /*let {response} = err;
-        if (response.status === 401) {
-          store.commit("logout");  // token过期,清除
-          router.replace({ //跳转到登录页面
-            path: '/login'
-          });
-          return Promise.reject(err.response);
-        }*/
-      }
-    )
+        // respone拦截器
+        this.instance.interceptors.response.use(response => {
+                NProgress.done();
+                return response;
+            }, err => {
+                let {response} = err;
+                if (response.status === 401) {
+                    message.info(response.data.msg);
 
-  }
+                    Cookies.remove('token');  // token过期,清除
+                    Cookies.remove('admin_id');
+                    Cookies.remove('admin_name');
 
-  get(url, config = {}) {
-    return this.instance.get(url, config)
-  }
+                    window.location.href = '/login';
 
-  post(url, data = undefined, config = {}) {
-    return this.instance.post(url, data, {...this.dataMethodDefaults, ...config})
-  }
+                    NProgress.done();
 
-  patch(url, data = undefined, config = {}) {
-    return this.instance.patch(url, data, {...this.dataMethodDefaults, ...config})
-  }
+                    return Promise.reject(response);
+                }
+            }
+        )
+    }
 
-  put(url, data = undefined, config = {}) {
-    return this.instance.put(url, data, {...this.dataMethodDefaults, ...config})
-  }
+    get(url, config = {}) {
+        return this.instance.get(url, config)
+    }
 
-  delete(url, config = {}) {
-    return this.instance.delete(url, config)
-  }
+    post(url, data = undefined, config = {}) {
+        return this.instance.post(url, data, {...this.dataMethodDefaults, ...config})
+    }
+
+    patch(url, data = undefined, config = {}) {
+        return this.instance.patch(url, data, {...this.dataMethodDefaults, ...config})
+    }
+
+    put(url, data = undefined, config = {}) {
+        return this.instance.put(url, data, {...this.dataMethodDefaults, ...config})
+    }
+
+    delete(url, config = {}) {
+        return this.instance.delete(url, config)
+    }
 }
 
 export default BaseModule

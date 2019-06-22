@@ -81,22 +81,6 @@ class ListForm extends Component {
         this.props.getArticleList({keyword, tag, state, current_page, page_size})
     };
 
-    /**
-     * 写文章
-     * @params e
-     */
-    handleArticle = e => {
-
-    };
-
-    /**
-     * 修改
-     * @params e
-     */
-    handleFix = e => {
-
-    };
-
     handleTableChange = (pagination, filters, sorter) => {
         this.props.setStore({
             current_page: pagination.current,
@@ -182,7 +166,7 @@ class ListForm extends Component {
                             type="primary"
                             size="small"
                             style={{marginRight: '5px'}}
-                            onClick={this.handleFix}
+                            onClick={() => this.props.history.push(`/app/article/edit/${params._id}`)}
                         >修改
                         </Button>
                         <Button
@@ -263,7 +247,7 @@ class ListForm extends Component {
                     <Button
                         type="default"
                         style={{marginLeft: '10px'}}
-                        onClick={this.handleArticle}
+                        onClick={() => this.props.history.push(`/app/article/new`)}
                     >
                         写文章
                     </Button>

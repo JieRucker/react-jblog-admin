@@ -6,7 +6,7 @@ function toolbar_right_preview_click($vm) {
 
 function toolbar_right_expand_click($vm) {
     $vm.setState({
-        expand_switch: !$vm.state.expand_switch
+        expand_switch: !$vm.state.expand_switch,
     })
 }
 

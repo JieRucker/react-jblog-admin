@@ -7,11 +7,12 @@
  */
 
 import api from '@/api/server';
-import {message} from 'antd';
+// import {message} from 'antd';
 
 const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
 const SET_STORE_SUCCESS = 'SET_STORE_SUCCESS';
-const ADD_ARTICLE_SUCCESS = 'ADD_ARTICLE_SUCCESS';
+const GET_ARTICLE_SUCCESS = 'GET_ARTICLE_SUCCESS';
+const ALTER_ARTICLE_SUCCESS = 'ALTER_ARTICLE_SUCCESS';
 
 const initState = {
     title: '',
@@ -21,22 +22,12 @@ const initState = {
     desc: '',
     create_time: '',
     update_time: '',
-    content: '234234\n' +
-    '\n' +
-    '### dfsdf\n' +
-    '\n' +
-    '> sdfsdf\n' +
-    '\n' +
-    '- sdfsdf\n' +
-    '\n' +
-    '```js\n' +
-    'sdfsdfs\n' +
-    '```',
+    content: '',
     navigation: [],
     selectedTags: [],
 };
 
-export function article_new(state = initState, action) {
+export function article_edit(state = initState, action) {
     switch (action.type) {
         case TAG_LIST_SUCCESS:
             return {
@@ -48,7 +39,26 @@ export function article_new(state = initState, action) {
                 ...state,
                 ...action.payload
             };
-        case ADD_ARTICLE_SUCCESS:
+        case GET_ARTICLE_SUCCESS:
+            let payload = action.payload;
+            let selectedTags = [];
+
+            if (payload.article_tags.length) {
+                payload.article_tags.map(item => selectedTags.push(item._id))
+            }
+
+            return {
+                ...state,
+                title: payload.article_title,
+                state: payload.article_state,
+                cover: payload.article_cover,
+                desc: payload.article_desc,
+                create_time: payload.create_time,
+                update_time: payload.update_time,
+                content: payload.article_content,
+                selectedTags: selectedTags
+            };
+        case ALTER_ARTICLE_SUCCESS:
             return {};
         default:
             return state
@@ -76,9 +86,28 @@ export function getTagsList() {
     }
 }
 
-export function addArticle({content, render_content, cover, desc, state, tags, title, navigation}) {
+export function getArticle({_id}) {
     return async dispatch => {
+        let res = await api.articleInterface.getArticleById({_id});
+        let {code, data} = res.data;
+
+        if (code === 200 && data.length) {
+            let [payload] = data;
+
+            console.log('payload', payload)
+
+            dispatch({
+                type: GET_ARTICLE_SUCCESS,
+                payload
+            })
+        }
+    }
+}
+
+export function alterArticle({_id, content, render_content, cover, desc, state, tags, title, navigation}) {
+    return dispatch => {
         let reqBody = {
+            _id,
             article_content: content,
             article_render_content: render_content,
             article_cover: cover,
@@ -90,10 +119,6 @@ export function addArticle({content, render_content, cover, desc, state, tags, t
         };
 
         console.log(reqBody)
-
-        let res = await api.articleInterface.addArticle(reqBody);
-        let {msg} = res.data;
-        return message.info(msg)
     }
 }
 

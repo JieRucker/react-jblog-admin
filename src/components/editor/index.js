@@ -48,12 +48,12 @@ class MdEditor extends React.Component {
             f_history_index: 0,
             line_index: 1,
             value: props.value*/
-            preview_switch: props.preview,
-            expand_switch: props.expand,
+            preview_switch: props.preview_switch,
+            expand_switch: props.expand_switch,
             f_history: [],
             f_history_index: 0,
             line_index: 1,
-            value: props.value
+            value: props.value,
         }
     }
 
@@ -68,11 +68,11 @@ class MdEditor extends React.Component {
         },
         onSave: () => {
         },
-        fontSize: '14px',
+        fontSize: '16px',
         disabled: false,
-        preview_switch: false,
+        preview_switch: true,
         expand_switch: false,
-        style: {}
+        style: {},
     }
 
     componentDidMount() {
@@ -151,8 +151,8 @@ class MdEditor extends React.Component {
     }
 
     render() {
-        const {preview_switch, expand_switch, line_index} = this.state
-        const {value, placeholder, fontSize, disabled, height, style} = this.props
+        const {preview_switch, expand_switch, line_index, height} = this.state
+        const {value, placeholder, fontSize, disabled, style} = this.props
         const previewClass = classNames({
             'for-panel': true,
             'for-editor-preview': true,
