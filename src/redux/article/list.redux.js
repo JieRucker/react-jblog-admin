@@ -17,7 +17,17 @@ const initState = {
     tag_list: [],
     keyword: '',
     tag: '',
-    state: 1,
+    state: '',
+    state_list: [{
+        name: '所有',
+        value: ''
+    }, {
+        name: '发布',
+        value: 1
+    }, {
+        name: '草稿',
+        value: 0
+    }],
     total_count: 0,
     current_page: 1,
     page_size: 10,

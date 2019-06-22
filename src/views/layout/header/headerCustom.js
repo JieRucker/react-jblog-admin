@@ -50,6 +50,7 @@ class HeaderCustom extends Component {
                             </Dropdown>
                             : null
                     }
+                    <span style={{marginLeft: '5px'}}>{this.props.name}</span>
                 </div>
             </Header>
         )

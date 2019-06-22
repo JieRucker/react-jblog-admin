@@ -7,6 +7,7 @@
  */
 
 import api from '@/api/server';
+import {message} from "antd/lib/index";
 // import {message} from 'antd';
 
 const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
@@ -18,6 +19,13 @@ const initState = {
     title: '',
     tag_list: [],
     state: 1,
+    state_list: [{
+        name: '发布',
+        value: 1
+    }, {
+        name: '草稿',
+        value: 0
+    }],
     cover: '',
     desc: '',
     create_time: '',
@@ -94,8 +102,6 @@ export function getArticle({_id}) {
         if (code === 200 && data.length) {
             let [payload] = data;
 
-            console.log('payload', payload)
-
             dispatch({
                 type: GET_ARTICLE_SUCCESS,
                 payload
@@ -105,7 +111,7 @@ export function getArticle({_id}) {
 }
 
 export function alterArticle({_id, content, render_content, cover, desc, state, tags, title, navigation}) {
-    return dispatch => {
+    return async dispatch => {
         let reqBody = {
             _id,
             article_content: content,
@@ -118,7 +124,11 @@ export function alterArticle({_id, content, render_content, cover, desc, state, 
             article_navigation: navigation
         };
 
-        console.log(reqBody)
+        console.log(reqBody);
+
+        let res = await api.articleInterface.alterArticle(reqBody);
+        let {msg} = res.data;
+        return message.info(msg)
     }
 }
 

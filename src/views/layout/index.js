@@ -75,6 +75,7 @@ class Index extends Component {
                             collapsed={this.state.collapsed}
                             toggle={this.toggle}
                             loginOut={this.loginOut}
+                            name={this.props.user.admin_name}
                         >
                         </HeaderCustom>
                         <Content style={{

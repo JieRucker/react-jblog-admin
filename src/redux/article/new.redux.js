@@ -17,21 +17,18 @@ const initState = {
     title: '',
     tag_list: [],
     state: 1,
+    state_list: [{
+        name: '发布',
+        value: 1
+    }, {
+        name: '草稿',
+        value: 0
+    }],
     cover: '',
     desc: '',
     create_time: '',
     update_time: '',
-    content: '234234\n' +
-    '\n' +
-    '### dfsdf\n' +
-    '\n' +
-    '> sdfsdf\n' +
-    '\n' +
-    '- sdfsdf\n' +
-    '\n' +
-    '```js\n' +
-    'sdfsdfs\n' +
-    '```',
+    content: '',
     navigation: [],
     selectedTags: [],
 };
@@ -89,7 +86,7 @@ export function addArticle({content, render_content, cover, desc, state, tags, t
             article_navigation: navigation
         };
 
-        console.log(reqBody)
+        console.log(reqBody);
 
         let res = await api.articleInterface.addArticle(reqBody);
         let {msg} = res.data;
