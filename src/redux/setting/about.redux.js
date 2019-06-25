@@ -11,7 +11,8 @@ import {message} from 'antd';
 
 export const types = {
     GET_SETTING_SUCCESS: 'about/GET_SETTING_SUCCESS',
-    ALTER_SETTING_SUCCESS: 'article_list/ALTER_SETTING_SUCCESS',
+    ALTER_SETTING_SUCCESS: 'about/ALTER_SETTING_SUCCESS',
+    SET_STORE_SUCCESS: 'about/SET_STORE_SUCCESS'
 };
 
 const initState = {
@@ -26,6 +27,11 @@ export function about(state = initState, action) {
                 ...state,
                 picture: action.payload.picture,
                 description: action.payload.description
+            };
+        case types.SET_STORE_SUCCESS:
+            return {
+                ...state,
+                ...action.payload
             };
         default:
             return state
@@ -61,5 +67,17 @@ export function alterSetting({picture, description}) {
         let res = await this.$api.settingInterface.alterSetting(reqBody);
         let {msg} = res.data;
         return message.info(msg)
+    }
+}
+
+/**
+ * 设置属性值
+ * @param payload
+ * @returns {{type: string, payload: *}}
+ */
+export function setStore(payload) {
+    return {
+        type: types.SET_STORE_SUCCESS,
+        payload
     }
 }
