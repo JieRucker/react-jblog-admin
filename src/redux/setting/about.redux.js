@@ -64,7 +64,7 @@ export function alterSetting({picture, description}) {
             })
         };
 
-        let res = await this.$api.settingInterface.alterSetting(reqBody);
+        let res = await api.settingInterface.alterSetting(reqBody);
         let {msg} = res.data;
         return message.info(msg)
     }
@@ -73,11 +73,13 @@ export function alterSetting({picture, description}) {
 /**
  * 设置属性值
  * @param payload
- * @returns {{type: string, payload: *}}
+ * @returns {Function}
  */
 export function setStore(payload) {
-    return {
-        type: types.SET_STORE_SUCCESS,
-        payload
+    return dispatch => {
+        dispatch({
+            type: types.SET_STORE_SUCCESS,
+            payload
+        })
     }
 }

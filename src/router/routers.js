@@ -20,13 +20,13 @@ import ArticleList from '../views/article/list';
 import ArticleNew from '../views/article/new';
 import ArticleEdit from '../views/article/edit';
 
-// import TagList from '../views/tag/list';
+import TagList from '../views/tag/list';
 // import WorkList from '../views/work/list';
 // import WorkNew from '../views/work/new';
 // import FileUpload from '../views/upload/file-upload';
-// import SettingMine from '../views/setting/mine';
-// import SettingUpyun from '../views/setting/upyun';
-// import SettingAbout from '../views/setting/about';
+import SettingMine from '../views/setting/mine';
+import SettingUpyun from '../views/setting/upyun';
+import SettingAbout from '../views/setting/about';
 
 // 不显示在菜单路由里
 export const otherRouter = [
@@ -78,7 +78,7 @@ export const appRouter = [
             path: '/app/tag/list',
             title: '标签列表',
             icon: '',
-            // component: TagList
+            component: TagList
         }],
     },
     {
@@ -116,17 +116,17 @@ export const appRouter = [
             path: '/app/setting/mine',
             title: '个人信息',
             icon: '',
-            // component: SettingMine
+            component: SettingMine
         }, {
             path: '/app/setting/upyun',
             title: '又拍云',
             icon: '',
-            // component: SettingUpyun
+            component: SettingUpyun
         }, {
             path: '/app/setting/about',
             title: '关于',
             icon: '',
-            // component: SettingAbout
+            component: SettingAbout
         }],
     },
     {

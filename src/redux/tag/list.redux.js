@@ -11,7 +11,9 @@ import {message} from 'antd';
 
 export const types = {
     TAG_LIST_SUCCESS: 'tag_list/TAG_LIST_SUCCESS',
-    SET_STORE_SUCCESS: 'tag_list/SET_STORE_SUCCESS'
+    SET_STORE_SUCCESS: 'tag_list/SET_STORE_SUCCESS',
+    ADD_TAGS_SUCCESS: 'tag_list/ADD_TAGS_SUCCESS',
+    ALTER_TAGS_SUCCESS: 'tag_list/ALTER_TAGS_SUCCESS'
 };
 
 const initState = {
@@ -82,13 +84,63 @@ export function deleteTags({_id, onSuccess}) {
 }
 
 /**
+ * 添加标签
+ * @param tags_name
+ * @param tags_desc
+ * @param onSuccess
+ * @returns {function(*): MessageType}
+ */
+export function addTags({tags_name, tags_desc, onSuccess}) {
+    return async dispatch => {
+        let res = await api.tagsInterface.addTags({
+            tags_name,
+            tags_desc
+        });
+
+        let {code, msg} = res.data;
+        if (code === 200) {
+            onSuccess()
+        }
+
+        return message.info(msg)
+    }
+}
+
+/**
+ * 修改标签
+ * @param _id
+ * @param tags_name
+ * @param tags_desc
+ * @param onSuccess
+ * @returns {function(*): MessageType}
+ */
+export function alterTags({_id, tags_name, tags_desc, onSuccess}) {
+    return async dispatch => {
+        let res = await api.tagsInterface.alterTags({
+            _id,
+            tags_name,
+            tags_desc
+        });
+
+        let {code, msg} = res.data;
+        if (code === 200) {
+            onSuccess()
+        }
+
+        return message.info(msg)
+    }
+}
+
+/**
  * 设置属性值
  * @param payload
- * @returns {{type: string, payload: *}}
+ * @returns {Function}
  */
 export function setStore(payload) {
-    return {
-        type: types.SET_STORE_SUCCESS,
-        payload
+    return dispatch => {
+        dispatch({
+            type: types.SET_STORE_SUCCESS,
+            payload
+        })
     }
 }

@@ -100,11 +100,13 @@ export function addArticle({content, render_content, cover, desc, state, tags, t
 /**
  * 设置属性值
  * @param payload
- * @returns {{type: string, payload: *}}
+ * @returns {Function}
  */
 export function setStore(payload) {
-    return {
-        type: types.SET_STORE_SUCCESS,
-        payload
+    return dispatch => {
+        dispatch({
+            type: types.SET_STORE_SUCCESS,
+            payload
+        })
     }
 }

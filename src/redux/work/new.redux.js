@@ -26,16 +26,16 @@ const initState = {
     create_time: '',
     update_time: '',
     content: '234234\n' +
-        '\n' +
-        '### dfsdf\n' +
-        '\n' +
-        '> sdfsdf\n' +
-        '\n' +
-        '- sdfsdf\n' +
-        '\n' +
-        '```js\n' +
-        'sdfsdfs\n' +
-        '```',
+    '\n' +
+    '### dfsdf\n' +
+    '\n' +
+    '> sdfsdf\n' +
+    '\n' +
+    '- sdfsdf\n' +
+    '\n' +
+    '```js\n' +
+    'sdfsdfs\n' +
+    '```',
     navigation: [],
     selectedTags: [],
 };
@@ -152,11 +152,13 @@ export function alterArticle() {
 /**
  * 设置属性值
  * @param payload
- * @returns {{type: string, payload: *}}
+ * @returns {Function}
  */
 export function setStore(payload) {
-    return {
-        type: types.SET_STORE_SUCCESS,
-        payload
+    return dispatch => {
+        dispatch({
+            type: types.SET_STORE_SUCCESS,
+            payload
+        })
     }
 }

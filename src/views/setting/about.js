@@ -44,10 +44,15 @@ class AboutForm extends Component {
     };
 
     render() {
+        const formLayout = {
+            labelCol: {span: 1},
+            wrapperCol: {span: 13},
+        };
+
         return (
             <div>
-                <Form layout="inline">
-                    <Form.Item label="贴图：">
+                <Form>
+                    <Form.Item label="贴图：" {...formLayout}>
                         <Input
                             placeholder="请输入贴图地址"
                             name="picture"
@@ -59,12 +64,12 @@ class AboutForm extends Component {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label="描述：">
+                    <Form.Item label="描述：" {...formLayout}>
                         <Input.TextArea
                             placeholder="请输入描述内容"
                             name="description"
                             value={this.props.about.description}
-                            autosize={{minRows: 2, maxRows: 5}}
+                            autosize={{minRows: 5}}
                             onChange={(event) => {
                                 this.props.setStore({
                                     description: event.target.value,

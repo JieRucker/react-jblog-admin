@@ -6,8 +6,11 @@ import {article_list} from './article/list.redux';
 import {article_new} from './article/new.redux';
 import {article_edit} from './article/edit.redux';
 import {tags_list} from './tag/list.redux';
-import {work_list} from './work/list.redux';
-import {work_new} from './work/new.redux';
+import {mine} from './setting/mine.redux';
+import {upyun} from './setting/upyun.redux';
+import {about} from './setting/about.redux';
+// import {work_list} from './work/list.redux';
+// import {work_new} from './work/new.redux';
 
 export default combineReducers({
     user,
@@ -17,6 +20,9 @@ export default combineReducers({
     article_new,
     article_edit,
     tags_list,
-    work_list,
-    work_new
+    mine,
+    upyun,
+    about,
+    // work_list,
+    // work_new
 })
