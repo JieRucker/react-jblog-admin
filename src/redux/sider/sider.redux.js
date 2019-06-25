@@ -6,8 +6,10 @@
  * @Last Modified time: 2019/6/1 16:34
  */
 
-const OPEN_CHANGE_SUCCESS = 'OPEN_CHANGE_SUCCESS';
-const INIT_JSON_SUCCESS = 'INIT_JSON_SUCCESS';
+export const types = {
+    OPEN_CHANGE_SUCCESS: 'OPEN_CHANGE_SUCCESS',
+    INIT_JSON_SUCCESS: 'INIT_JSON_SUCCESS'
+};
 
 const initState = {
     openKeys: [] // 展开的菜单
@@ -15,13 +17,13 @@ const initState = {
 
 export function sider(state = initState, action) {
     switch (action.type) {
-        case OPEN_CHANGE_SUCCESS:
+        case types.OPEN_CHANGE_SUCCESS:
             window.sessionStorage.setItem('openMenuKeys', JSON.stringify(action.payload));
 
             return Object.assign({}, state, {
                 openKeys: action.payload
             });
-        case INIT_JSON_SUCCESS:
+        case types.INIT_JSON_SUCCESS:
             return Object.assign({}, state, {
                 openKeys: action.payload
             });
@@ -38,7 +40,7 @@ export function initOpenMenu() {
             let json = JSON.parse(openMenuKeys);
 
             dispatch({
-                type: INIT_JSON_SUCCESS,
+                type: types.INIT_JSON_SUCCESS,
                 payload: json
             })
         }
@@ -48,7 +50,7 @@ export function initOpenMenu() {
 export function siderOpenChange(openKeys) {
     return dispatch => {
         dispatch({
-            type: OPEN_CHANGE_SUCCESS,
+            type: types.OPEN_CHANGE_SUCCESS,
             payload: openKeys
         });
     }

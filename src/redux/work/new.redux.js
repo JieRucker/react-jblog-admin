@@ -9,11 +9,13 @@
 import api from '@/api/server';
 // import {message} from 'antd';
 
-const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
-const SET_STORE_SUCCESS = 'SET_STORE_SUCCESS';
-const GET_ARTICLE_SUCCESS = 'GET_ARTICLE_SUCCESS';
-const ADD_ARTICLE_SUCCESS = 'ADD_ARTICLE_SUCCESS';
-const ALTER_ARTICLE_SUCCESS = 'ALTER_ARTICLE_SUCCESS';
+export const types = {
+    TAG_LIST_SUCCESS: 'work_new/TAG_LIST_SUCCESS',
+    SET_STORE_SUCCESS: 'work_new/SET_STORE_SUCCESS',
+    GET_ARTICLE_SUCCESS: 'work_new/GET_ARTICLE_SUCCESS',
+    ADD_ARTICLE_SUCCESS: 'work_new/ADD_ARTICLE_SUCCESS',
+    ALTER_ARTICLE_SUCCESS: 'work_new/ALTER_ARTICLE_SUCCESS'
+};
 
 const initState = {
     title: '',
@@ -24,33 +26,33 @@ const initState = {
     create_time: '',
     update_time: '',
     content: '234234\n' +
-    '\n' +
-    '### dfsdf\n' +
-    '\n' +
-    '> sdfsdf\n' +
-    '\n' +
-    '- sdfsdf\n' +
-    '\n' +
-    '```js\n' +
-    'sdfsdfs\n' +
-    '```',
+        '\n' +
+        '### dfsdf\n' +
+        '\n' +
+        '> sdfsdf\n' +
+        '\n' +
+        '- sdfsdf\n' +
+        '\n' +
+        '```js\n' +
+        'sdfsdfs\n' +
+        '```',
     navigation: [],
     selectedTags: [],
 };
 
 export function article_new(state = initState, action) {
     switch (action.type) {
-        case TAG_LIST_SUCCESS:
+        case types.TAG_LIST_SUCCESS:
             return {
                 ...state,
                 tag_list: action.payload.tag_list
             };
-        case SET_STORE_SUCCESS:
+        case types.SET_STORE_SUCCESS:
             return {
                 ...state,
                 ...action.payload
             };
-        case GET_ARTICLE_SUCCESS:
+        case types.GET_ARTICLE_SUCCESS:
             let payload = action.payload;
             let tag_list = [];
 
@@ -70,9 +72,9 @@ export function article_new(state = initState, action) {
                 content: payload.article_content,
                 tag_list: tag_list
             };
-        case ADD_ARTICLE_SUCCESS:
+        case types.ADD_ARTICLE_SUCCESS:
             return {};
-        case ALTER_ARTICLE_SUCCESS:
+        case types.ALTER_ARTICLE_SUCCESS:
             return {};
         default:
             return state
@@ -97,7 +99,7 @@ export function getTagsList() {
 
         console.log(tag_list)
         dispatch({
-            type: TAG_LIST_SUCCESS,
+            type: types.TAG_LIST_SUCCESS,
             payload: {tag_list}
         })
     }
@@ -112,7 +114,7 @@ export function getArticle({_id}) {
             let [payload] = data;
 
             dispatch({
-                type: GET_ARTICLE_SUCCESS,
+                type: types.GET_ARTICLE_SUCCESS,
                 payload
             })
         }
@@ -135,9 +137,9 @@ export function addArticle({content, render_content, cover, desc, state, tags, t
 
         console.log(reqBody)
 
-       /* let res = await api.articleInterface.addArticle(reqBody);
-        let {msg} = res.data;
-        return message.info(msg)*/
+        /* let res = await api.articleInterface.addArticle(reqBody);
+         let {msg} = res.data;
+         return message.info(msg)*/
     }
 }
 
@@ -154,7 +156,7 @@ export function alterArticle() {
  */
 export function setStore(payload) {
     return {
-        type: SET_STORE_SUCCESS,
+        type: types.SET_STORE_SUCCESS,
         payload
     }
 }

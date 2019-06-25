@@ -9,9 +9,11 @@
 import api from '@/api/server';
 import {message} from 'antd';
 
-const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
-const ARTICLE_LIST_SUCCESS = 'ARTICLE_LIST_SUCCESS';
-const SET_STORE_SUCCESS = 'SET_STORE_SUCCESS';
+export const types = {
+    TAG_LIST_SUCCESS: 'article_list/TAG_LIST_SUCCESS',
+    ARTICLE_LIST_SUCCESS: 'article_list/ARTICLE_LIST_SUCCESS',
+    SET_STORE_SUCCESS: 'article_list/SET_STORE_SUCCESS'
+};
 
 const initState = {
     tag_list: [],
@@ -39,22 +41,22 @@ const initState = {
  * action处理
  * @param state
  * @param action
- * @returns {{tag_list: Array, keyword: string, tag: string, state: number, total_count: number, current_page: number, page_size: number, loading: boolean, article_list: Array}}
+ * @return {{tag_list: Array, keyword: string, tag: string, state: string, state_list: *[], total_count: number, current_page: number, page_size: number, loading: boolean, article_list: Array}}
  */
 export function article_list(state = initState, action) {
     switch (action.type) {
-        case TAG_LIST_SUCCESS:
+        case types.TAG_LIST_SUCCESS:
             return {
                 ...state,
                 tag_list: action.payload.tag_list
             };
-        case ARTICLE_LIST_SUCCESS:
+        case types.ARTICLE_LIST_SUCCESS:
             return {
                 ...state,
                 article_list: action.payload.list,
                 total_count: action.payload.total
             };
-        case SET_STORE_SUCCESS:
+        case types.SET_STORE_SUCCESS:
             return {
                 ...state,
                 ...action.payload
@@ -88,7 +90,7 @@ export function getTagsList() {
         });
 
         dispatch({
-            type: TAG_LIST_SUCCESS,
+            type: types.TAG_LIST_SUCCESS,
             payload: {tag_list}
         })
     }
@@ -117,7 +119,7 @@ export function getArticleList({keyword, tag, state, current_page, page_size}) {
         let {code, data = {}} = res.data;
         if (code === 200) {
             dispatch({
-                type: ARTICLE_LIST_SUCCESS,
+                type: types.ARTICLE_LIST_SUCCESS,
                 payload: data
             })
         }
@@ -149,7 +151,7 @@ export function deleteArticle({_id, onSuccess}) {
  */
 export function setStore(payload) {
     return {
-        type: SET_STORE_SUCCESS,
+        type: types.SET_STORE_SUCCESS,
         payload
     }
 }

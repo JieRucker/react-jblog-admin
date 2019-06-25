@@ -57,7 +57,6 @@ class NewForm extends Component {
     }
 
     handleStateChange = value => {
-        console.log(value)
         this.props.setStore({
             state: value,
         });

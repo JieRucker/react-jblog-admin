@@ -15,12 +15,13 @@ import Cookies from 'js-cookie'
 /**
  * action
  */
-const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
-const LOGOUT = 'LOGOUT';
-const INIT_USER_INFO = 'INIT_USER_INFO';
-
-const FETCH_CAPTCHA = 'FETCH_CAPTCHA';
+export const types = {
+    LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+    REGISTER_SUCCESS: 'REGISTER_SUCCESS',
+    LOGOUT: 'LOGOUT',
+    INIT_USER_INFO: 'INIT_USER_INFO',
+    FETCH_CAPTCHA: 'FETCH_CAPTCHA'
+};
 
 /**
  * state
@@ -41,12 +42,12 @@ const initState = {
  */
 export function user(state = initState, action) {
     switch (action.type) {
-        case FETCH_CAPTCHA:
+        case types.FETCH_CAPTCHA:
             return {
                 checkToken: action.payload.token,
                 captchaImg: action.payload.img,
             };
-        case LOGIN_SUCCESS:
+        case types.LOGIN_SUCCESS:
             let {admin_id, admin_name, token} = action.payload;
 
             return {
@@ -56,18 +57,18 @@ export function user(state = initState, action) {
                 admin_name: admin_name,
                 token: token
             };
-        case REGISTER_SUCCESS:
+        case types.REGISTER_SUCCESS:
             return {
                 redirectTo: '/login',
             };
-        case LOGOUT:
+        case types.LOGOUT:
             return {
                 admin_id: '',
                 admin_name: '',
                 token: '',
                 redirectTo: '/login'
             };
-        case INIT_USER_INFO:
+        case types.INIT_USER_INFO:
             let payload = action.payload;
 
             return {
@@ -90,7 +91,7 @@ export function fetchCaptcha() {
         let {code, data} = res.data;
         if (code === 200) {
             dispatch({
-                type: FETCH_CAPTCHA,
+                type: types.FETCH_CAPTCHA,
                 payload: data
             });
         }
@@ -136,7 +137,7 @@ export function login({username, password, captcha, checkToken}) {
                 Cookies.set('token', token);
 
                 dispatch({
-                    type: LOGIN_SUCCESS,
+                    type: types.LOGIN_SUCCESS,
                     payload: res_login.data.data
                 });
 
@@ -148,7 +149,7 @@ export function login({username, password, captcha, checkToken}) {
             let getCode = await getCheckcode();
 
             dispatch({
-                type: FETCH_CAPTCHA,
+                type: types.FETCH_CAPTCHA,
                 payload: Object.assign({}, getCode)
             });
         }
@@ -170,7 +171,7 @@ export function register({username, password}) {
             message.success('注册成功！');
 
             dispatch({
-                type: REGISTER_SUCCESS,
+                type: types.REGISTER_SUCCESS,
             });
 
             return false;
@@ -186,7 +187,7 @@ export function loginOut() {
     Cookies.remove('token');
 
     return {
-        type: LOGOUT
+        type: types.LOGOUT
     }
 }
 
@@ -197,7 +198,7 @@ export function initUserInfo() {
     let token = Cookies.get('token') || '';
 
     return {
-        type: INIT_USER_INFO,
+        type: types.INIT_USER_INFO,
         payload: {admin_id, admin_name, token}
     }
 }

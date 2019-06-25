@@ -7,13 +7,14 @@
  */
 
 import api from '@/api/server';
-import {message} from "antd/lib/index";
-// import {message} from 'antd';
+import {message} from 'antd';
 
-const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
-const SET_STORE_SUCCESS = 'SET_STORE_SUCCESS';
-const GET_ARTICLE_SUCCESS = 'GET_ARTICLE_SUCCESS';
-const ALTER_ARTICLE_SUCCESS = 'ALTER_ARTICLE_SUCCESS';
+export const types = {
+    TAG_LIST_SUCCESS: 'article_edit/TAG_LIST_SUCCESS',
+    SET_STORE_SUCCESS: 'article_edit/SET_STORE_SUCCESS',
+    GET_ARTICLE_SUCCESS: 'article_edit/GET_ARTICLE_SUCCESS',
+    ALTER_ARTICLE_SUCCESS: 'article_edit/ALTER_ARTICLE_SUCCESS',
+};
 
 const initState = {
     title: '',
@@ -37,17 +38,17 @@ const initState = {
 
 export function article_edit(state = initState, action) {
     switch (action.type) {
-        case TAG_LIST_SUCCESS:
+        case types.TAG_LIST_SUCCESS:
             return {
                 ...state,
                 tag_list: action.payload.tag_list
             };
-        case SET_STORE_SUCCESS:
+        case types.SET_STORE_SUCCESS:
             return {
                 ...state,
                 ...action.payload
             };
-        case GET_ARTICLE_SUCCESS:
+        case types.GET_ARTICLE_SUCCESS:
             let payload = action.payload;
             let selectedTags = [];
 
@@ -66,7 +67,7 @@ export function article_edit(state = initState, action) {
                 content: payload.article_content,
                 selectedTags: selectedTags
             };
-        case ALTER_ARTICLE_SUCCESS:
+        case types.ALTER_ARTICLE_SUCCESS:
             return {};
         default:
             return state
@@ -88,7 +89,7 @@ export function getTagsList() {
         let tag_list = tags_list.sort((a, b) => a.tags_article_num < b.tags_article_num);
 
         dispatch({
-            type: TAG_LIST_SUCCESS,
+            type: types.TAG_LIST_SUCCESS,
             payload: {tag_list}
         })
     }
@@ -103,7 +104,7 @@ export function getArticle({_id}) {
             let [payload] = data;
 
             dispatch({
-                type: GET_ARTICLE_SUCCESS,
+                type: types.GET_ARTICLE_SUCCESS,
                 payload
             })
         }
@@ -139,7 +140,7 @@ export function alterArticle({_id, content, render_content, cover, desc, state, 
  */
 export function setStore(payload) {
     return {
-        type: SET_STORE_SUCCESS,
+        type: types.SET_STORE_SUCCESS,
         payload
     }
 }

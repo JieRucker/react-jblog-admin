@@ -9,8 +9,10 @@
 import api from '@/api/server';
 import {message} from 'antd';
 
-const TAG_LIST_SUCCESS = 'TAG_LIST_SUCCESS';
-const SET_STORE_SUCCESS = 'SET_STORE_SUCCESS';
+export const types = {
+    TAG_LIST_SUCCESS: 'tag_list/TAG_LIST_SUCCESS',
+    SET_STORE_SUCCESS: 'tag_list/SET_STORE_SUCCESS'
+};
 
 const initState = {
     tag_list: [],
@@ -21,12 +23,12 @@ const initState = {
 
 export function tags_list(state = initState, action) {
     switch (action.type) {
-        case TAG_LIST_SUCCESS:
+        case types.TAG_LIST_SUCCESS:
             return {
                 ...state,
                 tag_list: action.payload.tag_list
             };
-        case SET_STORE_SUCCESS:
+        case types.SET_STORE_SUCCESS:
             return {
                 ...state,
                 ...action.payload
@@ -55,7 +57,7 @@ export function getTagsList() {
         tag_list = tags_list.sort((a, b) => a.tags_article_num < b.tags_article_num);
 
         dispatch({
-            type: TAG_LIST_SUCCESS,
+            type: types.TAG_LIST_SUCCESS,
             payload: {tag_list}
         })
     }
@@ -86,7 +88,7 @@ export function deleteTags({_id, onSuccess}) {
  */
 export function setStore(payload) {
     return {
-        type: SET_STORE_SUCCESS,
+        type: types.SET_STORE_SUCCESS,
         payload
     }
 }
