@@ -53,16 +53,6 @@ class ListForm extends Component {
         // this.setState(prevState => ({state: value}))
     };
 
-    handleInputChange = event => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-
-        this.props.setStore({
-            keyword: event.target.value,
-        });
-    };
-
     /**
      * 搜索
      * @params e
@@ -227,7 +217,11 @@ class ListForm extends Component {
                             placeholder="请输入关键词"
                             name="keyword"
                             value={this.props.article.keyword}
-                            onChange={this.handleInputChange}
+                            onChange={(event) => {
+                                this.props.setStore({
+                                    keyword: event.target.value,
+                                });
+                            }}
                         />
                     </Form.Item>
                     <Button
