@@ -77,7 +77,7 @@ class UploadForm extends Component {
                 dataIndex: 'image_url',
                 key: 'image_url',
                 render: (value, params) => (
-                    <img src={value} style={{width: '40px', height: '40px'}}/>
+                    <img src={value} alt="" style={{width: '40px', height: '40px'}}/>
                 )
             },
             {
