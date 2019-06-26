@@ -81,3 +81,17 @@ export function deleteUpload({_id, onSuccess}) {
         return message.info(msg)
     }
 }
+
+/**
+ * 设置属性值
+ * @param payload
+ * @returns {Function}
+ */
+export function setStore(payload) {
+    return dispatch => {
+        dispatch({
+            type: types.SET_STORE_SUCCESS,
+            payload
+        })
+    }
+}
