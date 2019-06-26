@@ -14,7 +14,13 @@ export const types = {
     SET_STORE_SUCCESS: 'upload/SET_STORE_SUCCESS'
 };
 
-const initState = {};
+const initState = {
+    tree_list: [],
+    upload_list: [],
+    total_count: 0,
+    current_page: 1,
+    page_size: 10,
+};
 
 export function upload(state = initState, action) {
     switch (action.type) {
@@ -23,10 +29,10 @@ export function upload(state = initState, action) {
                 ...state,
                 tag_list: action.payload.tag_list
             };
-        case types.WORKS_LIST_SUCCESS:
+        case types.UPLOAD_LIST_SUCCESS:
             return {
                 ...state,
-                works_list: action.payload.list,
+                upload_list: action.payload.list,
                 total_count: action.payload.total
             };
         case types.SET_STORE_SUCCESS:
