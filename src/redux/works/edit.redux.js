@@ -97,7 +97,7 @@ export function getTagsList() {
 
 export function getWorks({_id}) {
     return async dispatch => {
-        let res = await api.articleInterface.getWorksById({_id});
+        let res = await api.worksInterface.getWorksById({_id});
         let {code, data} = res.data;
 
         if (code === 200 && data.length) {

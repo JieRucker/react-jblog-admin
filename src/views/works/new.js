@@ -125,7 +125,7 @@ class NewForm extends Component {
 
     handlePublish = () => {
 
-        this.props.addArticle({
+        this.props.addWorks({
             content: this.props.works_new.content,
             render_content: this.editor.getHtmlValue(),
             cover: this.props.works_new.cover,
@@ -138,7 +138,7 @@ class NewForm extends Component {
     };
 
     render() {
-        const {title, tag_list, state_list, cover, desc, content, selectedTags, state} = this.props.article_new;
+        const {title, tag_list, state_list, cover, desc, content, selectedTags, state} = this.props.works_new;
 
         return (
             <div>

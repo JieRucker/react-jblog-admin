@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
 import {Form, Select, Input, Button, Table, Modal} from 'antd';
-import {getWorksList, deleteWorks, setStore} from '../../redux/works/list.redux';
+import {getTagsList, getWorksList, deleteWorks, setStore} from '../../redux/works/list.redux';
 
 const {Option} = Select;
 
@@ -10,7 +10,7 @@ const mapStateProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getWorksList, deleteWorks, setStore
+    getTagsList, getWorksList, deleteWorks, setStore
 });
 
 @connect(
@@ -26,7 +26,7 @@ class ListForm extends Component {
     }
 
     componentWillMount() {
-
+        this.props.getTagsList()
     }
 
     componentDidMount() {
@@ -34,7 +34,7 @@ class ListForm extends Component {
         this.getWorksList()
     }
 
-    getArticleList = () => {
+    getWorksList = () => {
         let {keyword, tag, state, current_page, page_size} = this.props.works;
         this.props.getWorksList({keyword, tag, state, current_page, page_size})
     };
@@ -149,7 +149,7 @@ class ListForm extends Component {
                             type="primary"
                             size="small"
                             style={{marginRight: '5px'}}
-                            onClick={() => this.props.history.push(`/app/work/edit/${params._id}`)}
+                            onClick={() => this.props.history.push(`/app/works/edit/${params._id}`)}
                         >修改
                         </Button>
                         <Button
@@ -242,7 +242,7 @@ class ListForm extends Component {
                 <Table
                     style={{marginTop: '20px'}}
                     columns={columns}
-                    dataSource={this.props.works.article_list}
+                    dataSource={this.props.works.works_list}
                     rowKey="_id"
                     pagination={paginationProps}
                     loading={this.props.loading}

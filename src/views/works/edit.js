@@ -138,7 +138,7 @@ class EditForm extends Component {
     };
 
     render() {
-        const {title, tag_list, state_list, cover, desc, content, selectedTags, state} = this.props.article_edit;
+        const {title, tag_list, state_list, cover, desc, content, selectedTags, state} = this.props.works_edit;
 
         return (
             <div>
