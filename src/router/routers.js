@@ -27,7 +27,7 @@ import WorksEdit from '../views/works/edit';
 import TagList from '../views/tag/list';
 // import WorkList from '../views/work/list';
 // import WorkNew from '../views/work/new';
-// import FileUpload from '../views/upload/file-upload';
+import Upload from '../views/upload/upload';
 import SettingMine from '../views/setting/mine';
 import SettingUpyun from '../views/setting/upyun';
 import SettingAbout from '../views/setting/about';
@@ -114,7 +114,7 @@ export const appRouter = [
             path: '/app/upload/list',
             title: '文件列表',
             icon: '',
-            // component: FileUpload
+            component: Upload
         }],
     },
     {

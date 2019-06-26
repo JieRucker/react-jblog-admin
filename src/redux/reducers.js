@@ -12,6 +12,7 @@ import {about} from './setting/about.redux';
 import {works_list} from './works/list.redux';
 import {works_new} from './works/new.redux';
 import {works_edit} from './works/edit.redux';
+import {upload} from './upload/upload.redux';
 
 export default combineReducers({
     user,
@@ -26,5 +27,6 @@ export default combineReducers({
     about,
     works_list,
     works_new,
-    works_edit
+    works_edit,
+    upload
 })
