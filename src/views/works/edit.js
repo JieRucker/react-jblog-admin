@@ -9,27 +9,18 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Form, Select, Input, Button, Tag, message} from 'antd';
-// import Editor from 'for-editor';
 import Editor from '../../components/editor';
-import './stylesheet.css';
-// import MdEditor from 'react-markdown-editor-lite';
-// import MarkdownIt from 'markdown-it';
-// import hljs from 'highlight.js';
-// import MarkdownEditor from '@uiw/react-markdown-editor';
-// import SimpleMDE from "react-simplemde-editor";
-// import "simplemde/dist/simplemde.min.css";
-// import './github-markdown.css';
-import {getTagsList, getArticle, addArticle, alterArticle, setStore} from "../../redux/article/new.redux";
+import {getTagsList, getWorks, alterWorks, setStore} from "../../redux/works/edit.redux";
 
 const {Option} = Select;
 const {CheckableTag} = Tag;
 
 const mapStateProps = state => ({
-    article_new: state.article_new
+    works_edit: state.works_edit
 });
 
 const mapDispatchToProps = dispatch => ({
-    getTagsList, getArticle, addArticle, alterArticle, setStore
+    getTagsList, getWorks, alterWorks, setStore
 });
 
 @connect(
@@ -37,44 +28,22 @@ const mapDispatchToProps = dispatch => ({
     mapDispatchToProps()
 )
 
-class NewForm extends Component {
+class EditForm extends Component {
 
     editor = null;
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            state_list: [{
-                name: '发布',
-                value: 1
-            }, {
-                name: '草稿',
-                value: 0
-            }],
-            formLayout: 'horizontal',
-        };
-
+        this.state = {};
     }
 
 
     handleEditorChange = (value) => {
-        console.log(value)
         this.props.setStore({
             content: value,
         });
-        // console.log('handleEditorChange', html, md)
     };
-
-    /*handleGetMdValue = () => {
-        window.editor = this.editor;
-        console.log(this.editor)
-        // this.editor && alert(this.editor.getMdValue())
-    };*/
-
-    /*handleGetHtmlValue = () => {
-        this.editor && alert(this.editor.getHtmlValue())
-    };*/
 
     componentWillMount() {
         this.props.getTagsList()
@@ -83,59 +52,23 @@ class NewForm extends Component {
     componentDidMount() {
         console.log(this);
 
-        // let _id = ''
-        // this.props.getArticle({_id})
+        const _id = this.props.match.params.id;
+        this.props.getWorks({_id})
     }
-
-    updateMarkdown = (editor, data, value) => {
-        window.editor = editor;
-    };
-
-    handleInputTitleChange = event => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-
-        this.props.setStore({
-            title: event.target.value,
-        });
-    };
 
     handleStateChange = value => {
         this.props.setStore({
             state: value,
         });
-
-        // this.setState(prevState => ({state: value}))
-    };
-
-    handleInputCoverChange = event => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-
-        this.props.setStore({
-            cover: event.target.value,
-        });
-    };
-
-    handleTextAreaChange = event => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-
-        this.props.setStore({
-            desc: event.target.value,
-        });
     };
 
     handleTagChange = (tag, checked) => {
-        const {selectedTags} = this.props.article_new;
+        const {selectedTags} = this.props.works_edit;
         const nextSelectedTags = checked ? [...selectedTags, tag._id] : selectedTags.filter(t => t !== tag._id);
         this.props.setStore({selectedTags: nextSelectedTags});
 
         setTimeout(() => {
-            console.log(this.props.article_new.selectedTags)
+            console.log(this.props.works_edit.selectedTags)
         }, 50)
     };
 
@@ -165,9 +98,9 @@ class NewForm extends Component {
     getNavigation = () => {
         let navigationContent;
         let navigation_list = [];
-        let mavonEditor = this.$refs.mavonEditor;
-        navigationContent = mavonEditor.$refs.navigationContent;
-        navigationContent.innerHTML = mavonEditor.d_render;
+
+        navigationContent = document.querySelector('.for-markdown-preview');
+        navigationContent.innerHTML = this.editor.getHtmlValue();
 
         let nodes = navigationContent.children;
         if (nodes.length) {
@@ -181,7 +114,7 @@ class NewForm extends Component {
             if (reg.exec(node.tagName)) {
                 navigation_list.push({
                     name: node.innerText,
-                    id: node.childNodes[0].getAttribute('id')
+                    id: node.getAttribute('id')
                 })
             }
         }
@@ -190,22 +123,22 @@ class NewForm extends Component {
     };
 
     handlePublish = () => {
-        let reqBody = {
-            content: this.props.article_new.content,
-            render_content: this.editor.getHtmlValue(),
-            cover: this.props.article_new.cover,
-            desc: this.props.article_new.desc,
-            state: this.props.article_new.state,
-            tags: this.props.article_new.selectedTags,
-            title: this.props.article_new.title,
-            navigation: JSON.stringify(this.getNavigation())
-        };
 
-        this.props.addArticle(reqBody)
+        this.props.alterWorks({
+            _id: this.props.match.params.id,
+            content: this.props.works_edit.content,
+            render_content: this.editor.getHtmlValue(),
+            cover: this.props.works_edit.cover,
+            desc: this.props.works_edit.desc,
+            state: this.props.works_edit.state,
+            tags: JSON.stringify(this.props.works_edit.selectedTags),
+            title: this.props.works_edit.title,
+            navigation: JSON.stringify(this.getNavigation())
+        })
     };
 
     render() {
-        const {selectedTags} = this.props.article_new;
+        const {title, tag_list, state_list, cover, desc, content, selectedTags, state} = this.props.article_edit;
 
         return (
             <div>
@@ -214,13 +147,17 @@ class NewForm extends Component {
                         <Input
                             placeholder="请输入名称"
                             name="title"
-                            value={this.props.article_new.title}
-                            onChange={this.handleInputTitleChange}
+                            value={title}
+                            onChange={(event) => {
+                                this.props.setStore({
+                                    title: event.target.value,
+                                });
+                            }}
                         />
                     </Form.Item>
                     <Form.Item label="标签：">
                         {
-                            this.props.article_new.tag_list.map((tag, key) => (
+                            tag_list.map((tag, key) => (
                                 <CheckableTag
                                     key={key}
                                     checked={selectedTags.indexOf(tag._id) > -1}
@@ -232,9 +169,9 @@ class NewForm extends Component {
                         }
                     </Form.Item>
                     <Form.Item label="状态：">
-                        <Select defaultValue={this.props.article_new.state} style={{width: 150}}
+                        <Select value={state} style={{width: 150}}
                                 onChange={this.handleStateChange}>
-                            {this.state.state_list.map((item, key) => (
+                            {state_list.map((item, key) => (
                                 <Option
                                     key={key}
                                     value={item.value}
@@ -248,61 +185,34 @@ class NewForm extends Component {
                         <Input
                             placeholder="请输入图片地址"
                             name="cover"
-                            value={this.props.article_new.cover}
-                            onChange={this.handleInputCoverChange}
+                            value={cover}
+                            onChange={(event) => {
+                                this.props.setStore({
+                                    cover: event.target.value,
+                                });
+                            }}
                         />
                     </Form.Item>
                     <Form.Item label="描述：">
                         <Input.TextArea
                             placeholder="请输入描述内容"
                             name="desc"
-                            value={this.props.article_new.desc}
+                            value={desc}
                             autosize={{minRows: 2, maxRows: 5}}
-                            onChange={this.handleTextAreaChange}
+                            onChange={(event) => {
+                                this.props.setStore({
+                                    desc: event.target.value,
+                                });
+                            }}
                         />
                     </Form.Item>
                 </Form>
+
                 <div className="article-content markdown-body" id="article-content" style={{marginBottom: '20px'}}>
                     <Editor
                         ref={node => this.editor = node}
-                        value={this.props.article_new.content}
+                        value={content}
                         onChange={this.handleEditorChange}/>
-                    {/*<MdEditor
-                        ref={node => this.mdEditor = node}
-                        value={this.props.article_new.content}
-                        renderHTML={(text) => this.mdjs.render(text)}
-                        config={{
-                            view: {
-                                menu: true,
-                                md: true,
-                                html: true
-                            },
-                            imageUrl: 'https://octodex.github.com/images/minion.png'
-                        }}
-                        onChange={this.handleEditorChange}
-                    />*/}
-                    {/*<SimpleMDE
-                        id="your-custom-id"
-                        label=""
-                        options={{
-                            autofocus: true,
-                            spellChecker: false,
-                            gfm: true,
-                            pedantic: false,
-                            sanitize: false,
-                            tables: true,
-                            breaks: true,
-                            smartLists: true,
-                            smartypants: true,
-                        }}
-                        value={this.props.article_new.content}
-                        onChange={this.updateMarkdown}
-                    />*/}
-                    {/*<MarkdownEditor
-                        value={this.props.article_new.content}
-                        height={300}
-                        onChange={this.updateMarkdown}
-                    />*/}
                 </div>
 
                 <input
@@ -330,6 +240,6 @@ class NewForm extends Component {
     }
 }
 
-const New = Form.create()(NewForm);
+const Edit = Form.create()(EditForm);
 
-export default New
+export default Edit

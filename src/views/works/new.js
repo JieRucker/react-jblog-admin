@@ -10,17 +10,17 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Form, Select, Input, Button, Tag, message} from 'antd';
 import Editor from '../../components/editor';
-import {getTagsList, getArticle, alterArticle, setStore} from "../../redux/article/edit.redux";
+import {getTagsList, addWorks, setStore} from "../../redux/works/new.redux";
 
 const {Option} = Select;
 const {CheckableTag} = Tag;
 
 const mapStateProps = state => ({
-    article_edit: state.article_edit
+    works_new: state.works_new
 });
 
 const mapDispatchToProps = dispatch => ({
-    getTagsList, getArticle, alterArticle, setStore
+    getTagsList, addWorks, setStore
 });
 
 @connect(
@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => ({
     mapDispatchToProps()
 )
 
-class EditForm extends Component {
+class NewForm extends Component {
 
     editor = null;
 
@@ -36,6 +36,10 @@ class EditForm extends Component {
         super(props);
 
         this.state = {};
+
+        /*this.setState(prevState => ({
+            title: ''
+        }));*/
     }
 
 
@@ -51,9 +55,6 @@ class EditForm extends Component {
 
     componentDidMount() {
         console.log(this);
-
-        const _id = this.props.match.params.id;
-        this.props.getArticle({_id})
     }
 
     handleStateChange = value => {
@@ -63,12 +64,12 @@ class EditForm extends Component {
     };
 
     handleTagChange = (tag, checked) => {
-        const {selectedTags} = this.props.article_edit;
+        const {selectedTags} = this.props.works_new;
         const nextSelectedTags = checked ? [...selectedTags, tag._id] : selectedTags.filter(t => t !== tag._id);
         this.props.setStore({selectedTags: nextSelectedTags});
 
         setTimeout(() => {
-            console.log(this.props.article_edit.selectedTags)
+            console.log(this.props.works_new.selectedTags)
         }, 50)
     };
 
@@ -124,21 +125,20 @@ class EditForm extends Component {
 
     handlePublish = () => {
 
-        this.props.alterArticle({
-            _id: this.props.match.params.id,
-            content: this.props.article_edit.content,
+        this.props.addArticle({
+            content: this.props.works_new.content,
             render_content: this.editor.getHtmlValue(),
-            cover: this.props.article_edit.cover,
-            desc: this.props.article_edit.desc,
-            state: this.props.article_edit.state,
-            tags: JSON.stringify(this.props.article_edit.selectedTags),
-            title: this.props.article_edit.title,
+            cover: this.props.works_new.cover,
+            desc: this.props.works_new.desc,
+            state: this.props.works_new.state,
+            tags: JSON.stringify(this.props.works_new.selectedTags),
+            title: this.props.works_new.title,
             navigation: JSON.stringify(this.getNavigation())
         })
     };
 
     render() {
-        const {title, tag_list, state_list, cover, desc, content, selectedTags, state} = this.props.article_edit;
+        const {title, tag_list, state_list, cover, desc, content, selectedTags, state} = this.props.article_new;
 
         return (
             <div>
@@ -240,6 +240,6 @@ class EditForm extends Component {
     }
 }
 
-const Edit = Form.create()(EditForm);
+const New = Form.create()(NewForm);
 
-export default Edit
+export default New

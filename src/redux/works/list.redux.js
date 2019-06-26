@@ -10,40 +10,50 @@ import api from '@/api/server';
 import {message} from 'antd';
 
 export const types = {
-    TAG_LIST_SUCCESS: 'work_list/TAG_LIST_SUCCESS',
-    ARTICLE_LIST_SUCCESS: 'work_list/ARTICLE_LIST_SUCCESS',
-    SET_STORE_SUCCESS: 'work_list/SET_STORE_SUCCESS'
+    TAG_LIST_SUCCESS: 'works_list/TAG_LIST_SUCCESS',
+    WORKS_LIST_SUCCESS: 'works_list/WORKS_LIST_SUCCESS',
+    SET_STORE_SUCCESS: 'works_list/SET_STORE_SUCCESS'
 };
 
 const initState = {
     tag_list: [],
     keyword: '',
     tag: '',
-    state: 1,
+    state: '',
+    state_list: [{
+        name: '所有',
+        value: ''
+    }, {
+        name: '发布',
+        value: 1
+    }, {
+        name: '草稿',
+        value: 0
+    }],
     total_count: 0,
     current_page: 1,
     page_size: 10,
     loading: false,
-    article_list: []
+    works_list: []
 };
 
 /**
  * action处理
  * @param state
  * @param action
- * @returns {{tag_list: Array, keyword: string, tag: string, state: number, total_count: number, current_page: number, page_size: number, loading: boolean, article_list: Array}}
+ * @return {{tag_list: Array, keyword: string, tag: string, state: string, state_list: *[], total_count: number, current_page: number, page_size: number, loading: boolean, article_list: Array}}
  */
-export function article_list(state = initState, action) {
+export function works_list(state = initState, action) {
     switch (action.type) {
         case types.TAG_LIST_SUCCESS:
             return {
                 ...state,
                 tag_list: action.payload.tag_list
             };
-        case types.ARTICLE_LIST_SUCCESS:
+        case types.WORKS_LIST_SUCCESS:
             return {
                 ...state,
-                article_list: action.payload.list,
+                works_list: action.payload.list,
                 total_count: action.payload.total
             };
         case types.SET_STORE_SUCCESS:
@@ -95,7 +105,7 @@ export function getTagsList() {
  * @param page_size
  * @returns {Function}
  */
-export function getArticleList({keyword, tag, state, current_page, page_size}) {
+export function getWorksList({keyword, tag, state, current_page, page_size}) {
     return async dispatch => {
         let reqBody = {
             keyword,
@@ -105,11 +115,11 @@ export function getArticleList({keyword, tag, state, current_page, page_size}) {
             page_size,
         };
 
-        let res = await api.articleInterface.getArticleList(reqBody);
+        let res = await api.worksInterface.getWorksList(reqBody);
         let {code, data = {}} = res.data;
         if (code === 200) {
             dispatch({
-                type: types.ARTICLE_LIST_SUCCESS,
+                type: types.WORKS_LIST_SUCCESS,
                 payload: data
             })
         }
@@ -122,9 +132,9 @@ export function getArticleList({keyword, tag, state, current_page, page_size}) {
  * @param onSuccess
  * @returns {function(*): MessageType}
  */
-export function deleteArticle({_id, onSuccess}) {
+export function deleteWorks({_id, onSuccess}) {
     return async dispatch => {
-        let res = await api.articleInterface.deleteArticleById({_id});
+        let res = await api.worksInterface.deleteWorksById({_id});
         let {code, msg} = res.data;
         if (code === 200) {
             onSuccess()

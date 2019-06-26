@@ -7,40 +7,36 @@
  */
 
 import api from '@/api/server';
-// import {message} from 'antd';
+import {message} from 'antd';
 
 export const types = {
-    TAG_LIST_SUCCESS: 'work_new/TAG_LIST_SUCCESS',
-    SET_STORE_SUCCESS: 'work_new/SET_STORE_SUCCESS',
-    GET_ARTICLE_SUCCESS: 'work_new/GET_ARTICLE_SUCCESS',
-    ADD_ARTICLE_SUCCESS: 'work_new/ADD_ARTICLE_SUCCESS',
-    ALTER_ARTICLE_SUCCESS: 'work_new/ALTER_ARTICLE_SUCCESS'
+    TAG_LIST_SUCCESS: 'works_edit/TAG_LIST_SUCCESS',
+    SET_STORE_SUCCESS: 'works_edit/SET_STORE_SUCCESS',
+    GET_WORKS_SUCCESS: 'works_edit/GET_WORKS_SUCCESS',
+    ALTER_WORKS_SUCCESS: 'works_edit/ALTER_WORKS_SUCCESS',
 };
 
 const initState = {
     title: '',
     tag_list: [],
     state: 1,
+    state_list: [{
+        name: '发布',
+        value: 1
+    }, {
+        name: '草稿',
+        value: 0
+    }],
     cover: '',
     desc: '',
     create_time: '',
     update_time: '',
-    content: '234234\n' +
-    '\n' +
-    '### dfsdf\n' +
-    '\n' +
-    '> sdfsdf\n' +
-    '\n' +
-    '- sdfsdf\n' +
-    '\n' +
-    '```js\n' +
-    'sdfsdfs\n' +
-    '```',
+    content: '',
     navigation: [],
     selectedTags: [],
 };
 
-export function article_new(state = initState, action) {
+export function works_edit(state = initState, action) {
     switch (action.type) {
         case types.TAG_LIST_SUCCESS:
             return {
@@ -52,29 +48,26 @@ export function article_new(state = initState, action) {
                 ...state,
                 ...action.payload
             };
-        case types.GET_ARTICLE_SUCCESS:
+        case types.GET_WORKS_SUCCESS:
             let payload = action.payload;
-            let tag_list = [];
+            let selectedTags = [];
 
-            if (payload.article_tags.length) {
-                tag_list = state.tag_list.map(item => {
-                    return payload.article_tags.map(m => (item._id === m._id) && (item.checked = true))
-                })
+            if (payload.works_tags.length) {
+                payload.works_tags.map(item => selectedTags.push(item._id))
             }
+
             return {
                 ...state,
-                title: payload.article_title,
-                state: payload.article_state,
-                cover: payload.article_cover,
-                desc: payload.article_desc,
+                title: payload.works_title,
+                state: payload.works_state,
+                cover: payload.works_cover,
+                desc: payload.works_desc,
                 create_time: payload.create_time,
                 update_time: payload.update_time,
-                content: payload.article_content,
-                tag_list: tag_list
+                content: payload.works_content,
+                selectedTags: selectedTags
             };
-        case types.ADD_ARTICLE_SUCCESS:
-            return {};
-        case types.ALTER_ARTICLE_SUCCESS:
+        case types.ALTER_WORKS_SUCCESS:
             return {};
         default:
             return state
@@ -82,8 +75,6 @@ export function article_new(state = initState, action) {
 }
 
 export function getTagsList() {
-    // let tag_list = [];
-
     return async dispatch => {
         let res = await api.tagsInterface.getTagsList();
         let {article_num_list = [], tags_list = []} = res.data.data;
@@ -97,7 +88,6 @@ export function getTagsList() {
 
         let tag_list = tags_list.sort((a, b) => a.tags_article_num < b.tags_article_num);
 
-        console.log(tag_list)
         dispatch({
             type: types.TAG_LIST_SUCCESS,
             payload: {tag_list}
@@ -105,47 +95,41 @@ export function getTagsList() {
     }
 }
 
-export function getArticle({_id}) {
+export function getWorks({_id}) {
     return async dispatch => {
-        let res = await api.articleInterface.getArticleById({_id});
+        let res = await api.articleInterface.getWorksById({_id});
         let {code, data} = res.data;
 
         if (code === 200 && data.length) {
             let [payload] = data;
 
             dispatch({
-                type: types.GET_ARTICLE_SUCCESS,
+                type: types.GET_WORKS_SUCCESS,
                 payload
             })
         }
     }
 }
 
-export function addArticle({content, render_content, cover, desc, state, tags, title, navigation}) {
+export function alterWorks({_id, content, render_content, cover, desc, state, tags, title, navigation}) {
     return async dispatch => {
         let reqBody = {
-            _id: '',
-            article_content: content,
-            article_render_content: render_content,
-            article_cover: cover,
-            article_desc: desc,
-            article_state: state,
-            article_tags: tags,
-            article_title: title,
-            article_navigation: navigation
+            _id,
+            works_content: content,
+            works_render_content: render_content,
+            works_cover: cover,
+            works_desc: desc,
+            works_state: state,
+            works_tags: tags,
+            works_title: title,
+            works_navigation: navigation
         };
 
-        console.log(reqBody)
+        console.log(reqBody);
 
-        /* let res = await api.articleInterface.addArticle(reqBody);
-         let {msg} = res.data;
-         return message.info(msg)*/
-    }
-}
-
-export function alterArticle() {
-    return dispatch => {
-
+        let res = await api.worksInterface.alterWorks(reqBody);
+        let {msg} = res.data;
+        return message.info(msg)
     }
 }
 

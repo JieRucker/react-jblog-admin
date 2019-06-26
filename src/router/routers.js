@@ -20,6 +20,10 @@ import ArticleList from '../views/article/list';
 import ArticleNew from '../views/article/new';
 import ArticleEdit from '../views/article/edit';
 
+import WorksList from '../views/works/list';
+import WorksNew from '../views/works/new';
+import WorksEdit from '../views/works/edit';
+
 import TagList from '../views/tag/list';
 // import WorkList from '../views/work/list';
 // import WorkNew from '../views/work/new';
@@ -34,6 +38,11 @@ export const otherRouter = [
         title: '编辑文章',
         path: '/app/article/edit/:id',
         component: ArticleEdit
+    },
+    {
+        title: '编辑作品',
+        path: '/app/works/edit/:id',
+        component: WorksEdit
     },
     {
         title: '编辑博客',
@@ -86,15 +95,15 @@ export const appRouter = [
         title: '作品',
         icon: 'exception',
         sub: [{
-            path: '/app/work/list',
+            path: '/app/works/list',
             title: '作品列表',
             icon: '',
-            // component: WorkList
+            component: WorksList
         }, {
-            path: '/app/work/new',
+            path: '/app/works/new',
             title: '写作品',
             icon: '',
-            // component: WorkNew
+            component: WorksNew
         }],
     },
     {

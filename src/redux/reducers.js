@@ -9,8 +9,9 @@ import {tags_list} from './tag/list.redux';
 import {mine} from './setting/mine.redux';
 import {upyun} from './setting/upyun.redux';
 import {about} from './setting/about.redux';
-// import {work_list} from './work/list.redux';
-// import {work_new} from './work/new.redux';
+import {works_list} from './works/list.redux';
+import {works_new} from './works/new.redux';
+import {works_edit} from './works/edit.redux';
 
 export default combineReducers({
     user,
@@ -23,6 +24,7 @@ export default combineReducers({
     mine,
     upyun,
     about,
-    // work_list,
-    // work_new
+    works_list,
+    works_new,
+    works_edit
 })
