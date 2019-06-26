@@ -10,6 +10,7 @@ import api from '@/api/server';
 import {message} from 'antd';
 
 export const types = {
+    GET_FOLD_SUCCESS: 'upload/GET_FOLD_SUCCESS',
     UPLOAD_LIST_SUCCESS: 'upload/UPLOAD_LIST_SUCCESS',
     SET_STORE_SUCCESS: 'upload/SET_STORE_SUCCESS'
 };
@@ -29,6 +30,11 @@ export function upload(state = initState, action) {
                 ...state,
                 tag_list: action.payload.tag_list
             };
+        case types.GET_FOLD_SUCCESS:
+            return {
+                ...state,
+                tree_list: action.payload.tree_list
+            };
         case types.UPLOAD_LIST_SUCCESS:
             return {
                 ...state,
@@ -42,6 +48,39 @@ export function upload(state = initState, action) {
             };
         default:
             return state
+    }
+}
+
+export function getFold() {
+    return async dispatch => {
+        let res = await api.uploadInterface.getFold();
+        let {code, msg, data} = res.data;
+
+        let tree_list = [];
+
+        if (code === 200) {
+
+            data.map(item => {
+                return tree_list.push({
+                    parentId: item.parentId,
+                    id: item._id,
+                    _id: item._id,
+                    name: item.name,
+                    isFolder: true,
+                    showDropDown: item.hasOwnProperty('children'),
+                    openFolder: false,
+                    selected: false,
+                    isEdit: false,
+                    originNodes: item.children ? item.children : [],
+                    nodes: []
+                })
+            });
+
+            dispatch({
+                type: types.GET_FOLD_SUCCESS,
+                payload: tree_list
+            })
+        }
     }
 }
 

@@ -48,7 +48,7 @@ class UploadForm extends Component {
     };
 
     render() {
-        const tree_list = this.props.upload;
+        const {tree_list} = this.props.upload;
 
         const columns = [
             {
@@ -74,10 +74,8 @@ class UploadForm extends Component {
             },
             {
                 title: '图片',
-                dataIndex: 'image_url',
-                key: 'image_url',
                 render: (value, params) => (
-                    <img src={value} alt="" style={{width: '40px', height: '40px'}}/>
+                    <img src={params.image_url} alt="" style={{width: '40px', height: '40px'}}/>
                 )
             },
             {
