@@ -80,7 +80,7 @@ class Index extends Component {
                         </HeaderCustom>
                         <Content style={{
                             margin: '10px',
-                            padding: 24,
+                            padding: 10,
                             background: '#fff',
                             overflow: 'initial',
                             minHeight: 'initial'

@@ -8,16 +8,26 @@
 
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Form, Tree, Row, Col, Button, Table, Modal} from 'antd';
-import {getUploadList, alterUpload, deleteUpload, setStore} from '../../redux/upload/upload.redux';
-
-const {TreeNode, DirectoryTree} = Tree;
+import {Form, Row, Col, Button, Table, Input, Modal} from 'antd';
+import {
+    getFold,
+    addFold,
+    alterFold,
+    deleteFold,
+    getUploadList,
+    alterUpload,
+    deleteUpload,
+    setStore
+} from '../../redux/upload/upload.redux';
+import EditableTree from './EditableTree';
+import './upload.scss';
 
 const mapStateProps = state => ({
     upload: state.upload
 });
 
 const mapDispatchToProps = dispatch => ({
+    getFold, addFold, alterFold, deleteFold,
     getUploadList, alterUpload, deleteUpload, setStore
 });
 
@@ -28,12 +38,18 @@ const mapDispatchToProps = dispatch => ({
 
 class UploadForm extends Component {
 
-    onSelect = (keys, event) => {
-        console.log('Trigger Select', keys, event);
+    state = {
+        foldVisible: false,
+        foldName: '',
+        parentId: -1,
     };
 
-    onExpand = () => {
-        console.log('Trigger Expand');
+    componentWillMount() {
+        this.props.getFold();
+    };
+
+    componentDidMount() {
+
     };
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -45,6 +61,48 @@ class UploadForm extends Component {
             let {keyword, tag, state, current_page, page_size} = this.props.upload;
             this.props.getUploadList({keyword, tag, state, current_page, page_size})
         }, 50)
+    };
+
+    onSelect = (value) => {
+        console.log('onSelect', value);
+    };
+
+    onExpand = (value) => {
+        console.log('onExpand', value);
+    };
+
+    onAdd = ({item}) => {
+        this.setState({
+            foldVisible: true,
+            parentId: item._id
+        })
+    };
+
+    onSave = ({item}) => {
+        this.props.alterFold({
+            _id: item._id,
+            name: item.value,
+            onSuccess: () => {
+                this.props.getFold();
+            }
+        });
+    };
+
+    onDelete = ({item}) => {
+        Modal.confirm({
+            title: '删除',
+            content: '确定删除吗？',
+            okText: '确认',
+            cancelText: '取消',
+            onOk: async () => {
+                this.props.deleteFold({
+                    _id: item._id,
+                    onSuccess: () => {
+                        this.props.getFold();
+                    }
+                });
+            },
+        });
     };
 
     render() {
@@ -140,42 +198,26 @@ class UploadForm extends Component {
         };
 
         return (
-            <div>
-                <Row gutter={16}>
-                    <Col span={6}>
-                        <DirectoryTree multiple defaultExpandAll onSelect={this.onSelect} onExpand={this.onExpand}>
-                            {/*<TreeNode title="parent 0" key="0-0">
-                                <TreeNode title="leaf 0-0" key="0-0-0" isLeaf/>
-                                <TreeNode title="leaf 0-1" key="0-0-1" isLeaf/>
-                            </TreeNode>
-                            <TreeNode title="parent 1" key="0-1">
-                                <TreeNode title="leaf 1-0" key="0-1-0" isLeaf/>
-                                <TreeNode title="leaf 1-1" key="0-1-1" isLeaf/>
-                            </TreeNode>*/}
-
-                            {
-                                tree_list.map((item, key) => (
-                                    <TreeNode
-                                        title={item.name}
-                                        key={key}
-                                    >
-                                        {
-                                            item.nodes && item.nodes.map((node, nodeKey) => (
-                                                <TreeNode
-                                                    title={node.name}
-                                                    key={nodeKey}
-                                                    isLeaf
-                                                />
-                                            ))
-                                        }
-                                    </TreeNode>
-                                ))
-                            }
-                        </DirectoryTree>
+            <div style={{height: '100%'}}>
+                <Row gutter={16} style={{height: '100%'}}>
+                    <Col span={5} className="tree">
+                        <div>
+                            <h2 className="title">文件目录</h2>
+                            <Button className="button" size="small" onClick={() => {
+                                this.setState(() => ({foldVisible: true, parentId: -1}));
+                            }}>新建目录</Button>
+                        </div>
+                        <EditableTree
+                            list={tree_list}
+                            onSelect={this.onSelect}
+                            onExpand={this.onExpand}
+                            onSave={this.onSave}
+                            onAdd={this.onAdd}
+                            onDelete={this.onDelete}
+                        />
                     </Col>
-                    <Col span={18}>
+                    <Col span={19}>
                         <Table
-                            style={{marginTop: '20px'}}
                             columns={columns}
                             dataSource={this.props.upload.upload_list}
                             rowKey="_id"
@@ -185,6 +227,34 @@ class UploadForm extends Component {
                     </Col>
                 </Row>
 
+                <Modal
+                    title="新建目录"
+                    visible={this.state.foldVisible}
+                    destroyOnClose
+                    onOk={() => {
+                        this.props.addFold({
+                            parentId: this.state.parentId,
+                            name: this.state.foldName,
+                            onSuccess: () => {
+                                this.props.getFold();
+
+                                this.setState({
+                                    foldVisible: false
+                                })
+                            }
+                        });
+                    }}
+                    onCancel={() => {
+                        this.setState(() => ({foldVisible: false}));
+                    }}
+                >
+                    <Input
+                        placeholder="请输入名称"
+                        onChange={(e) => {
+                            this.setState({foldName: e.target.value})
+                        }}
+                    />
+                </Modal>
             </div>
         )
     }

@@ -33,7 +33,7 @@ export function upload(state = initState, action) {
         case types.GET_FOLD_SUCCESS:
             return {
                 ...state,
-                tree_list: action.payload.tree_list
+                tree_list: action.payload
             };
         case types.UPLOAD_LIST_SUCCESS:
             return {
@@ -54,32 +54,78 @@ export function upload(state = initState, action) {
 export function getFold() {
     return async dispatch => {
         let res = await api.uploadInterface.getFold();
-        let {code, msg, data} = res.data;
-
-        let tree_list = [];
+        let {code, data} = res.data;
 
         if (code === 200) {
 
-            data.map(item => {
-                return tree_list.push({
-                    parentId: item.parentId,
-                    id: item._id,
-                    _id: item._id,
-                    name: item.name,
-                    isFolder: true,
-                    showDropDown: item.hasOwnProperty('children'),
-                    openFolder: false,
-                    selected: false,
-                    isEdit: false,
-                    originNodes: item.children ? item.children : [],
-                    nodes: []
-                })
-            });
+            function deep(node) {
+                node.map(item => {
+                    item.value = item.name;
+                    item.defaultValue = item.name;
+                    item.key = item._id;
+                    item.isEditable = false;
+                    item.children && deep(item.children);
+
+                    return true
+                });
+            }
+
+            deep(data);
 
             dispatch({
                 type: types.GET_FOLD_SUCCESS,
-                payload: tree_list
+                payload: data
             })
+        }
+    }
+}
+
+export function addFold({parentId, name, onSuccess}) {
+    return async dispatch => {
+        let reqBody = {
+            parentId,
+            name
+        };
+
+        let res = await api.uploadInterface.addFold(reqBody);
+        let {code, msg} = res.data;
+
+        if (code === 200) {
+            onSuccess();
+            message.info(msg)
+        }
+    }
+}
+
+export function alterFold({_id, name, onSuccess}) {
+    return async dispatch => {
+        let reqBody = {
+            _id,
+            name
+        };
+
+        let res = await api.uploadInterface.alterFold(reqBody);
+        let {code, msg} = res.data;
+
+        if (code === 200) {
+            onSuccess();
+            message.info(msg)
+        }
+    }
+}
+
+export function deleteFold({_id, onSuccess}) {
+    return async dispatch => {
+        let reqBody = {
+            _id,
+        };
+
+        let res = await api.uploadInterface.deleteFold(reqBody);
+        let {code, msg} = res.data;
+
+        if (code === 200) {
+            onSuccess();
+            message.info(msg)
         }
     }
 }
