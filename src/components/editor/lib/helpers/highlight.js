@@ -1,4 +1,5 @@
 const Hljs = require('highlight.js/lib/highlight')
+require('../css/tomorrow.css');
 
 Hljs.registerLanguage('css', require('highlight.js/lib/languages/css'))
 Hljs.registerLanguage('json', require('highlight.js/lib/languages/json'))
