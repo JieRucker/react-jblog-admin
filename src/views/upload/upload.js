@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Form, Row, Col, Button, Table, Input, Modal} from 'antd';
+import {Form, Row, Col, Button, Table, Input, Modal, message} from 'antd';
 import {
     getFold,
     addFold,
@@ -39,17 +39,35 @@ const mapDispatchToProps = dispatch => ({
 class UploadForm extends Component {
 
     state = {
-        foldVisible: false,
-        foldName: '',
+        foldVisible: false, // 新建目录
+        moveVisible: false, // 移动
+        move_fold_id: '', // 移动到的目录
+        foldName: '', // 目录名称
         parentId: -1,
     };
 
     componentWillMount() {
-        this.props.getFold();
+        this.getFold()
     };
 
     componentDidMount() {
 
+    };
+
+    getFold = () => {
+        this.props.getFold({
+            onSuccess: (data) => {
+                if (!data.length) {
+                    return
+                }
+
+                this.props.getUploadList({
+                    foldId: data[0]._id,
+                    current_page: this.props.upload.current_page,
+                    page_size: this.props.upload.page_size
+                })
+            }
+        });
     };
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -58,17 +76,30 @@ class UploadForm extends Component {
         });
 
         setTimeout(() => {
-            let {keyword, tag, state, current_page, page_size} = this.props.upload;
-            this.props.getUploadList({keyword, tag, state, current_page, page_size})
+            let {foldId, current_page, page_size} = this.props.upload;
+            this.props.getUploadList({foldId, current_page, page_size})
         }, 50)
     };
 
-    onSelect = (value) => {
-        console.log('onSelect', value);
+    onSelect = ({item}) => {
+        this.props.setStore({
+            foldId: item._id
+        });
+
+        this.props.getUploadList({
+            foldId: item._id,
+            current_page: this.props.upload.current_page,
+            page_size: this.props.upload.page_size
+        })
+    };
+
+    onMoveSelect = ({item}) => {
+        this.setState({
+            move_fold_id: item._id
+        });
     };
 
     onExpand = (value) => {
-        console.log('onExpand', value);
     };
 
     onAdd = ({item}) => {
@@ -133,7 +164,11 @@ class UploadForm extends Component {
             {
                 title: '图片',
                 render: (value, params) => (
-                    <img src={params.image_url} alt="" style={{width: '40px', height: '40px'}}/>
+                    <img
+                        src={params.image_url}
+                        alt=""
+                        style={{width: '40px', height: '40px', verticalAlign: 'middle', objectFit: 'cover'}}
+                    />
                 )
             },
             {
@@ -149,21 +184,25 @@ class UploadForm extends Component {
                 key: 'action',
                 render: (value, params) => (
                     <span>
-                        {/*<Button
-                            type="primary"
-                            size="small"
-                            style={{marginRight: '5px'}}
-                            onClick={() => {
-                                let prefix = 'https://www.jrucker.cn';
-                                window.open(`${prefix}/detail/${params._id}`, '_blank')
-                            }}
-                        >预览
-                        </Button>*/}
                         <Button
                             type="primary"
                             size="small"
                             style={{marginRight: '5px'}}
-                            onClick={() => this.props.history.push(`/app/work/edit/${params._id}`)}
+                            onClick={() => {
+
+                                this.setState({
+                                    moveVisible: true,
+                                    move_id: params._id
+                                });
+
+                                let tree_list = this.props.upload.tree_list;
+
+                                setTimeout(() => {
+                                    this.props.setStore({
+                                        move_tree_list: tree_list
+                                    })
+                                }, 100)
+                            }}
                         >修改
                         </Button>
                         <Button
@@ -176,7 +215,7 @@ class UploadForm extends Component {
                                     okText: '确认',
                                     cancelText: '取消',
                                     onOk: async () => {
-                                        this.props.deleteUplaod({
+                                        this.props.deleteUpload({
                                             _id: params._id,
                                             onSuccess: () => {
                                                 this.getUploadList()
@@ -196,6 +235,16 @@ class UploadForm extends Component {
             pageSize: this.props.upload.page_size,
             total: this.props.upload.total_count,
         };
+
+        const renderMoveTreeNodes = (
+            <EditableTree
+                list={this.props.upload.move_tree_list}
+                onSelect={this.onMoveSelect}
+                editBtn={false}
+                plusBtn={false}
+                minusBtn={false}
+            />
+        );
 
         return (
             <div style={{height: '100%'}}>
@@ -226,6 +275,37 @@ class UploadForm extends Component {
                         />
                     </Col>
                 </Row>
+
+                <Modal
+                    title="修改"
+                    visible={this.state.moveVisible}
+                    destroyOnClose
+                    onOk={() => {
+
+                        if (!this.state.move_fold_id) {
+                            return message.info('请选择目录')
+                        }
+
+                        this.props.alterUpload({
+                            fold_id: this.state.move_fold_id,
+                            _id: this.state.move_id,
+                            onSuccess: () => {
+                                this.getFold();
+
+                                this.setState({
+                                    moveVisible: false,
+                                    move_fold_id: ''
+                                })
+                            }
+                        });
+                    }}
+                    onCancel={() => {
+                        this.setState(() => ({moveVisible: false, move_fold_id: ''}));
+                    }}
+                >
+                    <p>移动至目录：</p>
+                    {renderMoveTreeNodes}
+                </Modal>
 
                 <Modal
                     title="新建目录"

@@ -25,12 +25,20 @@ class EditableTree extends Component {
 
     expandedKeys = [];
 
+    static defaultProps = {
+        editBtn: true,
+        plusBtn: true,
+        minusBtn: true
+    };
+
     state = {
         expandedKeys: [],
         list: []
     };
 
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps)
+
         if (nextProps.list !== this.state.list) {
             this.setState({
                 list: nextProps.list
@@ -51,7 +59,9 @@ class EditableTree extends Component {
     onExpand = (expandedKeys) => {
         this.expandedKeys = expandedKeys;
         this.setState({expandedKeys: expandedKeys});
-        this.props.onExpand(expandedKeys);
+        if (this.props.onExpand) {
+            this.props.onExpand(expandedKeys);
+        }
     };
 
     onAdd = (item) => {
@@ -237,13 +247,16 @@ class EditableTree extends Component {
         } else {
             item.title = (
                 <div className={styles.titleContainer}>
-                    <span onClick={() => this.props.onSelect(item)}>
+                    <span onClick={() => this.props.onSelect({item})}>
                         {item.value}
                     </span>
                     <span className={styles.operationField}>
-                        <Icon style={{marginLeft: 10}} type='edit' onClick={() => this.onEdit(item)}/>
-                        <Icon style={{marginLeft: 10}} type='plus' onClick={() => this.onAdd(item)}/>
-                        <Icon style={{marginLeft: 10}} type='minus' onClick={() => this.onDelete(item)}/>
+                        {this.props.editBtn && (
+                            <Icon style={{marginLeft: 10}} type='edit' onClick={() => this.onEdit(item)}/>)}
+                        {this.props.plusBtn && (
+                            <Icon style={{marginLeft: 10}} type='plus' onClick={() => this.onAdd(item)}/>)}
+                        {this.props.minusBtn && (
+                            <Icon style={{marginLeft: 10}} type='minus' onClick={() => this.onDelete(item)}/>)}
                     </span>
                 </div>
             )

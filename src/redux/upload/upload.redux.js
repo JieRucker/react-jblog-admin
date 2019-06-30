@@ -16,11 +16,13 @@ export const types = {
 };
 
 const initState = {
+    foldId: '',
     tree_list: [],
+    move_tree_list: [],
     upload_list: [],
     total_count: 0,
     current_page: 1,
-    page_size: 10,
+    page_size: 8,
 };
 
 export function upload(state = initState, action) {
@@ -33,7 +35,7 @@ export function upload(state = initState, action) {
         case types.GET_FOLD_SUCCESS:
             return {
                 ...state,
-                tree_list: action.payload
+                tree_list: action.payload,
             };
         case types.UPLOAD_LIST_SUCCESS:
             return {
@@ -51,9 +53,10 @@ export function upload(state = initState, action) {
     }
 }
 
-export function getFold() {
+export function getFold({onSuccess}) {
     return async dispatch => {
         let res = await api.uploadInterface.getFold();
+        if (!res) return;
         let {code, data} = res.data;
 
         if (code === 200) {
@@ -75,7 +78,9 @@ export function getFold() {
             dispatch({
                 type: types.GET_FOLD_SUCCESS,
                 payload: data
-            })
+            });
+
+            onSuccess(data)
         }
     }
 }
@@ -88,6 +93,7 @@ export function addFold({parentId, name, onSuccess}) {
         };
 
         let res = await api.uploadInterface.addFold(reqBody);
+        if (!res) return;
         let {code, msg} = res.data;
 
         if (code === 200) {
@@ -105,6 +111,7 @@ export function alterFold({_id, name, onSuccess}) {
         };
 
         let res = await api.uploadInterface.alterFold(reqBody);
+        if (!res) return;
         let {code, msg} = res.data;
 
         if (code === 200) {
@@ -121,6 +128,7 @@ export function deleteFold({_id, onSuccess}) {
         };
 
         let res = await api.uploadInterface.deleteFold(reqBody);
+        if (!res) return;
         let {code, msg} = res.data;
 
         if (code === 200) {
@@ -130,15 +138,16 @@ export function deleteFold({_id, onSuccess}) {
     }
 }
 
-export function getUploadList({id, current_page, page_size}) {
+export function getUploadList({foldId, current_page, page_size}) {
     return async dispatch => {
         let reqBody = {
-            id,
+            id: foldId,
             current_page,
             page_size,
         };
 
         let res = await api.uploadInterface.getUploadList(reqBody);
+        if (!res) return;
         let {code, data = {}} = res.data;
         if (code === 200) {
             dispatch({
@@ -152,6 +161,7 @@ export function getUploadList({id, current_page, page_size}) {
 export function alterUpload({fold_id, _id, onSuccess}) {
     return async dispatch => {
         let res = await api.uploadInterface.alterUpload({fold_id, _id});
+        if (!res) return;
         let {code, msg} = res.data;
         if (code === 200) {
             onSuccess()
@@ -164,6 +174,7 @@ export function alterUpload({fold_id, _id, onSuccess}) {
 export function deleteUpload({_id, onSuccess}) {
     return async dispatch => {
         let res = await api.uploadInterface.deleteUploadById({_id});
+        if (!res) return;
         let {code, msg} = res.data;
         if (code === 200) {
             onSuccess()
