@@ -55,9 +55,14 @@ export function works_new(state = initState, action) {
     }
 }
 
+/**
+ * 获取标签列表
+ * @returns {Function}
+ */
 export function getTagsList() {
     return async dispatch => {
         let res = await api.tagsInterface.getTagsList();
+        if (!res) return;
         let {article_num_list = [], tags_list = []} = res.data.data;
         tags_list.forEach(item => {
             item.checked = false;
@@ -76,6 +81,18 @@ export function getTagsList() {
     }
 }
 
+/**
+ * 添加作品
+ * @param content
+ * @param render_content
+ * @param cover
+ * @param desc
+ * @param state
+ * @param tags
+ * @param title
+ * @param navigation
+ * @returns {function(*): MessageType}
+ */
 export function addWorks({content, render_content, cover, desc, state, tags, title, navigation}) {
     return async dispatch => {
         let reqBody = {
@@ -92,6 +109,7 @@ export function addWorks({content, render_content, cover, desc, state, tags, tit
         console.log(reqBody);
 
         let res = await api.worksInterface.addWorks(reqBody);
+        if (!res) return;
         let {msg} = res.data;
         return message.info(msg)
     }

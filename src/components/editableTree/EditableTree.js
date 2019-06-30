@@ -21,8 +21,6 @@ class EditableTree extends Component {
         isEditable: false
     }];*/
 
-    // list = this.props.list;
-
     expandedKeys = [];
 
     static defaultProps = {
@@ -37,8 +35,6 @@ class EditableTree extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
-
         if (nextProps.list !== this.state.list) {
             this.setState({
                 list: nextProps.list
@@ -66,41 +62,18 @@ class EditableTree extends Component {
 
     onAdd = (item) => {
         this.props.onAdd({item})
-        // console.log('add', this.state);
-        // 防止expandedKeys重复
-        // Tip: Must have, expandedKeys should not be reduplicative
-        /*if (this.state.expandedKeys.indexOf(key) === -1) {
-            this.expandedKeys.push(key);
-        }
-
-        this.addNode(key, this.list);
-        this.setState({
-            expandedKeys: this.expandedKeys,
-            list: this.list
-        });*/
     };
 
     onDelete = (item) => {
-        /*this.deleteNode(key, this.list);
-        this.setState({
-            list: this.list
-        });*/
         this.props.onDelete({item})
     };
 
     onEdit = (item) => {
-
-        /*this.editNode(key, this.list);
-        this.setState({
-            list: this.list
-        });*/
         item.isEditable = true;
 
         this.setState({
             list: this.state.list
         });
-
-        // this.props.onEdit({item})
     };
 
     onClose = (item) => {
@@ -110,17 +83,9 @@ class EditableTree extends Component {
         this.setState({
             list: this.state.list
         });
-        /*this.closeNode(key, defaultValue, this.list);
-        this.setState({
-            list: this.list
-        });*/
     };
 
     onSave = (item) => {
-        /*this.saveNode(key, this.list);
-        this.setState({
-            list: this.list
-        });*/
         this.props.onSave({item})
     };
 
@@ -130,106 +95,7 @@ class EditableTree extends Component {
         this.setState({
             list: this.state.list
         });
-        /*this.changeNode(key, e.target.value, this.list);
-        this.setState({
-            list: this.list
-        });*/
     };
-
-    /*addNode = (key, list) => list.map((item) => {
-        if (item.key === key) {
-            this.props.onAdd({item});
-            if (item.children) {
-                item
-                    .children
-                    .push({
-                        value: 'default',
-                        defaultValue: 'default',
-                        key: key + Math.random(100), // 这个 key 应该是唯一的。 Tip: The key should be unique
-                        isEditable: false
-                    });
-            } else {
-                item.children = [];
-                item
-                    .children
-                    .push({
-                        value: 'default',
-                        defaultValue: 'default',
-                        key: key + Math.random(100),
-                        isEditable: false
-                    });
-            }
-        }
-
-        if (item.children) {
-            this.addNode(key, item.children)
-        }
-
-        return true
-    });*/
-
-    /*deleteNode = (key, list) => list.map((item, index) => {
-        if (item.key === key) {
-            list.splice(index, 1);
-        } else {
-            if (item.children) {
-                this.deleteNode(key, item.children)
-            }
-        }
-
-        return true
-    });*/
-
-    /*editNode = (key, list) => list.map((item) => {
-        if (item.key === key) {
-            item.isEditable = true;
-        } else {
-            item.isEditable = false;
-        }
-        //Tip: Must have, when a node is editable, and you click a button to make other node editable, the node which you don't save yet will be not editable, and its value should be defaultValue
-        item.value = item.defaultValue; // 当某节点处于编辑状态，并改变数据，点击编辑其他节点时，此节点变成不可编辑状态，value 需要回退到 defaultvalue
-        if (item.children) {
-            this.editNode(key, item.children)
-        }
-
-        return true
-    });*/
-
-    /*closeNode = (key, defaultValue, list) => list.map((item) => {
-        item.isEditable = false;
-        if (item.key === key) {
-            item.value = defaultValue;
-        }
-        if (item.children) {
-            this.closeNode(key, defaultValue, item.children)
-        }
-
-        return true
-    });*/
-
-    /*saveNode = (key, list) => list.map((item) => {
-        if (item.key === key) {
-            item.defaultValue = item.value;
-            this.props.onSave({item})
-        }
-        if (item.children) {
-            this.saveNode(key, item.children)
-        }
-        item.isEditable = false;
-
-        return true
-    });*/
-
-    /*changeNode = (key, value, list) => list.map((item) => {
-        if (item.key === key) {
-            item.value = value;
-        }
-        if (item.children) {
-            this.changeNode(key, value, item.children)
-        }
-
-        return true
-    });*/
 
     renderTreeNodes = list => list.map((item) => {
         if (item.isEditable) {

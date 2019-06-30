@@ -75,6 +75,9 @@ export function getTagsList() {
 
     return async dispatch => {
         let res = await api.tagsInterface.getTagsList();
+
+        if (!res) return;
+
         let {article_num_list = [], tags_list = []} = res.data.data;
 
         tags_list.forEach(item => {
@@ -116,6 +119,7 @@ export function getArticleList({keyword, tag, state, current_page, page_size}) {
         };
 
         let res = await api.articleInterface.getArticleList(reqBody);
+        if (!res) return;
         let {code, data = {}} = res.data;
         if (code === 200) {
             dispatch({
@@ -135,6 +139,7 @@ export function getArticleList({keyword, tag, state, current_page, page_size}) {
 export function deleteArticle({_id, onSuccess}) {
     return async dispatch => {
         let res = await api.articleInterface.deleteArticleById({_id});
+        if (!res) return;
         let {code, msg} = res.data;
         if (code === 200) {
             onSuccess()

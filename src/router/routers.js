@@ -6,16 +6,6 @@
  * @Last Modified time: 2019/6/1 15:14
  */
 
-import Index from '../views/index/index'
-import Publish from '../views/publish/publish'
-import Edit from '../views/edit/edit'
-import CatalogNew from '../views/catalog/catalognew'
-import CatalogList from '../views/catalog/cataloglist'
-import CatalogEdit from '../views/catalog/catalogedit'
-import StarNew from '../views/star/starnew'
-import StarList from '../views/star/starlist'
-import StarEdit from '../views/star/staredit'
-
 import ArticleList from '../views/article/list';
 import ArticleNew from '../views/article/new';
 import ArticleEdit from '../views/article/edit';
@@ -25,8 +15,6 @@ import WorksNew from '../views/works/new';
 import WorksEdit from '../views/works/edit';
 
 import TagList from '../views/tag/list';
-// import WorkList from '../views/work/list';
-// import WorkNew from '../views/work/new';
 import Upload from '../views/upload/upload';
 import SettingMine from '../views/setting/mine';
 import SettingUpyun from '../views/setting/upyun';
@@ -44,21 +32,6 @@ export const otherRouter = [
         path: '/app/works/edit/:id',
         component: WorksEdit
     },
-    {
-        title: '编辑博客',
-        path: '/app/blog/edit/:id',
-        component: Edit
-    },
-    {
-        title: '编辑分类',
-        path: '/app/catalog/edit/:id',
-        component: CatalogEdit
-    },
-    {
-        title: '编辑收藏',
-        path: '/app/collect/edit/:id',
-        component: StarEdit
-    }
 ];
 
 // 显示在菜单路由里
@@ -137,55 +110,6 @@ export const appRouter = [
             icon: '',
             component: SettingAbout
         }],
-    },
-    {
-        path: '/app/index',
-        title: '首页',
-        icon: 'home',
-        component: Index
-    },
-    {
-        path: '/app/blog',
-        title: '博客',
-        icon: 'edit',
-        sub: [{
-            path: '/app/blog/publish',
-            title: '发布博客',
-            icon: '',
-            component: Publish
-        }],
-    },
-    {
-        path: '/app/catalog',
-        title: '分类',
-        icon: 'exception',
-        sub: [{
-            path: '/app/catalog/list',
-            title: '分类列表',
-            icon: '',
-            component: CatalogList
-        }, {
-            path: '/app/catalog/new',
-            title: '创建分类',
-            icon: '',
-            component: CatalogNew
-        }]
-    },
-    {
-        path: '/app/collect',
-        title: '收藏',
-        icon: 'star',
-        sub: [{
-            path: '/app/collect/list',
-            title: '收藏列表',
-            icon: '',
-            component: StarList
-        }, {
-            path: '/app/collect/new',
-            title: '添加收藏',
-            icon: '',
-            component: StarNew
-        }]
     }
 ];
 

@@ -38,10 +38,14 @@ export function about(state = initState, action) {
     }
 }
 
+/**
+ * 获取设置信息
+ * @returns {Function}
+ */
 export function getSetting() {
     return async dispatch => {
         let res = await api.settingInterface.getSetting();
-
+        if (!res) return;
         let {data = {}} = res.data;
         let info = data.info;
         let about = info.about;
@@ -56,6 +60,12 @@ export function getSetting() {
     }
 }
 
+/**
+ * 修改设置信息
+ * @param picture
+ * @param description
+ * @returns {function(*): MessageType}
+ */
 export function alterSetting({picture, description}) {
     return async dispatch => {
         let reqBody = {
@@ -65,6 +75,7 @@ export function alterSetting({picture, description}) {
         };
 
         let res = await api.settingInterface.alterSetting(reqBody);
+        if (!res) return;
         let {msg} = res.data;
         return message.info(msg)
     }

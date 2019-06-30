@@ -8,7 +8,8 @@
 
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Form, Row, Col, Button, Table, Input, Modal, message} from 'antd';
+import Cookies from 'js-cookie'
+import {Form, Row, Col, Button, Table, Input, Modal, message, Upload} from 'antd';
 import {
     getFold,
     addFold,
@@ -19,7 +20,7 @@ import {
     deleteUpload,
     setStore
 } from '../../redux/upload/upload.redux';
-import EditableTree from './EditableTree';
+import EditableTree from '../../components/editableTree/EditableTree';
 import './upload.scss';
 
 const mapStateProps = state => ({
@@ -44,6 +45,7 @@ class UploadForm extends Component {
         move_fold_id: '', // 移动到的目录
         foldName: '', // 目录名称
         parentId: -1,
+        action: '', // 上传地址
     };
 
     componentWillMount() {
@@ -60,6 +62,10 @@ class UploadForm extends Component {
                 if (!data.length) {
                     return
                 }
+
+                this.setState({
+                    foldId: data[0]._id
+                });
 
                 this.props.getUploadList({
                     foldId: data[0]._id,
@@ -134,6 +140,12 @@ class UploadForm extends Component {
                 });
             },
         });
+    };
+
+    handleUpload = () => {
+        let {foldId} = this.state;
+        let action = `${process.env.api.common_url}/api/upload/pic/${foldId}`;
+        this.setState({action})
     };
 
     render() {
@@ -218,7 +230,7 @@ class UploadForm extends Component {
                                         this.props.deleteUpload({
                                             _id: params._id,
                                             onSuccess: () => {
-                                                this.getUploadList()
+                                                this.getFold()
                                             }
                                         })
                                     },
@@ -246,6 +258,23 @@ class UploadForm extends Component {
             />
         );
 
+        const uploadProps = {
+            multiple: true,
+            headers: {
+                Authorization: Cookies.get('token')
+            },
+            action: this.state.action,
+            beforeUpload(file, fileList) {
+
+            },
+            showUploadList: false,
+            onChange: (value) => {
+                if (value.file.response) {
+                    this.getFold();
+                }
+            }
+        };
+
         return (
             <div style={{height: '100%'}}>
                 <Row gutter={16} style={{height: '100%'}}>
@@ -266,6 +295,9 @@ class UploadForm extends Component {
                         />
                     </Col>
                     <Col span={19}>
+                        <Upload {...uploadProps}>
+                            <Button type="primary" style={{margin: '10px'}} onClick={this.handleUpload}>上传文件</Button>
+                        </Upload>
                         <Table
                             columns={columns}
                             dataSource={this.props.upload.upload_list}
@@ -340,6 +372,6 @@ class UploadForm extends Component {
     }
 }
 
-const Upload = Form.create()(UploadForm);
+const UploadPage = Form.create()(UploadForm);
 
-export default Upload
+export default UploadPage

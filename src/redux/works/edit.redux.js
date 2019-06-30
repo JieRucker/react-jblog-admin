@@ -74,9 +74,14 @@ export function works_edit(state = initState, action) {
     }
 }
 
+/**
+ * 获取标签列表
+ * @returns {Function}
+ */
 export function getTagsList() {
     return async dispatch => {
         let res = await api.tagsInterface.getTagsList();
+        if (!res) return;
         let {article_num_list = [], tags_list = []} = res.data.data;
         tags_list.forEach(item => {
             item.checked = false;
@@ -95,9 +100,15 @@ export function getTagsList() {
     }
 }
 
+/**
+ * 获取作品详情
+ * @param _id
+ * @returns {Function}
+ */
 export function getWorks({_id}) {
     return async dispatch => {
         let res = await api.worksInterface.getWorksById({_id});
+        if (!res) return;
         let {code, data} = res.data;
 
         if (code === 200 && data.length) {
@@ -111,6 +122,19 @@ export function getWorks({_id}) {
     }
 }
 
+/**
+ * 修改作品
+ * @param _id
+ * @param content
+ * @param render_content
+ * @param cover
+ * @param desc
+ * @param state
+ * @param tags
+ * @param title
+ * @param navigation
+ * @returns {function(*): MessageType}
+ */
 export function alterWorks({_id, content, render_content, cover, desc, state, tags, title, navigation}) {
     return async dispatch => {
         let reqBody = {
@@ -128,6 +152,7 @@ export function alterWorks({_id, content, render_content, cover, desc, state, ta
         console.log(reqBody);
 
         let res = await api.worksInterface.alterWorks(reqBody);
+        if (!res) return;
         let {msg} = res.data;
         return message.info(msg)
     }

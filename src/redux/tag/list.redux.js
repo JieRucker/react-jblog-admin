@@ -49,6 +49,7 @@ export function getTagsList() {
 
     return async dispatch => {
         let res = await api.tagsInterface.getTagsList();
+        if (!res) return;
         let {article_num_list = [], tags_list = []} = res.data.data;
 
         tags_list.forEach(item => {
@@ -74,6 +75,7 @@ export function getTagsList() {
 export function deleteTags({_id, onSuccess}) {
     return async dispatch => {
         let res = await api.tagsInterface.deleteTagsById({_id});
+        if (!res) return;
         let {code, msg} = res.data;
         if (code === 200) {
             onSuccess()
@@ -96,6 +98,7 @@ export function addTags({tags_name, tags_desc, onSuccess}) {
             tags_name,
             tags_desc
         });
+        if (!res) return;
 
         let {code, msg} = res.data;
         if (code === 200) {
@@ -121,6 +124,7 @@ export function alterTags({_id, tags_name, tags_desc, onSuccess}) {
             tags_name,
             tags_desc
         });
+        if (!res) return;
 
         let {code, msg} = res.data;
         if (code === 200) {

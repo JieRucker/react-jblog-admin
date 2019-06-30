@@ -36,6 +36,12 @@ const initState = {
     selectedTags: [],
 };
 
+/**
+ * 编辑文章
+ * @param state
+ * @param action
+ * @returns {*}
+ */
 export function article_edit(state = initState, action) {
     switch (action.type) {
         case types.TAG_LIST_SUCCESS:
@@ -74,9 +80,14 @@ export function article_edit(state = initState, action) {
     }
 }
 
+/**
+ * 获取标签列表
+ * @returns {Function}
+ */
 export function getTagsList() {
     return async dispatch => {
         let res = await api.tagsInterface.getTagsList();
+        if (!res) return;
         let {article_num_list = [], tags_list = []} = res.data.data;
         tags_list.forEach(item => {
             item.checked = false;
@@ -95,9 +106,15 @@ export function getTagsList() {
     }
 }
 
+/**
+ * 获取文章详情
+ * @param _id
+ * @returns {Function}
+ */
 export function getArticle({_id}) {
     return async dispatch => {
         let res = await api.articleInterface.getArticleById({_id});
+        if (!res) return;
         let {code, data} = res.data;
 
         if (code === 200 && data.length) {
@@ -111,6 +128,19 @@ export function getArticle({_id}) {
     }
 }
 
+/**
+ * 修改文章
+ * @param _id
+ * @param content
+ * @param render_content
+ * @param cover
+ * @param desc
+ * @param state
+ * @param tags
+ * @param title
+ * @param navigation
+ * @returns {function(*): MessageType}
+ */
 export function alterArticle({_id, content, render_content, cover, desc, state, tags, title, navigation}) {
     return async dispatch => {
         let reqBody = {
@@ -128,6 +158,7 @@ export function alterArticle({_id, content, render_content, cover, desc, state, 
         console.log(reqBody);
 
         let res = await api.articleInterface.alterArticle(reqBody);
+        if (!res) return;
         let {msg} = res.data;
         return message.info(msg)
     }

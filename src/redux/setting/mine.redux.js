@@ -46,10 +46,14 @@ export function mine(state = initState, action) {
     }
 }
 
+/**
+ * 获取设置信息
+ * @returns {Function}
+ */
 export function getSetting() {
     return async dispatch => {
         let res = await api.settingInterface.getSetting();
-
+        if (!res) return;
         let {data = {}} = res.data;
         let info = data.info;
         let person_info = info.person_info;
@@ -68,6 +72,16 @@ export function getSetting() {
     }
 }
 
+/**
+ * 修改设置信息
+ * @param avatar
+ * @param cover
+ * @param description
+ * @param github
+ * @param twitter
+ * @param juejin
+ * @returns {function(*): MessageType}
+ */
 export function alterSetting({avatar, cover, description, github, twitter, juejin}) {
     return async dispatch => {
         let reqBody = {
@@ -82,6 +96,7 @@ export function alterSetting({avatar, cover, description, github, twitter, jueji
         };
 
         let res = await api.settingInterface.alterSetting(reqBody);
+        if (!res) return;
         let {msg} = res.data;
         return message.info(msg)
     }

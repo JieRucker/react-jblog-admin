@@ -32,6 +32,10 @@ export function sider(state = initState, action) {
     }
 }
 
+/**
+ * 初始化展开的菜单
+ * @returns {Function}
+ */
 export function initOpenMenu() {
     return dispatch => {
         let openMenuKeys = window.sessionStorage.getItem('openMenuKeys');
@@ -47,6 +51,11 @@ export function initOpenMenu() {
     }
 }
 
+/**
+ * 菜单展开事件
+ * @param openKeys
+ * @returns {Function}
+ */
 export function siderOpenChange(openKeys) {
     return dispatch => {
         dispatch({

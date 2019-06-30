@@ -42,10 +42,14 @@ export function upyun(state = initState, action) {
     }
 }
 
+/**
+ * 获取设置信息
+ * @returns {Function}
+ */
 export function getSetting() {
     return async dispatch => {
         let res = await api.settingInterface.getSetting();
-
+        if (!res) return;
         let {data = {}} = res.data;
         let info = data.info;
         let upyun_cos = info.upyun_cos;
@@ -62,6 +66,14 @@ export function getSetting() {
     }
 }
 
+/**
+ * 修改设置信息
+ * @param bucket
+ * @param operatorname
+ * @param operatorpwd
+ * @param endpoint
+ * @returns {function(*): MessageType}
+ */
 export function alterSetting({bucket, operatorname, operatorpwd, endpoint}) {
     return async dispatch => {
         let reqBody = {
@@ -74,6 +86,7 @@ export function alterSetting({bucket, operatorname, operatorpwd, endpoint}) {
         };
 
         let res = await api.settingInterface.alterSetting(reqBody);
+        if (!res) return;
         let {msg} = res.data;
         return message.info(msg)
     }

@@ -88,6 +88,7 @@ export function user(state = initState, action) {
 export function fetchCaptcha() {
     return async dispatch => {
         let res = await api.loginInterface.getCheckcode();
+        if (!res) return;
         let {code, data} = res.data;
         if (code === 200) {
             dispatch({
@@ -98,9 +99,14 @@ export function fetchCaptcha() {
     }
 }
 
+/**
+ * 获取验证码
+ * @returns {Promise}
+ */
 function getCheckcode() {
     return new Promise(async (resolve, reject) => {
         let res = await api.loginInterface.getCheckcode();
+        if (!res) return;
         let {code, data} = res.data;
         if (code === 200) {
             resolve(data)
@@ -108,9 +114,18 @@ function getCheckcode() {
     });
 }
 
+/**
+ * 登录
+ * @param username
+ * @param password
+ * @param captcha
+ * @param checkToken
+ * @returns {Function}
+ */
 export function login({username, password, captcha, checkToken}) {
     return async dispatch => {
         let res = await api.loginInterface.getPublicKey();
+        if (!res) return;
         let {code, data} = res.data;
         if (code === 200) {
             let publicKey = data;
@@ -125,6 +140,7 @@ export function login({username, password, captcha, checkToken}) {
             };
 
             let res_login = await api.loginInterface.login(params);
+            if (!res_login) return;
 
             let {code, msg} = res_login.data;
             if (code === 200) {
@@ -156,6 +172,12 @@ export function login({username, password, captcha, checkToken}) {
     }
 }
 
+/**
+ * 注册
+ * @param username
+ * @param password
+ * @returns {Function}
+ */
 export function register({username, password}) {
     return async dispatch => {
         let params = {
@@ -165,7 +187,7 @@ export function register({username, password}) {
         };
 
         let res = await api.loginInterface.register(params);
-
+        if (!res) return;
         let {code, msg} = res.data;
         if (code === 200) {
             message.success('注册成功！');
@@ -181,6 +203,10 @@ export function register({username, password}) {
     }
 }
 
+/**
+ * 登出
+ * @returns {{type: string}}
+ */
 export function loginOut() {
     Cookies.remove('admin_id');
     Cookies.remove('admin_name');
@@ -191,8 +217,11 @@ export function loginOut() {
     }
 }
 
+/**
+ * 获取用户信息
+ * @returns {{type: string, payload: {admin_id: (*|string), admin_name: (*|string), token: (*|string)}}}
+ */
 export function initUserInfo() {
-
     let admin_id = Cookies.get('admin_id') || '';
     let admin_name = Cookies.get('admin_name') || '';
     let token = Cookies.get('token') || '';
