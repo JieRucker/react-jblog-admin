@@ -149,6 +149,7 @@ export function getUploadList({foldId, current_page, page_size}) {
         let res = await api.uploadInterface.getUploadList(reqBody);
         if (!res) return;
         let {code, data = {}} = res.data;
+
         if (code === 200) {
             dispatch({
                 type: types.UPLOAD_LIST_SUCCESS,
