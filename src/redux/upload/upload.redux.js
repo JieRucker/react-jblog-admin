@@ -24,6 +24,12 @@ const initState = {
     page_size: 8,
 };
 
+/**
+ * 上传
+ * @param state
+ * @param action
+ * @returns {*}
+ */
 export function upload(state = initState, action) {
     switch (action.type) {
         case types.TAG_LIST_SUCCESS:
@@ -52,6 +58,11 @@ export function upload(state = initState, action) {
     }
 }
 
+/**
+ * 获取目录
+ * @param onSuccess
+ * @returns {Function}
+ */
 export function getFold({onSuccess}) {
     return async dispatch => {
         let res = await api.uploadInterface.getFold();
@@ -84,6 +95,13 @@ export function getFold({onSuccess}) {
     }
 }
 
+/**
+ * 添加目录
+ * @param parentId
+ * @param name
+ * @param onSuccess
+ * @returns {Function}
+ */
 export function addFold({parentId, name, onSuccess}) {
     return async dispatch => {
         let reqBody = {
@@ -102,6 +120,13 @@ export function addFold({parentId, name, onSuccess}) {
     }
 }
 
+/**
+ * 修改目录
+ * @param _id
+ * @param name
+ * @param onSuccess
+ * @returns {Function}
+ */
 export function alterFold({_id, name, onSuccess}) {
     return async dispatch => {
         let reqBody = {
@@ -120,6 +145,12 @@ export function alterFold({_id, name, onSuccess}) {
     }
 }
 
+/**
+ * 删除目录
+ * @param _id
+ * @param onSuccess
+ * @returns {Function}
+ */
 export function deleteFold({_id, onSuccess}) {
     return async dispatch => {
         let reqBody = {
@@ -137,6 +168,13 @@ export function deleteFold({_id, onSuccess}) {
     }
 }
 
+/**
+ * 获取上传列表
+ * @param foldId
+ * @param current_page
+ * @param page_size
+ * @returns {Function}
+ */
 export function getUploadList({foldId, current_page, page_size}) {
     return async dispatch => {
         let reqBody = {
@@ -158,6 +196,13 @@ export function getUploadList({foldId, current_page, page_size}) {
     }
 }
 
+/**
+ * 修改上传文件目录
+ * @param fold_id
+ * @param _id
+ * @param onSuccess
+ * @returns {function(*): MessageType}
+ */
 export function alterUpload({fold_id, _id, onSuccess}) {
     return async dispatch => {
         let res = await api.uploadInterface.alterUpload({fold_id, _id});
@@ -171,6 +216,12 @@ export function alterUpload({fold_id, _id, onSuccess}) {
     }
 }
 
+/**
+ * 删除上传文件
+ * @param _id
+ * @param onSuccess
+ * @returns {function(*): MessageType}
+ */
 export function deleteUpload({_id, onSuccess}) {
     return async dispatch => {
         let res = await api.uploadInterface.deleteUploadById({_id});

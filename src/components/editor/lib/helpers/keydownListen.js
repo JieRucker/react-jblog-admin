@@ -43,7 +43,7 @@ export default ins => {
             switch (e.keyCode) {
                 case KEY_CODE.TAB: {
                     e.preventDefault()
-                    ins.toolBarLeftClick('tab')
+                    // ins.toolBarLeftClick('tab')
                     break
                 }
                 default:
