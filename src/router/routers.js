@@ -6,19 +6,19 @@
  * @Last Modified time: 2019/6/1 15:14
  */
 
-import ArticleList from '../views/article/list';
-import ArticleNew from '../views/article/new';
-import ArticleEdit from '../views/article/edit';
+const ArticleList = () => import('../views/article/list');
+const ArticleNew = () => import('../views/article/new');
+const ArticleEdit = () => import('../views/article/edit');
 
-import WorksList from '../views/works/list';
-import WorksNew from '../views/works/new';
-import WorksEdit from '../views/works/edit';
+const WorksList = () => import('../views/works/list');
+const WorksNew = () => import('../views/works/new');
+const WorksEdit = () => import('../views/works/edit');
 
-import TagList from '../views/tag/list';
-import Upload from '../views/upload/upload';
-import SettingMine from '../views/setting/mine';
-import SettingUpyun from '../views/setting/upyun';
-import SettingAbout from '../views/setting/about';
+const TagList = () => import('../views/tag/list');
+const Upload = () => import('../views/upload/upload');
+const SettingMine = () => import('../views/setting/mine');
+const SettingUpyun = () => import('../views/setting/upyun');
+const SettingAbout = () => import('../views/setting/about');
 
 // 不显示在菜单路由里
 export const otherRouter = [
