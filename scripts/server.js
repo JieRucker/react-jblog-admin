@@ -3,9 +3,9 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const proxyMiddleware = require('http-proxy-middleware');
-const compression = require('compression');
+// const compression = require('compression');
 
-function shouldCompress(req, res) {
+/*function shouldCompress(req, res) {
     if (req.headers['x-no-compression']) {
         // 这里就过滤掉了请求头包含'x-no-compression'
         return false
@@ -16,7 +16,7 @@ function shouldCompress(req, res) {
 
 app.use(compression({
     // filter: shouldCompress
-}));
+}));*/
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
 const proxyTable = {
