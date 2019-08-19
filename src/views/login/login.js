@@ -23,7 +23,9 @@ class LoginForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            background: 'http://admin.jrucker.cn/static/images/login-bg.jpg'
+        };
 
         this.onRegister = this.onRegister.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -33,9 +35,9 @@ class LoginForm extends Component {
         this.props.fetchCaptcha()
     }
 
-    get backgroundImage() {
-        return `url(http://admin.jrucker.cn/static/images/login/login-bg.jpg)`
-    }
+    /*get backgroundImage() {
+        return `url(http://admin.jrucker.cn/static/images/login-bg.jpg)`
+    }*/
 
     onRegister(e) {
         e.preventDefault();
@@ -62,7 +64,7 @@ class LoginForm extends Component {
     render() {
         const {getFieldDecorator} = this.props.form;
         return (
-            <div className="login" style={{backgroundImage: this.backgroundImage}}>
+            <div className="login" style={{backgroundImage: `url(${this.state.background})`}}>
                 {this.props.user.redirectTo && this.props.user.redirectTo !== '/login' ?
                     <Redirect to={this.props.user.redirectTo}/> : null}
 
