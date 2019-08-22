@@ -17,6 +17,7 @@ const proxyMiddleware = require('http-proxy-middleware');
 app.use(compression({
     // filter: shouldCompress
 }));*/
+
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
 const proxyTable = {
