@@ -13,10 +13,10 @@ const proxyMiddleware = require('http-proxy-middleware');
 
     return compression.filter(req, res)
 }
-
 app.use(compression({
     // filter: shouldCompress
 }));*/
+
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
 const proxyTable = {
