@@ -6,10 +6,10 @@ import {
     Redirect
 } from 'react-router-dom'
 import AuthRouter from '../components/auth/AuthRouter';
-import Login from '../views/login/login'
-import Register from '../views/login/register'
-import Index from '../views/layout'
-import NotFound from '../views/404/notFound'
+import Login from '../views/login/login';
+import Register from '../views/login/register';
+import Index from '../views/layout';
+import NotFound from '../views/404/notFound';
 
 export default () => (
     <Router>
