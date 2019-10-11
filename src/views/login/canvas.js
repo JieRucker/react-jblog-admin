@@ -5,10 +5,10 @@ export class Circle {
   //this.r是创建圆的半径，参数越大半径越大
   //this._mx,this._my是移动的距离，参数越大移动
   constructor(x, y) {
-    this.x = x
-    this.y = y
-    this.r = Math.random() * 10
-    this._mx = Math.random()
+    this.x = x;
+    this.y = y;
+    this.r = Math.random() * 10;
+    this._mx = Math.random();
     this._my = Math.random()
 
   }
