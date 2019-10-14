@@ -14,8 +14,6 @@ export class Circle {
   }
 
   //canvas 画圆和画直线
-  //画圆就是正常的用canvas画一个圆
-  //画直线是两个圆连线，为了避免直线过多，给圆圈距离设置了一个值，距离很远的圆圈，就不做连线处理
   drawCircle(ctx) {
     ctx.beginPath()
     //arc() 方法使用一个中心点和半径，为一个画布的当前子路径添加一条弧。
