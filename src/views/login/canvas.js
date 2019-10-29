@@ -29,7 +29,6 @@ export class Circle {
     let d = Math.sqrt(dx * dx + dy * dy)
     if (d < 150) {
       ctx.beginPath()
-      //开始一条路径，移动到位置 this.x,this.y。创建到达位置 _circle.x,_circle.y 的一条线：
       ctx.moveTo(this.x, this.y) //起始点
       ctx.lineTo(_circle.x, _circle.y) //终点
       ctx.closePath()
