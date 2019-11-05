@@ -2,8 +2,6 @@ export class Circle {
   //创建对象
   //以一个圆为对象
   //设置随机的 x，y坐标，r半径，_mx，_my移动的距离
-  //this.r是创建圆的半径，参数越大半径越大
-  //this._mx,this._my是移动的距离，参数越大移动
   constructor(x, y) {
     this.x = x;
     this.y = y;
