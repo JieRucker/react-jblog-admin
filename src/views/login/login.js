@@ -35,10 +35,6 @@ class LoginForm extends Component {
         this.props.fetchCaptcha()
     }
 
-    /*get backgroundImage() {
-        return `url(http://admin.jrucker.cn/static/images/login-bg.jpg)`
-    }*/
-
     onRegister(e) {
         e.preventDefault();
         this.props.history.push('/register')

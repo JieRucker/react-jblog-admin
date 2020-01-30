@@ -19,5 +19,5 @@ const dev = {
   common_url: 'http://localhost:8091',
 };
 
-module.exports = {build, build_dev, dev};
+module.exports = {build, build_dev, dev}
 
