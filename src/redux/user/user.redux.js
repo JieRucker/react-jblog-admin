@@ -30,7 +30,6 @@ const initState = {
     redirectTo: '', // 重定向
     checkToken: '', // token值
     captchaImg: '', // 验证码
-    admin_id: '',
     admin_name: '', // 用户名
     token: ''
 };
@@ -44,16 +43,15 @@ export function user(state = initState, action) {
     switch (action.type) {
         case types.FETCH_CAPTCHA:
             return {
-                checkToken: action.payload.token,
-                captchaImg: action.payload.img,
+                // checkToken: action.payload.token,
+                captchaImg: action.payload,
             };
         case types.LOGIN_SUCCESS:
-            let {admin_id, admin_name, token} = action.payload;
+            let {admin_name, token} = action.payload;
 
             return {
                 ...state,
                 redirectTo: '/app/article/list',
-                admin_id: admin_id,
                 admin_name: admin_name,
                 token: token
             };
@@ -63,7 +61,6 @@ export function user(state = initState, action) {
             };
         case types.LOGOUT:
             return {
-                admin_id: '',
                 admin_name: '',
                 token: '',
                 redirectTo: '/login'
@@ -72,7 +69,6 @@ export function user(state = initState, action) {
             let payload = action.payload;
 
             return {
-                admin_id: payload.admin_id,
                 admin_name: payload.admin_name,
                 token: payload.token
             };
@@ -82,20 +78,33 @@ export function user(state = initState, action) {
 }
 
 /**
+ * 获取验证码
  * dispatch
  */
 
 export function fetchCaptcha() {
     return async dispatch => {
-        let res = await api.loginInterface.getCheckcode();
-        if (!res) return;
-        let {code, data} = res.data;
-        if (code === 200) {
-            dispatch({
-                type: types.FETCH_CAPTCHA,
-                payload: data
-            });
-        }
+        dispatch({
+            type: types.FETCH_CAPTCHA,
+            payload: process.env.api.common_url + '/api/admin/getCode?=' + Math.random()
+        });
+
+        /*let res = await api.loginInterface.getCode();
+
+        dispatch({
+            type: types.FETCH_CAPTCHA,
+            payload: res.data
+        });*/
+
+        /* let res = await api.loginInterface.getCode();
+         if (!res) return;
+         let {status, data} = res;
+         if (status === 200) {
+             dispatch({
+                 type: types.FETCH_CAPTCHA,
+                 payload: data
+             });
+         }*/
     }
 }
 
@@ -103,16 +112,17 @@ export function fetchCaptcha() {
  * 获取验证码
  * @returns {Promise}
  */
-function getCheckcode() {
+
+/*function getCheckcode() {
     return new Promise(async (resolve, reject) => {
-        let res = await api.loginInterface.getCheckcode();
+        let res = await api.loginInterface.getCode();
         if (!res) return;
         let {code, data} = res.data;
         if (code === 200) {
             resolve(data)
         }
     });
-}
+}*/
 
 /**
  * 登录
@@ -133,7 +143,7 @@ export function login({username, password, captcha, checkToken}) {
             encrypt.setPublicKey(publicKey);
 
             let params = {
-                admin_id: username,
+                admin_name: username,
                 admin_pwd: encrypt.encrypt(password),
                 code: captcha,
                 token: checkToken
@@ -146,9 +156,8 @@ export function login({username, password, captcha, checkToken}) {
             if (code === 200) {
                 message.success('登录成功！');
 
-                let {admin_id, admin_name, token} = res_login.data.data;
+                let {admin_name, token} = res_login.data.data;
 
-                Cookies.set('admin_id', admin_id);
                 Cookies.set('admin_name', admin_name);
                 Cookies.set('token', token);
 
@@ -162,12 +171,19 @@ export function login({username, password, captcha, checkToken}) {
 
             message.error(msg);
 
-            let getCode = await getCheckcode();
+            /*let getCode = await getCheckcode();
 
             dispatch({
                 type: types.FETCH_CAPTCHA,
                 payload: Object.assign({}, getCode)
-            });
+            });*/
+            /* dispatch({
+                 type: types.FETCH_CAPTCHA,
+                 payload: process.env.api.common_url + '/api/admin/getCode?=' + Math.random()
+             });*/
+
+            fetchCaptcha()(dispatch)
+
         }
     }
 }
@@ -180,26 +196,35 @@ export function login({username, password, captcha, checkToken}) {
  */
 export function register({username, password}) {
     return async dispatch => {
-        let params = {
-            admin_name: username,
-            admin_id: username,
-            admin_pwd: password,
-        };
-
-        let res = await api.loginInterface.register(params);
+        let res = await api.loginInterface.getPublicKey();
         if (!res) return;
-        let {code, msg} = res.data;
+        let {code, data} = res.data;
         if (code === 200) {
-            message.success('注册成功！');
+            let publicKey = data;
+            let encrypt = new JSEncrypt.JSEncrypt();
+            encrypt.setPublicKey(publicKey);
 
-            dispatch({
-                type: types.REGISTER_SUCCESS,
-            });
+            let params = {
+                admin_name: username,
+                admin_pwd: encrypt.encrypt(password),
+            };
 
-            return false;
+            let res_register = await api.loginInterface.register(params);
+            if (!res_register) return;
+
+            let {code, msg} = res.data;
+            if (code === 200) {
+                message.success('注册成功！');
+
+                dispatch({
+                    type: types.REGISTER_SUCCESS,
+                });
+
+                return false;
+            }
+
+            message.error(msg);
         }
-
-        message.error(msg);
     }
 }
 
@@ -208,7 +233,6 @@ export function register({username, password}) {
  * @returns {{type: string}}
  */
 export function loginOut() {
-    Cookies.remove('admin_id');
     Cookies.remove('admin_name');
     Cookies.remove('token');
 
@@ -219,15 +243,14 @@ export function loginOut() {
 
 /**
  * 获取用户信息
- * @returns {{type: string, payload: {admin_id: (*|string), admin_name: (*|string), token: (*|string)}}}
+ * @returns {{type: string, payload: {admin_name: (*|string), token: (*|string)}}}
  */
 export function initUserInfo() {
-    let admin_id = Cookies.get('admin_id') || '';
     let admin_name = Cookies.get('admin_name') || '';
     let token = Cookies.get('token') || '';
 
     return {
         type: types.INIT_USER_INFO,
-        payload: {admin_id, admin_name, token}
+        payload: {admin_name, token}
     }
 }

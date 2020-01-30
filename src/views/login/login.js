@@ -24,7 +24,7 @@ class LoginForm extends Component {
         super(props);
 
         this.state = {
-            background: 'http://admin.jrucker.cn/static/images/login-bg.jpg'
+            background: '/static/images/login-bg.jpg'
         };
 
         this.onRegister = this.onRegister.bind(this);

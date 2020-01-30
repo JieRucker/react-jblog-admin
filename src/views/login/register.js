@@ -49,7 +49,7 @@ class RegisterForm extends Component {
     }
 
     get backgroundImage() {
-        return `url(http://admin.jrucker.cn/static/images/login/login-bg.jpg)`
+        return `url(/static/images/login-bg.jpg)`
     }
 
     onLogin(e) {
@@ -115,7 +115,8 @@ class RegisterForm extends Component {
         const {getFieldDecorator} = this.props.form;
         return (
             <div className="login" style={{backgroundImage: this.backgroundImage}}>
-                {this.props.redirectTo ? <Redirect to={this.props.redirectTo}/> : null}
+                {this.props.user.redirectTo ?
+                    <Redirect to={this.props.user.redirectTo}/> : null}
 
                 <div className="login-box">
                     <h3 className="login-title"><Icon type="user" style={{marginRight: '3px'}}/>注册</h3>

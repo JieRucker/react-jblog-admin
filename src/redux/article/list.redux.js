@@ -75,9 +75,7 @@ export function getTagsList() {
 
     return async dispatch => {
         let res = await api.tagsInterface.getTagsList();
-
         if (!res) return;
-
         let {article_num_list = [], tags_list = []} = res.data.data;
 
         tags_list.forEach(item => {
