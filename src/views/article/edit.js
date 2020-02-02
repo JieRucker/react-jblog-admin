@@ -50,8 +50,6 @@ class EditForm extends Component {
     }
 
     componentDidMount() {
-        console.log(this);
-
         const _id = this.props.match.params.id;
         this.props.getArticle({_id})
     }

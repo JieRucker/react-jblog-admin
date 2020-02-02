@@ -163,8 +163,9 @@ export function deleteFold({_id, onSuccess}) {
 
         if (code === 200) {
             onSuccess();
-            message.info(msg)
         }
+
+        message.info(msg)
     }
 }
 

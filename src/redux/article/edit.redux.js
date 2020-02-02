@@ -59,7 +59,7 @@ export function article_edit(state = initState, action) {
             let selectedTags = [];
 
             if (payload.article_tags.length) {
-                payload.article_tags.map(item => selectedTags.push(item._id))
+                payload.article_tags.map(id => selectedTags.push(id))
             }
 
             return {

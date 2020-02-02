@@ -63,7 +63,7 @@ class UploadForm extends Component {
                     return
                 }
 
-                this.setState({
+                this.props.setStore({
                     foldId: data[0]._id
                 });
 
@@ -120,7 +120,7 @@ class UploadForm extends Component {
             _id: item._id,
             name: item.value,
             onSuccess: () => {
-                this.props.getFold();
+                this.getFold();
             }
         });
     };
@@ -135,7 +135,7 @@ class UploadForm extends Component {
                 this.props.deleteFold({
                     _id: item._id,
                     onSuccess: () => {
-                        this.props.getFold();
+                        this.getFold();
                     }
                 });
             },
@@ -143,8 +143,8 @@ class UploadForm extends Component {
     };
 
     handleUpload = () => {
-        let {foldId} = this.state;
-        let action = `${process.env.api.common_url}/api/upload/pic/${foldId}`;
+        let {foldId} = this.props.upload;
+        let action = `${process.env.api.common_url}/api/upload/file/${foldId}`;
         this.setState({action})
     };
 
@@ -154,8 +154,8 @@ class UploadForm extends Component {
         const columns = [
             {
                 title: '文件名',
-                dataIndex: 'image_origin_name',
-                key: 'image_origin_name',
+                dataIndex: 'file_name',
+                key: 'file_name',
             },
             {
                 title: '创建日期',
@@ -167,8 +167,8 @@ class UploadForm extends Component {
             },
             {
                 title: '大小',
-                dataIndex: 'image_size',
-                key: 'image_size',
+                dataIndex: 'file_size',
+                key: 'file_size',
                 render: (value, params) => (
                     <span>{`${(value / 1024).toFixed(3)}kb`}</span>
                 )
@@ -177,7 +177,7 @@ class UploadForm extends Component {
                 title: '图片',
                 render: (value, params) => (
                     <img
-                        src={params.image_url}
+                        src={params.file_url}
                         alt=""
                         style={{width: '40px', height: '40px', verticalAlign: 'middle', objectFit: 'cover'}}
                     />
@@ -185,8 +185,8 @@ class UploadForm extends Component {
             },
             {
                 title: '地址',
-                dataIndex: 'image_url',
-                key: 'image_url',
+                dataIndex: 'file_url',
+                key: 'file_url',
                 render: (value, params) => (
                     <span>{value}</span>
                 )
@@ -348,7 +348,7 @@ class UploadForm extends Component {
                             parentId: this.state.parentId,
                             name: this.state.foldName,
                             onSuccess: () => {
-                                this.props.getFold();
+                                this.getFold();
 
                                 this.setState({
                                     foldVisible: false
