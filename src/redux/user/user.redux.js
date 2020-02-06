@@ -156,10 +156,10 @@ export function login({username, password, captcha, checkToken}) {
             if (code === 200) {
                 message.success('登录成功！');
 
-                let {admin_name, token} = res_login.data.data;
+                // let {admin_name, token} = res_login.data.data;
 
-                Cookies.set('admin_name', admin_name);
-                Cookies.set('token', token);
+                // Cookies.set('admin_name', admin_name);
+                // Cookies.set('token', token);
 
                 dispatch({
                     type: types.LOGIN_SUCCESS,

@@ -97,7 +97,7 @@ class Index extends Component {
                                 : null}
                         </Content>
                         <Footer style={{textAlign: 'center'}}>
-                            Copyright © J.Rucker 2018
+                            Copyright © 阿杰 2019
                         </Footer>
                     </Layout>
                 </Layout>
