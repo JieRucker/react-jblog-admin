@@ -194,6 +194,8 @@ class UploadForm extends Component {
             {
                 title: '操作',
                 key: 'action',
+                fixed: 'right',
+                width: 140,
                 render: (value, params) => (
                     <span>
                         <Button
@@ -278,7 +280,7 @@ class UploadForm extends Component {
         return (
             <div style={{height: '100%'}}>
                 <Row gutter={16} style={{height: '100%'}}>
-                    <Col span={5} className="tree">
+                    <Col span={4} className="tree">
                         <div>
                             <h2 className="title">文件目录</h2>
                             <Button className="button" size="small" onClick={() => {
@@ -304,6 +306,7 @@ class UploadForm extends Component {
                             rowKey="_id"
                             pagination={paginationProps}
                             onChange={this.handleTableChange}
+                            scroll={{ x: 2000, y: 300 }}
                         />
                     </Col>
                 </Row>
