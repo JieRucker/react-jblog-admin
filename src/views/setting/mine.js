@@ -32,7 +32,6 @@ class MineForm extends Component {
     }
 
     componentDidMount() {
-        console.log(this);
         this.props.getSetting()
     }
 
@@ -42,7 +41,6 @@ class MineForm extends Component {
             cover: this.props.mine.cover, /*封面*/
             description: this.props.mine.description, /*描述*/
             github: this.props.mine.github,
-            twitter: this.props.mine.twitter,
             juejin: this.props.mine.juejin,
         })
     };
@@ -101,18 +99,6 @@ class MineForm extends Component {
                             onChange={(event) => {
                                 this.props.setStore({
                                     github: event.target.value,
-                                });
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="twitter：" {...formLayout}>
-                        <Input
-                            placeholder="请输入twitter地址"
-                            name="twitter"
-                            value={this.props.mine.twitter}
-                            onChange={(event) => {
-                                this.props.setStore({
-                                    twitter: event.target.value,
                                 });
                             }}
                         />

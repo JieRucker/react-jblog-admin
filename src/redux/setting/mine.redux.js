@@ -20,7 +20,6 @@ const initState = {
     cover: '', /*封面*/
     description: '', /*描述*/
     github: '',
-    twitter: '',
     juejin: '',
 };
 
@@ -33,7 +32,6 @@ export function mine(state = initState, action) {
                 cover: action.payload.cover, /*封面*/
                 description: action.payload.description, /*描述*/
                 github: action.payload.github,
-                twitter: action.payload.twitter,
                 juejin: action.payload.juejin,
             };
         case types.SET_STORE_SUCCESS:
@@ -65,7 +63,6 @@ export function getSetting() {
                 cover: person_info ? person_info.cover : '',
                 description: person_info ? person_info.description : '',
                 github: person_info ? person_info.github : '',
-                twitter: person_info ? person_info.twitter : '',
                 juejin: person_info ? person_info.juejin : ''
             }
         })
@@ -78,11 +75,10 @@ export function getSetting() {
  * @param cover
  * @param description
  * @param github
- * @param twitter
  * @param juejin
  * @returns {function(*): MessageType}
  */
-export function alterSetting({avatar, cover, description, github, twitter, juejin}) {
+export function alterSetting({avatar, cover, description, github, juejin}) {
     return async dispatch => {
         let reqBody = {
             person_info: JSON.stringify({
@@ -90,7 +86,6 @@ export function alterSetting({avatar, cover, description, github, twitter, jueji
                 cover,
                 description,
                 github,
-                twitter,
                 juejin,
             })
         };
