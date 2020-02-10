@@ -26,13 +26,19 @@ COPY ./yarn.lock /home/react-jblog-admin/yarn.lock
 RUN npm config set registry "https://registry.npm.taobao.org" \
     && npm config set sass_binary_site "https://npm.taobao.org/mirrors/node-sass/"
 
-RUN npm install yarn -g \
-    && yarn install
+#RUN npm install yarn -g \
+#    && yarn install
 
 #RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 #RUN yarn install
 
-#RUN yarn install
+RUN yarn install
+
+#RUN \
+#npm install yarn -g \
+#yarn global add nrm && \
+#nrm use taobao &&\
+#yarn global add cross-env
 
 # 拷贝所有源代码到工作目录
 COPY . /home/react-jblog-admin
