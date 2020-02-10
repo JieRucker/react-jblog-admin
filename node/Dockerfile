@@ -26,11 +26,10 @@ COPY ./yarn.lock /home/react-jblog-admin/yarn.lock
 RUN npm config set registry "https://registry.npm.taobao.org" \
     && npm config set sass_binary_site "https://npm.taobao.org/mirrors/node-sass/"
 
-npm install -g yarn
-#RUN curl -o- -L https://yarnpkg.com/install.sh | bash
-#RUN $HOME/.yarn/bin/yarn install
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+RUN $HOME/.yarn/bin/yarn install
 
-RUN yarn install
+#RUN yarn install
 
 # 拷贝所有源代码到工作目录
 COPY . /home/react-jblog-admin
