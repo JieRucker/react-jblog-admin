@@ -65,7 +65,8 @@
   "scripts": {
     "dev": "node scripts/dev.js",
     "start": "cross-env npm run dev",
-    "prod": "pm2 start scripts/server.js --name react-jblog-admin --watch",
+    "prod": "node scripts/server.js --name react-jblog-admin --watch",
+    "prod1": "pm2 start scripts/server.js --name react-jblog-admin --watch",
     "build": "cross-env env_config=prod node scripts/build.js",
     "build:dev": "cross-env env_config=prod_dev node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
