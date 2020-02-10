@@ -34,6 +34,6 @@ COPY . /home/react-jblog-admin
 # 构建
 RUN npm run build
 
-CMD npm start
+CMD npm run prod
 
 EXPOSE 8091
