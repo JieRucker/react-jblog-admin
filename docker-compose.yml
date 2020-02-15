@@ -8,9 +8,11 @@ services:
     image: react-jblog-admin_image
     container_name: 'react-jblog-admin_container'
     environment:
-    - NODE_ENV=production
+      - NODE_ENV=production
     ports:
-    - 8091:8091
+      - 8091:8091
+    volumes:
+      - /home/git/blog/work/react-jblog-admin/dist:/home/react-jblog-admin/dist
     restart: always
 
 
