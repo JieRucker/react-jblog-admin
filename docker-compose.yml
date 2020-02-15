@@ -11,8 +11,6 @@ services:
       - NODE_ENV=production
     ports:
       - 8091:8091
-    volumes:
-      - /home/git/blog/work/react-jblog-admin/dist:/home/react-jblog-admin/dist
     restart: always
 
 
