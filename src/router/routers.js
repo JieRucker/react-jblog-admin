@@ -31,6 +31,7 @@ import WorksEdit from '../views/works/edit';
 import TagList from '../views/tag/list';
 import Upload from '../views/upload/upload';
 import SettingMine from '../views/setting/mine';
+import SettingSchedule from '../views/setting/schedule';
 import SettingUpyun from '../views/setting/upyun';
 import SettingAbout from '../views/setting/about';
 
@@ -113,6 +114,11 @@ export const appRouter = [
             title: '个人信息',
             icon: '',
             component: SettingMine
+        }, {
+            path: '/app/setting/schedule',
+            title: '定时任务',
+            icon: '',
+            component: SettingSchedule
         }, {
             path: '/app/setting/upyun',
             title: '又拍云',

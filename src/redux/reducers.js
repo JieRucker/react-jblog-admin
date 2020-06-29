@@ -6,6 +6,7 @@ import {article_new} from './article/new.redux';
 import {article_edit} from './article/edit.redux';
 import {tags_list} from './tag/list.redux';
 import {mine} from './setting/mine.redux';
+import {schedule} from './setting/schedule.redux';
 import {upyun} from './setting/upyun.redux';
 import {about} from './setting/about.redux';
 import {works_list} from './works/list.redux';
@@ -21,6 +22,7 @@ export default combineReducers({
     article_edit,
     tags_list,
     mine,
+    schedule,
     upyun,
     about,
     works_list,

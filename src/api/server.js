@@ -9,15 +9,17 @@ import articleInterface from './ArticleInterface';
 import tagsInterface from './TagsInterface';
 import worksInterface from './WorksInterface';
 import settingInterface from './SettingInterface';
+import scheduleInterface from './ScheduleInterface';
 import uploadInterface from './UploadInterface';
 
 export default {
-  loginInterface,
-  mainInterface,
-  articleInterface,
-  tagsInterface,
-  worksInterface,
-  settingInterface,
-  uploadInterface
+    loginInterface,
+    mainInterface,
+    articleInterface,
+    tagsInterface,
+    worksInterface,
+    settingInterface,
+    scheduleInterface,
+    uploadInterface
 }
 

@@ -32,7 +32,7 @@ class SiderCustom extends Component {
                 breakpoint="md"
                 collapsedWidth="0"
                 className="sider-contaniner">
-                <div className="logo">阿杰圈子</div>
+                <div className="logo">阿杰博客</div>
                 <SiderMenu
                     menus={appRouter}
                     onOpenChange={this.onOpenChange}
