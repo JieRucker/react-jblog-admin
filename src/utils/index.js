@@ -39,6 +39,11 @@ export function dateCron(obj) {
     let cron = '';
     if (!isArray(obj)) {
         let {type, date, week, month} = obj;
+
+        if (!date) {
+            return
+        }
+
         let formatDate = new Date(date),
             h = formatDate.getHours(),
             m = formatDate.getMinutes(),
@@ -47,11 +52,11 @@ export function dateCron(obj) {
         if (type === 'one') {
             cron = date
         } else if (type === 'day') {
-            cron = `${s} ${m} ${h} * * ? *`;
+            cron = `${s} ${m} ${h} * * ?`;
         } else if (type === 'week') {
-            cron = `${s} ${m} ${h} * * ${week.join(',')} *`;
+            cron = `${s} ${m} ${h} * * ${week.join(',')}`;
         } else if (type === 'month') {
-            cron = `${s} ${m} ${h} ${month.join(',')} * ? *`;
+            cron = `${s} ${m} ${h} ${month.join(',')} * ?`;
         } else if (type === 'hours') {
             cron = `0 0 */${date} * * ?`;
         } else if (type === 'minutes') {

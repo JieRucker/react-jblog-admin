@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Form, Typography, Tabs, Button, Table, Input, Select, Modal, TimePicker, message} from 'antd';
+import {Form, Typography, Tabs, Button, Table, Input, Select, Modal, TimePicker, Switch, message} from 'antd';
 import {
     getScheduleList,
     addSchedule,
@@ -42,10 +42,8 @@ class ScheduleForm extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {}
+        this.state = {visible: false}
     }
-
-    state = {visible: false};
 
     formLayout = {
         labelCol: {span: 7},
@@ -54,6 +52,7 @@ class ScheduleForm extends Component {
 
     componentDidMount() {
         this.getScheduleList()
+
     }
 
     getScheduleList = () => {
@@ -90,12 +89,9 @@ class ScheduleForm extends Component {
                 cron = this.props.schedule.inputCronValue;
             }
 
-            console.log('cron', cron);
-
             if (!cron) {
                 return message.info('请选择或输入cron时间');
             }
-
 
             if (typeof current !== 'undefined') {
                 params = {
@@ -104,15 +100,16 @@ class ScheduleForm extends Component {
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
                     task_cron: cron,
-                    switch: false,
+                    task_switch: this.props.schedule.task_switch,
                     onSuccess: () => {
-                        this.props.getScheduleList();
+                        this.getScheduleList();
                         this.setState({
                             visible: false,
                         });
                     }
                 };
 
+                console.log(params);
                 this.props.alterSchedule(params)
             } else {
                 params = {
@@ -120,9 +117,9 @@ class ScheduleForm extends Component {
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
                     task_cron: cron,
-                    switch: false,
+                    task_switch: this.props.schedule.task_switch,
                     onSuccess: () => {
-                        this.props.getScheduleList();
+                        this.getScheduleList();
                         this.setState({
                             visible: false,
                         });
@@ -130,7 +127,6 @@ class ScheduleForm extends Component {
                 };
 
                 console.log('params', params);
-
                 this.props.addSchedule(params)
             }
         });
@@ -144,20 +140,25 @@ class ScheduleForm extends Component {
         if (val === 'day') {
             this.props.setStore({
                 dateList: [],
+                inputCronState: false
             });
         } else if (val === 'week') {
             this.props.setStore({
+                dateSelectValue: 0,
                 dateList: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                inputCronState: false
             });
         } else if (val === 'month') {
             let day = Array.apply(null, Array(31)).map((it, key) => key + 1 + '号');
             this.props.setStore({
+                dateSelectValue: 0,
                 dateList: day,
+                inputCronState: false
             });
         } else if (val === 'inputCronState') {
             this.props.setStore({
                 dateList: [],
-                inputCron: true
+                inputCronState: true
             });
         }
 
@@ -207,8 +208,11 @@ class ScheduleForm extends Component {
             },
             {
                 title: '运行状态',
-                dataIndex: 'switch',
-                key: 'switch',
+                dataIndex: 'task_switch',
+                key: 'task_switch',
+                render: (value, params) => (
+                    <span>{value ? '已开启' : '已关闭'}</span>
+                )
             },
             {
                 title: '操作',
@@ -225,6 +229,10 @@ class ScheduleForm extends Component {
                                     visible: true,
                                     current: params
                                 });
+
+                                this.props.setStore({
+                                    task_switch: params.task_switch
+                                })
                             }}
                         >修改
                         </Button>
@@ -241,7 +249,7 @@ class ScheduleForm extends Component {
                                         this.props.deleteSchedule({
                                             _id: params._id,
                                             onSuccess: () => {
-                                                this.props.getScheduleList()
+                                                this.getScheduleList()
                                             }
                                         })
                                     },
@@ -287,7 +295,6 @@ class ScheduleForm extends Component {
                             placeholder="选择周期"
                             defaultValue={this.props.schedule.weekSelectValue}
                             onChange={this.onWeekChange}
-                            allowClear
                         >
                             <Option value="day">每天</Option>
                             <Option value="week">每周</Option>
@@ -299,8 +306,8 @@ class ScheduleForm extends Component {
                     <FormItem label="日期" {...this.formLayout} rules={[{required: true}]}>
                         <Select
                             placeholder="选择日期"
+                            defaultValue={this.props.schedule.dateSelectValue}
                             onChange={this.onDateChange}
-                            allowClear
                         >
                             {this.props.schedule.dateList.map((it, key) => (
                                 <Option
@@ -317,9 +324,25 @@ class ScheduleForm extends Component {
                         </FormItem>
                     ) : (
                         <FormItem label="cron" {...this.formLayout} rules={[{required: true}]}>
-                            <Input value={this.props.schedule.inputCronValue} placeholder="请输入cron"/>
+                            <Input
+                                placeholder="请输入cron"
+                                value={this.props.schedule.inputCronValue}
+                                onChange={(event) => {
+                                    this.props.setStore({
+                                        inputCronValue: event.target.value,
+                                    });
+                                }}/>
                         </FormItem>
                     )}
+                    <FormItem label="开关" {...this.formLayout}>
+                        <Switch
+                            checked={this.props.schedule.task_switch}
+                            onChange={(checked) => {
+                                this.props.setStore({
+                                    task_switch: checked
+                                });
+                            }}/>
+                    </FormItem>
                 </Form>
             );
         };

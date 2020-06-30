@@ -22,10 +22,6 @@ const initState = {
             name: '定时任务',
             key: 0
         },
-        {
-            name: '定时任务1',
-            key: 1
-        }
     ],
     schedule_list: [],
     keyword: '',
@@ -37,6 +33,7 @@ const initState = {
     timeValue: '',
     inputCronValue: '',
     inputCronState: false,
+    task_switch: true,
     dateList: []
 };
 
@@ -89,13 +86,14 @@ export function getScheduleList({keyword, current_page, page_size}) {
  * @param task_cookie
  * @param task_desc
  * @param task_cron
+ * @param task_switch
  * @param onSuccess
  * @return {function(*): MessageType}
  */
-export function addSchedule({task_name, task_cookie, task_desc, task_cron, onSuccess}) {
+export function addSchedule({task_name, task_cookie, task_desc, task_cron, task_switch, onSuccess}) {
     return async dispatch => {
         let res = await api.scheduleInterface.addSchedule({
-            task_name, task_cookie, task_desc, task_cron
+            task_name, task_cookie, task_desc, task_cron, task_switch
         });
         if (!res) return;
 
@@ -115,17 +113,19 @@ export function addSchedule({task_name, task_cookie, task_desc, task_cron, onSuc
  * @param task_cookie
  * @param task_desc
  * @param task_cron
+ * @param task_switch
  * @param onSuccess
  * @return {function(*): MessageType}
  */
-export function alterSchedule({_id, task_name, task_cookie, task_desc, task_cron, onSuccess}) {
+export function alterSchedule({_id, task_name, task_cookie, task_desc, task_cron, task_switch, onSuccess}) {
     return async dispatch => {
         let reqBody = {
             _id,
             task_name,
             task_cookie,
             task_desc,
-            task_cron
+            task_cron,
+            task_switch
         };
 
         let res = await api.scheduleInterface.alterSchedule(reqBody);
