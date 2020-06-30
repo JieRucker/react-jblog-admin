@@ -39,11 +39,7 @@ export function dateCron(obj) {
     let cron = '';
     if (!isArray(obj)) {
         let {type, date, week, month} = obj;
-
-        if (!date) {
-            return
-        }
-
+        if (!date) return
         let formatDate = new Date(date),
             h = formatDate.getHours(),
             m = formatDate.getMinutes(),
