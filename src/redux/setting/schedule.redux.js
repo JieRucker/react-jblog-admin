@@ -62,9 +62,14 @@ export function schedule(state = initState, action) {
  * 获取定时任务
  * @returns {Function}
  */
-export function getScheduleList() {
+export function getScheduleList({keyword, current_page, page_size}) {
     return async dispatch => {
-        let res = await api.scheduleInterface.getScheduleList();
+        let reqBody = {
+            keyword,
+            current_page,
+            page_size,
+        };
+        let res = await api.scheduleInterface.getScheduleList(reqBody);
         if (!res) return;
         let {list, total} = res.data.data;
 

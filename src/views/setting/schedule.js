@@ -53,8 +53,13 @@ class ScheduleForm extends Component {
     };
 
     componentDidMount() {
-        this.props.getScheduleList()
+        this.getScheduleList()
     }
+
+    getScheduleList = () => {
+        let {keyword, current_page, page_size} = this.props.schedule;
+        this.props.getScheduleList({keyword, current_page, page_size})
+    };
 
     handleCancel = () => {
         this.setState({
