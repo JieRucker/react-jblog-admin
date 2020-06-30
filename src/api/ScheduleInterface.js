@@ -1,30 +1,30 @@
 import BaseModule from "./BaseModule";
 
-class SettingInterface extends BaseModule {
-  constructor() {
-    super();
-    this.baseUrl = process.env.api.common_url
-  }
+class ScheduleInterface extends BaseModule {
+    constructor() {
+        super();
+        this.baseUrl = process.env.api.common_url
+    }
 
-  /*获取七牛云上传图片token*/
-  getQiniuToken() {
-    return this.get(`${this.baseUrl}/api/setting/token`);
-  }
+    /*获取任务列表*/
+    getScheduleList() {
+        return this.get(`${this.baseUrl}/api/schedule`);
+    }
 
-  /*获取全局设置*/
-  getSetting() {
-    return this.get(`${this.baseUrl}/api/setting`);
-  }
+    /*添加任务*/
+    addSchedule(data) {
+        return this.post(`${this.baseUrl}/api/schedule`, data);
+    }
 
-  /*修改全局设置*/
-  alterSetting(data) {
-    return this.patch(`${this.baseUrl}/api/setting`, data);
-  }
+    /*修改任务*/
+    alterSchedule(data) {
+        return this.patch(`${this.baseUrl}/api/schedule/${data._id}`, data);
+    }
 
-  /*腾讯云上传*/
-  pic(data) {
-    return this.post(`${this.baseUrl}/api/upload/pic`, data);
-  }
+    /*通过任务id来删除*/
+    deleteScheduleById(data) {
+        return this.delete(`${this.baseUrl}/api/schedule/${data._id}`, data);
+    }
 }
 
-export default new SettingInterface()
+export default new ScheduleInterface()

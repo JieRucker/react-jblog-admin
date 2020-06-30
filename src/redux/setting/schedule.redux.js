@@ -10,13 +10,13 @@ import api from '@/api/server';
 import {message} from 'antd';
 
 export const types = {
-    GET_SCHEDULE_SUCCESS: 'mine/GET_SCHEDULE_SUCCESS',
-    ALTER_SCHEDULE_SUCCESS: 'mine/ALTER_SCHEDULE_SUCCESS',
-    SET_STORE_SUCCESS: 'mine/SET_STORE_SUCCESS'
+    SCHEDULE_LIST_SUCCESS: 'schedule/SCHEDULE_LIST_SUCCESS',
+    ADD_SCHEDULE_SUCCESS: 'schedule/ADD_SCHEDULE_SUCCESS',
+    ALTER_SCHEDULE_SUCCESS: 'schedule/ALTER_SCHEDULE_SUCCESS',
+    SET_STORE_SUCCESS: 'schedule/SET_STORE_SUCCESS'
 };
 
 const initState = {
-    juejin: '',
     tabs_list: [
         {
             name: '定时任务',
@@ -27,24 +27,26 @@ const initState = {
             key: 1
         }
     ],
-    schedule_list: [{
-        task_name: '001',
-        task_cookie: 'xxx',
-        task_desc: '001',
-        _id: 0
-    }],
+    schedule_list: [],
+    keyword: '',
+    total_count: 0,
+    current_page: 1,
+    page_size: 10,
     weekSelectValue: 'day',
     dateSelectValue: '',
     timeValue: '',
+    inputCronValue: '',
+    inputCronState: false,
     dateList: []
 };
 
 export function schedule(state = initState, action) {
     switch (action.type) {
-        case types.GET_SETTING_SUCCESS:
+        case types.SCHEDULE_LIST_SUCCESS:
             return {
                 ...state,
-                juejin: action.payload.juejin,
+                schedule_list: action.payload.schedule_list,
+                total_count: action.payload.total_count
             };
         case types.SET_STORE_SUCCESS:
             return {
@@ -57,50 +59,95 @@ export function schedule(state = initState, action) {
 }
 
 /**
- * 获取定时信息
+ * 获取定时任务
  * @returns {Function}
  */
-export function getSchedule() {
+export function getScheduleList() {
     return async dispatch => {
-        let res = await api.scheduleInterface.getSchedule();
+        let res = await api.scheduleInterface.getScheduleList();
         if (!res) return;
-        let {data = {}} = res.data;
-        let info = data.info;
-        let person_info = info.person_info;
+        let {list, total} = res.data.data;
 
         dispatch({
-            type: types.GET_SETTING_SUCCESS,
+            type: types.SCHEDULE_LIST_SUCCESS,
             payload: {
-                juejin: person_info ? person_info.juejin : ''
+                schedule_list: list,
+                total_count: total
             }
         })
     }
 }
 
 /**
- * 修改定时信息
- * @param avatar
- * @param cover
- * @param description
- * @param github
- * @param juejin
- * @returns {function(*): MessageType}
+ * 添加任务
+ * @param task_name
+ * @param task_cookie
+ * @param task_desc
+ * @param task_cron
+ * @param onSuccess
+ * @return {function(*): MessageType}
  */
-export function alterSchedule({avatar, cover, description, github, juejin}) {
+export function addSchedule({task_name, task_cookie, task_desc, task_cron, onSuccess}) {
+    return async dispatch => {
+        let res = await api.scheduleInterface.addSchedule({
+            task_name, task_cookie, task_desc, task_cron
+        });
+        if (!res) return;
+
+        let {code, msg} = res.data;
+        if (code === 200) {
+            onSuccess()
+        }
+
+        return message.info(msg)
+    }
+}
+
+/**
+ * 修改任务
+ * @param _id
+ * @param task_name
+ * @param task_cookie
+ * @param task_desc
+ * @param task_cron
+ * @param onSuccess
+ * @return {function(*): MessageType}
+ */
+export function alterSchedule({_id, task_name, task_cookie, task_desc, task_cron, onSuccess}) {
     return async dispatch => {
         let reqBody = {
-            person_info: JSON.stringify({
-                avatar,
-                cover,
-                description,
-                github,
-                juejin,
-            })
+            _id,
+            task_name,
+            task_cookie,
+            task_desc,
+            task_cron
         };
 
         let res = await api.scheduleInterface.alterSchedule(reqBody);
         if (!res) return;
-        let {msg} = res.data;
+        let {code, msg} = res.data;
+        if (code === 200) {
+            onSuccess()
+        }
+        return message.info(msg)
+    }
+}
+
+/**
+ * 删除任务
+ * @param _id
+ * @param onSuccess
+ * @return {function(*): MessageType}
+ */
+export function deleteSchedule({_id, onSuccess}) {
+    return async dispatch => {
+        let res = await api.scheduleInterface.deleteScheduleById({_id});
+        if (!res) return;
+        let {code, msg} = res.data;
+        if (code === 200) {
+            onSuccess()
+        }
+
         return message.info(msg)
     }
 }

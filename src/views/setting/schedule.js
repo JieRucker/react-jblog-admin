@@ -8,8 +8,14 @@
 
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Form, Typography, Tabs, Button, Table, Input, Select, Modal, TimePicker} from 'antd';
-import {getSchedule, alterSchedule, setStore} from '../../redux/setting/schedule.redux';
+import {Form, Typography, Tabs, Button, Table, Input, Select, Modal, TimePicker, message} from 'antd';
+import {
+    getScheduleList,
+    addSchedule,
+    alterSchedule,
+    deleteSchedule,
+    setStore
+} from '../../redux/setting/schedule.redux';
 import styles from './schedule.scss';
 import {formatDate, dateCron} from '../../utils';
 
@@ -24,7 +30,7 @@ const mapStateProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getSchedule, alterSchedule, setStore
+    getScheduleList, addSchedule, alterSchedule, deleteSchedule, setStore
 });
 
 @connect(
@@ -47,7 +53,7 @@ class ScheduleForm extends Component {
     };
 
     componentDidMount() {
-        // this.props.getSchedule()
+        this.props.getScheduleList()
     }
 
     handleCancel = () => {
@@ -66,7 +72,25 @@ class ScheduleForm extends Component {
             if (err) return;
 
             let {task_name, task_cookie, task_desc} = fieldsValue;
-            let params;
+            let params, cron = '';
+            let {weekSelectValue, dateSelectValue, timeValue} = this.props.schedule;
+
+            if (weekSelectValue === 'day') {
+                cron = dateCron({type: 'day', date: timeValue})
+            } else if (weekSelectValue === 'week') {
+                cron = dateCron({type: 'week', week: [dateSelectValue + 1], date: timeValue})
+            } else if (weekSelectValue === 'month') {
+                cron = dateCron({type: 'month', month: [dateSelectValue + 1], date: timeValue})
+            } else if (weekSelectValue === 'inputCronState') {
+                cron = this.props.schedule.inputCronValue;
+            }
+
+            console.log('cron', cron);
+
+            if (!cron) {
+                return message.info('请选择或输入cron时间');
+            }
+
 
             if (typeof current !== 'undefined') {
                 params = {
@@ -74,55 +98,35 @@ class ScheduleForm extends Component {
                     task_name,
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
+                    task_cron: cron,
                     onSuccess: () => {
-                        // this.props.getTagsList();
+                        this.props.getScheduleList();
                         this.setState({
                             visible: false,
                         });
                     }
                 };
 
-                // this.props.alterTags(params)
+                this.props.alterSchedule(params)
             } else {
                 params = {
                     task_name,
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
+                    task_cron: cron,
                     onSuccess: () => {
-                        this.props.getTagsList();
+                        this.props.getScheduleList();
                         this.setState({
                             visible: false,
                         });
                     }
                 };
 
-                let {weekSelectValue, dateSelectValue, timeValue} = this.props.schedule;
-                let cron = '';
-
-                if (weekSelectValue === 'day') {
-                    cron = dateCron({type: 'day', date: timeValue})
-                } else if (weekSelectValue === 'week') {
-                    cron = dateCron({type: 'week', week: [dateSelectValue + 1], date: timeValue})
-                } else if (weekSelectValue === 'month') {
-                    cron = dateCron({type: 'month', month: [dateSelectValue + 1], date: timeValue})
-                }
-
-                console.log('cron', cron);
                 console.log('params', params);
 
-                this.props.addTags(params)
+                this.props.addSchedule(params)
             }
         });
-    };
-
-    handleSave = () => {
-        this.props.alterSchedule({
-            avatar: this.props.mine.avatar, /*头像*/
-            cover: this.props.mine.cover, /*封面*/
-            description: this.props.mine.description, /*描述*/
-            github: this.props.mine.github,
-            juejin: this.props.mine.juejin,
-        })
     };
 
     onTabChange = (key) => {
@@ -142,6 +146,11 @@ class ScheduleForm extends Component {
             let day = Array.apply(null, Array(31)).map((it, key) => key + 1 + '号');
             this.props.setStore({
                 dateList: day,
+            });
+        } else if (val === 'inputCronState') {
+            this.props.setStore({
+                dateList: [],
+                inputCron: true
             });
         }
 
@@ -185,6 +194,11 @@ class ScheduleForm extends Component {
                 key: 'task_desc',
             },
             {
+                title: '任务时间',
+                dataIndex: 'task_cron',
+                key: 'task_cron',
+            },
+            {
                 title: '操作',
                 key: 'action',
                 width: 150,
@@ -212,12 +226,12 @@ class ScheduleForm extends Component {
                                     okText: '确认',
                                     cancelText: '取消',
                                     onOk: async () => {
-                                        /*this.props.deleteTags({
+                                        this.props.deleteSchedule({
                                             _id: params._id,
                                             onSuccess: () => {
-                                                this.props.getTagsList()
+                                                this.props.getScheduleList()
                                             }
-                                        })*/
+                                        })
                                     },
                                 });
                             }}
@@ -229,7 +243,6 @@ class ScheduleForm extends Component {
         ];
 
         const {visible, current = {}} = this.state;
-
         const modalFooter = {okText: '确认', cancelText: '取消', onOk: this.handleSubmit, onCancel: this.handleCancel};
 
         const {
@@ -267,6 +280,7 @@ class ScheduleForm extends Component {
                             <Option value="day">每天</Option>
                             <Option value="week">每周</Option>
                             <Option value="month">每月</Option>
+                            <Option value="inputCronState">手动输入</Option>
                         </Select>
                     </FormItem>
                     {this.props.schedule.dateList.length > 0 &&
@@ -285,9 +299,15 @@ class ScheduleForm extends Component {
                             ))}
                         </Select>
                     </FormItem>}
-                    <FormItem label="时间" {...this.formLayout} rules={[{required: true}]}>
-                        <TimePicker placeholder="选择时间" onChange={this.onTimeChange}/>
-                    </FormItem>
+                    {!this.props.schedule.inputCronState ? (
+                        <FormItem label="时间" {...this.formLayout} rules={[{required: true}]}>
+                            <TimePicker placeholder="选择时间" onChange={this.onTimeChange}/>
+                        </FormItem>
+                    ) : (
+                        <FormItem label="cron" {...this.formLayout} rules={[{required: true}]}>
+                            <Input value={this.props.schedule.inputCronValue} placeholder="请输入cron"/>
+                        </FormItem>
+                    )}
                 </Form>
             );
         };
