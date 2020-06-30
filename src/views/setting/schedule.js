@@ -104,6 +104,7 @@ class ScheduleForm extends Component {
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
                     task_cron: cron,
+                    switch: false,
                     onSuccess: () => {
                         this.props.getScheduleList();
                         this.setState({
@@ -119,6 +120,7 @@ class ScheduleForm extends Component {
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
                     task_cron: cron,
+                    switch: false,
                     onSuccess: () => {
                         this.props.getScheduleList();
                         this.setState({
@@ -202,6 +204,11 @@ class ScheduleForm extends Component {
                 title: '任务时间',
                 dataIndex: 'task_cron',
                 key: 'task_cron',
+            },
+            {
+                title: '运行状态',
+                dataIndex: 'switch',
+                key: 'switch',
             },
             {
                 title: '操作',
