@@ -75,7 +75,7 @@ class ScheduleForm extends Component {
         form.validateFields((err, fieldsValue) => {
             if (err) return;
 
-            let {task_name, task_cookie, task_desc} = fieldsValue;
+            let {task_name, task_type, task_cookie, task_desc} = fieldsValue;
             let params, cron = '';
             let {weekSelectValue, dateSelectValue, timeValue} = this.props.schedule;
 
@@ -97,6 +97,7 @@ class ScheduleForm extends Component {
                 params = {
                     _id: current._id,
                     task_name,
+                    task_type,
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
                     task_cron: cron,
@@ -114,6 +115,7 @@ class ScheduleForm extends Component {
             } else {
                 params = {
                     task_name,
+                    task_type,
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
                     task_cron: cron,
@@ -190,6 +192,11 @@ class ScheduleForm extends Component {
                 title: '任务名称',
                 dataIndex: 'task_name',
                 key: 'task_name',
+            },
+            {
+                title: '任务类型',
+                dataIndex: 'task_type',
+                key: 'task_type'
             },
             {
                 title: '任务cookie',
@@ -277,6 +284,12 @@ class ScheduleForm extends Component {
                             rules: [{required: true, message: '请输入任务名称'}],
                             initialValue: current.task_name,
                         })(<Input placeholder="请输入任务名称"/>)}
+                    </FormItem>
+                    <FormItem label="任务类型" {...this.formLayout}>
+                        {getFieldDecorator('task_type', {
+                            rules: [{required: true, message: '请输入任务类型'}],
+                            initialValue: current.task_type,
+                        })(<Input placeholder="请输入任务类型"/>)}
                     </FormItem>
                     <FormItem label="cookie" {...this.formLayout}>
                         {getFieldDecorator('task_cookie', {
