@@ -90,10 +90,10 @@ export function getScheduleList({keyword, current_page, page_size}) {
  * @param onSuccess
  * @return {function(*): MessageType}
  */
-export function addSchedule({task_name, task_cookie, task_desc, task_cron, task_switch, onSuccess}) {
+export function addSchedule({task_name, task_type, task_cookie, task_desc, task_cron, task_switch, onSuccess}) {
     return async dispatch => {
         let res = await api.scheduleInterface.addSchedule({
-            task_name, task_cookie, task_desc, task_cron, task_switch
+            task_name, task_type, task_cookie, task_desc, task_cron, task_switch
         });
         if (!res) return;
 
@@ -117,11 +117,12 @@ export function addSchedule({task_name, task_cookie, task_desc, task_cron, task_
  * @param onSuccess
  * @return {function(*): MessageType}
  */
-export function alterSchedule({_id, task_name, task_cookie, task_desc, task_cron, task_switch, onSuccess}) {
+export function alterSchedule({_id, task_name, task_type, task_cookie, task_desc, task_cron, task_switch, onSuccess}) {
     return async dispatch => {
         let reqBody = {
             _id,
             task_name,
+            task_type,
             task_cookie,
             task_desc,
             task_cron,
