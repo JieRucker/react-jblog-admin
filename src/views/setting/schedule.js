@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react'
 import {connect} from 'react-redux';
-import {Form, Typography, Tabs, Button, Table, Input, Select, Modal, TimePicker, Switch, message} from 'antd';
+import {Form, Typography, Tabs, Button, Table, Input, Modal, Switch} from 'antd';
 import {
     getScheduleList,
     addSchedule,
@@ -17,13 +17,12 @@ import {
     setStore
 } from '../../redux/setting/schedule.redux';
 import styles from './schedule.scss';
-import {formatDate, dateCron} from '../../utils';
+import {formatDate} from '../../utils';
 
 const {Title, Paragraph} = Typography;
 const {TabPane} = Tabs;
 const FormItem = Form.Item;
 const {TextArea} = Input;
-const {Option} = Select;
 
 const mapStateProps = state => ({
     schedule: state.schedule
@@ -75,9 +74,10 @@ class ScheduleForm extends Component {
         form.validateFields((err, fieldsValue) => {
             if (err) return;
 
-            let {task_name, task_type, task_cookie, task_desc} = fieldsValue;
-            let params, cron = '';
-            let {weekSelectValue, dateSelectValue, timeValue} = this.props.schedule;
+            let {task_name, task_type, task_cookie, task_desc,task_cron} = fieldsValue;
+            let params;
+            // let cron = '';
+            /*let {weekSelectValue, dateSelectValue, timeValue} = this.props.schedule;
 
             if (weekSelectValue === 'day') {
                 cron = dateCron({type: 'day', date: timeValue})
@@ -91,7 +91,7 @@ class ScheduleForm extends Component {
 
             if (!cron) {
                 return message.info('请选择或输入cron时间');
-            }
+            }*/
 
             if (typeof current !== 'undefined') {
                 params = {
@@ -100,7 +100,7 @@ class ScheduleForm extends Component {
                     task_type,
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
-                    task_cron: cron,
+                    task_cron,
                     task_switch: this.props.schedule.task_switch,
                     onSuccess: () => {
                         this.getScheduleList();
@@ -118,7 +118,7 @@ class ScheduleForm extends Component {
                     task_type,
                     task_cookie,
                     task_desc: typeof task_desc !== 'undefined' ? task_desc : '',
-                    task_cron: cron,
+                    task_cron,
                     task_switch: this.props.schedule.task_switch,
                     onSuccess: () => {
                         this.getScheduleList();
@@ -303,7 +303,14 @@ class ScheduleForm extends Component {
                             initialValue: current.task_desc,
                         })(<TextArea rows={4} placeholder="请输入任务描述"/>)}
                     </FormItem>
-                    <FormItem label="周期" {...this.formLayout} rules={[{required: true}]}>
+                    <FormItem label="任务时间" {...this.formLayout}>
+                        {getFieldDecorator('task_cron', {
+                            rules: [{required: true, message: '请输入任务时间'}],
+                            initialValue: current.task_cron,
+                        })(<Input placeholder="请输入任务时间"/>)}
+                    </FormItem>
+
+                    {/*<FormItem label="周期" {...this.formLayout} rules={[{required: true}]}>
                         <Select
                             placeholder="选择周期"
                             defaultValue={this.props.schedule.weekSelectValue}
@@ -346,7 +353,7 @@ class ScheduleForm extends Component {
                                     });
                                 }}/>
                         </FormItem>
-                    )}
+                    )}*/}
                     <FormItem label="开关" {...this.formLayout}>
                         <Switch
                             checked={this.props.schedule.task_switch}
