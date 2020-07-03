@@ -83,6 +83,7 @@ export function getScheduleList({keyword, current_page, page_size}) {
 /**
  * 添加任务
  * @param task_name
+ * @param task_type
  * @param task_cookie
  * @param task_desc
  * @param task_cron
@@ -110,6 +111,7 @@ export function addSchedule({task_name, task_type, task_cookie, task_desc, task_
  * 修改任务
  * @param _id
  * @param task_name
+ * @param task_type
  * @param task_cookie
  * @param task_desc
  * @param task_cron

@@ -74,7 +74,7 @@ class ScheduleForm extends Component {
         form.validateFields((err, fieldsValue) => {
             if (err) return;
 
-            let {task_name, task_type, task_cookie, task_desc,task_cron} = fieldsValue;
+            let {task_name, task_type, task_cookie, task_desc, task_cron} = fieldsValue;
             let params;
             // let cron = '';
             /*let {weekSelectValue, dateSelectValue, timeValue} = this.props.schedule;
@@ -184,6 +184,16 @@ class ScheduleForm extends Component {
         this.props.setStore({
             timeValue: formatDate(val.toDate()),
         });
+    };
+
+    handleTableChange = (pagination, filters, sorter) => {
+        this.props.setStore({
+            current_page: pagination.current,
+        });
+
+        setTimeout(() => {
+            this.getScheduleList()
+        }, 50)
     };
 
     render() {
@@ -379,6 +389,11 @@ class ScheduleForm extends Component {
             </Tabs>
         );
 
+        const paginationProps = {
+            pageSize: this.props.schedule.page_size,
+            total: this.props.schedule.total_count,
+        };
+
         return (
             <div>
                 <Typography>
@@ -405,6 +420,8 @@ class ScheduleForm extends Component {
                         columns={columns}
                         dataSource={this.props.schedule.schedule_list}
                         rowKey="_id"
+                        pagination={paginationProps}
+                        onChange={this.handleTableChange}
                     />
                     <Modal
                         title={`${current._id ? '编辑' : '添加'}`}
