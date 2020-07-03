@@ -7,8 +7,8 @@ class ScheduleInterface extends BaseModule {
     }
 
     /*获取任务列表*/
-    getScheduleList() {
-        return this.get(`${this.baseUrl}/api/schedule`);
+    getScheduleList(data = {}) {
+        return this.get(`${this.baseUrl}/api/schedule?current_page=${data.current_page}&page_size=${data.page_size}&keyword=${data.keyword}`);
     }
 
     /*添加任务*/
