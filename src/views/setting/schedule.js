@@ -425,7 +425,7 @@ class ScheduleForm extends Component {
                         dataSource={this.props.schedule.schedule_list}
                         rowKey="_id"
                         pagination={paginationProps}
-                        scroll={{x: 1500, y: 500}}
+                        scroll={{x: 1500, y: 550}}
                         onChange={this.handleTableChange}
                     />
                     <Modal
