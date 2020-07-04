@@ -86,11 +86,14 @@ class ListForm extends Component {
                 title: '作品标题',
                 dataIndex: 'works_title',
                 key: 'works_title',
+                width: 250,
+                fixed: 'left',
             },
             {
                 title: '创建日期',
                 dataIndex: 'works_create_time',
                 key: 'works_create_time',
+                width: 200,
                 render: (value, params) => (
                     <span>{value}</span>
                 )
@@ -99,6 +102,7 @@ class ListForm extends Component {
                 title: '修改日期',
                 dataIndex: 'works_update_time',
                 key: 'works_update_time',
+                width: 200,
                 render: (value, params) => (
                     <span>{value}</span>
                 )
@@ -106,6 +110,7 @@ class ListForm extends Component {
             {
                 title: '标签',
                 dataIndex: 'works_tags',
+                width: 200,
                 key: 'works_tags',
                 render: (value, params) => {
                     if (value.length) {
@@ -134,6 +139,7 @@ class ListForm extends Component {
             {
                 title: '操作',
                 key: 'action',
+                fixed: 'right',
                 render: (value, params) => (
                     <span>
                         {/*<Button
@@ -247,6 +253,7 @@ class ListForm extends Component {
                     rowKey="_id"
                     pagination={paginationProps}
                     loading={this.props.loading}
+                    scroll={{x: 1500, y: 600}}
                     onChange={this.handleTableChange}
                 />
             </div>

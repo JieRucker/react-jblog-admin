@@ -202,10 +202,13 @@ class ScheduleForm extends Component {
                 title: '任务名称',
                 dataIndex: 'task_name',
                 key: 'task_name',
+                width: 150,
+                fixed: 'left',
             },
             {
                 title: '任务类型',
                 dataIndex: 'task_type',
+                width: 150,
                 key: 'task_type'
             },
             {
@@ -235,6 +238,7 @@ class ScheduleForm extends Component {
                 title: '操作',
                 key: 'action',
                 width: 150,
+                fixed: 'right',
                 render: (value, params) => (
                     <span>
                         <Button
@@ -421,6 +425,7 @@ class ScheduleForm extends Component {
                         dataSource={this.props.schedule.schedule_list}
                         rowKey="_id"
                         pagination={paginationProps}
+                        scroll={{x: 1500, y: 500}}
                         onChange={this.handleTableChange}
                     />
                     <Modal

@@ -20,7 +20,7 @@ const initState = {
     tag_list: [],
     total_count: 0,
     current_page: 1,
-    page_size: 10,
+    page_size: 4,
 };
 
 export function tags_list(state = initState, action) {
@@ -28,7 +28,8 @@ export function tags_list(state = initState, action) {
         case types.TAG_LIST_SUCCESS:
             return {
                 ...state,
-                tag_list: action.payload.tag_list
+                tag_list: action.payload.tag_list,
+                total_count: action.payload.tags_total
             };
         case types.SET_STORE_SUCCESS:
             return {
@@ -44,13 +45,17 @@ export function tags_list(state = initState, action) {
  * 获取标签列表
  * @returns {Function}
  */
-export function getTagsList() {
+export function getTagsList({current_page, page_size}) {
     let tag_list = [];
 
     return async dispatch => {
-        let res = await api.tagsInterface.getTagsList();
+        let reqBody = {
+            current_page,
+            page_size,
+        };
+        let res = await api.tagsInterface.getTagsList(reqBody);
         if (!res) return;
-        let {article_num_list = [], tags_list = []} = res.data.data;
+        let {article_num_list = [], tags_list = [], tags_total} = res.data.data;
 
         tags_list.forEach(item => {
             let temp = article_num_list.find(i => i._id === item._id);
@@ -61,7 +66,7 @@ export function getTagsList() {
 
         dispatch({
             type: types.TAG_LIST_SUCCESS,
-            payload: {tag_list}
+            payload: {tag_list, tags_total}
         })
     }
 }

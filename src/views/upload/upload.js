@@ -156,25 +156,27 @@ class UploadForm extends Component {
                 title: '文件名',
                 dataIndex: 'file_name',
                 key: 'file_name',
+                width: 200,
+                fixed: 'left',
             },
             {
                 title: '创建日期',
                 dataIndex: 'create_date',
                 key: 'create_date',
-                render: (value, params) => (
-                    <span>{value}</span>
-                )
+                width: 200,
             },
             {
                 title: '大小',
                 dataIndex: 'file_size',
                 key: 'file_size',
+                width: 200,
                 render: (value, params) => (
                     <span>{`${(value / 1024).toFixed(3)}kb`}</span>
                 )
             },
             {
                 title: '图片',
+                width: 200,
                 render: (value, params) => (
                     <img
                         src={params.file_url}
@@ -187,6 +189,7 @@ class UploadForm extends Component {
                 title: '地址',
                 dataIndex: 'file_url',
                 key: 'file_url',
+                width: 200,
                 render: (value, params) => (
                     <span>{value}</span>
                 )
@@ -306,7 +309,7 @@ class UploadForm extends Component {
                             rowKey="_id"
                             pagination={paginationProps}
                             onChange={this.handleTableChange}
-                            scroll={{ x: 2000, y: 300 }}
+                            scroll={{ x: 1500, y: 600 }}
                         />
                     </Col>
                 </Row>

@@ -85,11 +85,14 @@ class ListForm extends Component {
                 title: '文章标题',
                 dataIndex: 'article_title',
                 key: 'article_title',
+                width: 300,
+                fixed: 'left',
             },
             {
                 title: '创建日期',
                 dataIndex: 'article_create_time',
                 key: 'article_create_time',
+                width: 200,
                 render: (value, params) => (
                     <span>{value}</span>
                 )
@@ -98,6 +101,7 @@ class ListForm extends Component {
                 title: '修改日期',
                 dataIndex: 'article_update_time',
                 key: 'article_update_time',
+                width: 200,
                 render: (value, params) => (
                     <span>{value}</span>
                 )
@@ -106,6 +110,7 @@ class ListForm extends Component {
                 title: '标签',
                 dataIndex: 'article_tags',
                 key: 'article_tags',
+                width: 200,
                 render: (value, params) => {
                     if (value.length) {
                         return <ul>
@@ -126,6 +131,7 @@ class ListForm extends Component {
                 title: '状态',
                 dataIndex: 'article_state',
                 key: 'article_state',
+                width: 200,
                 render: (value, params) => (
                     <span>{this.formatState(params.article_state)}</span>
                 )
@@ -133,6 +139,7 @@ class ListForm extends Component {
             {
                 title: '操作',
                 key: 'action',
+                fixed: 'right',
                 render: (value, params) => (
                     <span>
                         <Button
@@ -246,6 +253,7 @@ class ListForm extends Component {
                     rowKey="_id"
                     pagination={paginationProps}
                     loading={this.props.loading}
+                    scroll={{x: 1500, y: 600}}
                     onChange={this.handleTableChange}
                 />
             </div>

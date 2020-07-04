@@ -38,8 +38,13 @@ class ListForm extends Component {
     };
 
     componentWillMount() {
-        this.props.getTagsList()
+        this.getTagsList()
     }
+
+    getTagsList = () => {
+        let {current_page, page_size} = this.props.tags_list;
+        this.props.getTagsList({current_page, page_size})
+    };
 
     handleCancel = () => {
         this.setState({
@@ -66,7 +71,7 @@ class ListForm extends Component {
                     tags_name,
                     tags_desc: typeof tags_desc !== 'undefined' ? tags_desc : '',
                     onSuccess: () => {
-                        this.props.getTagsList();
+                        this.getTagsList();
                         this.setState({
                             visible: false,
                         });
@@ -79,7 +84,7 @@ class ListForm extends Component {
                     tags_name,
                     tags_desc: typeof tags_desc !== 'undefined' ? tags_desc : '',
                     onSuccess: () => {
-                        this.props.getTagsList();
+                        this.getTagsList();
                         this.setState({
                             visible: false,
                         });
@@ -91,26 +96,41 @@ class ListForm extends Component {
         });
     };
 
+    handleTableChange = (pagination, filters, sorter) => {
+        this.props.setStore({
+            current_page: pagination.current,
+        });
+
+        setTimeout(() => {
+            this.getTagsList()
+        }, 50)
+    };
+
     render() {
         const columns = [
             {
                 title: '名称',
                 dataIndex: 'tags_name',
                 key: 'tags_name',
+                width: 400,
+                fixed: 'left',
             },
             {
                 title: '描述',
                 dataIndex: 'tags_desc',
+                width: 400,
                 key: 'tags_desc',
             },
             {
                 title: '文章数',
                 dataIndex: 'tags_article_num',
+                width: 400,
                 key: 'tags_article_num',
             },
             {
                 title: '操作',
                 key: 'action',
+                fixed: 'right',
                 render: (value, params) => (
                     <span>
                         <Button
@@ -138,7 +158,7 @@ class ListForm extends Component {
                                         this.props.deleteTags({
                                             _id: params._id,
                                             onSuccess: () => {
-                                                this.props.getTagsList()
+                                                this.getTagsList()
                                             }
                                         })
                                     },
@@ -178,6 +198,11 @@ class ListForm extends Component {
             );
         };
 
+        const paginationProps = {
+            pageSize: this.props.tags_list.page_size,
+            total: this.props.tags_list.total_count,
+        };
+
         return (
             <div>
                 <Form layout="inline">
@@ -198,6 +223,9 @@ class ListForm extends Component {
                     columns={columns}
                     dataSource={this.props.tags_list.tag_list}
                     rowKey="_id"
+                    pagination={paginationProps}
+                    scroll={{x: 1500, y: 600}}
+                    onChange={this.handleTableChange}
                 />
                 <Modal
                     title={`${current._id ? '编辑' : '添加'}`}
