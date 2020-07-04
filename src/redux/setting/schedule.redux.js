@@ -161,6 +161,21 @@ export function deleteSchedule({_id, onSuccess}) {
 }
 
 /**
+ * 运行全部任务
+ * @param onSuccess
+ * @return {function(*): MessageType}
+ */
+export function startAllSchedule() {
+    return async dispatch => {
+        let res = await api.scheduleInterface.startAllSchedule();
+        if (!res) return;
+        let {msg} = res.data;
+        return message.info(msg)
+
+    }
+}
+
+/**
  * 设置属性值
  * @param payload
  * @returns {Function}

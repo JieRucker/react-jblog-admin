@@ -25,6 +25,11 @@ class ScheduleInterface extends BaseModule {
     deleteScheduleById(data) {
         return this.delete(`${this.baseUrl}/api/schedule/${data._id}`, data);
     }
+
+    /*运行全部任务*/
+    startAllSchedule(data) {
+        return this.post(`${this.baseUrl}/api/schedule/startAll`);
+    }
 }
 
 export default new ScheduleInterface()

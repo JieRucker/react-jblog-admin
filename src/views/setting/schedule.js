@@ -14,6 +14,7 @@ import {
     addSchedule,
     alterSchedule,
     deleteSchedule,
+    startAllSchedule,
     setStore
 } from '../../redux/setting/schedule.redux';
 import styles from './schedule.scss';
@@ -29,7 +30,7 @@ const mapStateProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    getScheduleList, addSchedule, alterSchedule, deleteSchedule, setStore
+    getScheduleList, addSchedule, alterSchedule, deleteSchedule, startAllSchedule, setStore
 });
 
 @connect(
@@ -418,6 +419,15 @@ class ScheduleForm extends Component {
                         }}
                     >
                         添加任务
+                    </Button>
+                    <Button
+                        type="primary"
+                        style={{marginLeft: '10px'}}
+                        onClick={() => {
+                            this.props.startAllSchedule()
+                        }}
+                    >
+                        运行全部任务
                     </Button>
                     <Table
                         style={{marginTop: '20px'}}
